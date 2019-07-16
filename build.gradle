@@ -4,6 +4,8 @@ buildscript {
     repositories {
         google()
         jcenter()
+        //for parse
+        // maven { url "https://jitpack.io" }
         
     }
     dependencies {
