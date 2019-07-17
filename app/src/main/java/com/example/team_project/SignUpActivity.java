@@ -15,7 +15,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SignUpActivity extends AppCompatActivity {
-    @BindView(R.id.toolbar_main) Toolbar toolbar;
     @BindView(R.id.etUsername) EditText etUsername;
     @BindView(R.id.etPassword) EditText etPassword;
     @BindView(R.id.etEmail) EditText etEmail;
@@ -33,7 +32,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
     }
 
         // User Signup

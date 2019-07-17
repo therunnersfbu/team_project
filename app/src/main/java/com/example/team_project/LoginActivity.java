@@ -98,8 +98,6 @@ public class LoginActivity extends AppCompatActivity {
        finish();
         };
     }*/
-    @BindView(R.id.toolbar_main)
-    Toolbar toolbar;
     @BindView(R.id.etUsername)
     EditText etUsername;
     @BindView(R.id.etPassword)
@@ -124,7 +122,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
