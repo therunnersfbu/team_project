@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity">
 
-    <include
-        android:id="@+id/toolbar_main"
-        layout="@layout/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/etEmail"
         android:layout_width="385dp"
