@@ -1,8 +1,11 @@
 package com.example.team_project;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -48,10 +51,13 @@ public class SignUpActivity extends AppCompatActivity {
             user.signUpInBackground(new SignUpCallback() {
                 public void done(ParseException e) {
                     if (e == null) {
-                        // Hooray! Let them use the app now.
+                        Log.d("SignUpActivity", "Login successful");
+                        final Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        // Sign up didn't succeed. Look at the ParseException
-                        // to figure out what went wrong
+                            Log.e("SignUpActivity", "Sign Up failure");
+                            e.printStackTrace();
                     }
                 }
             });
