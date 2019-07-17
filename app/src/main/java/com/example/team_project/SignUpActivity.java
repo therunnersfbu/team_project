@@ -1,8 +1,8 @@
 package com.example.team_project;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -10,36 +10,30 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class SignUpActivity extends AppCompatActivity {
+    @BindView(R.id.toolbar_main) Toolbar toolbar;
+    @BindView(R.id.etUsername) EditText etUsername;
+    @BindView(R.id.etPassword) EditText etPassword;
+    @BindView(R.id.etEmail) EditText etEmail;
 
-    private EditText etUsername;
-    private EditText etPassword;
-    private Button btnSignUp;
-    private EditText etEmail;
-
+    @OnClick(R.id.btnSignUp)
+    public void signupBK(Button button) {
+        final String username = etUsername.getText().toString();
+        final String password = etPassword.getText().toString();
+        final String email = etEmail.getText().toString();
+        signup(username, password, email);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
-        etUsername = findViewById(R.id.etDescription);
-        etPassword = findViewById(R.id.etPassword);
-        btnSignUp = findViewById(R.id.btnSignUp);
-        etEmail = findViewById(R.id.etEmail);
-
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // get the username and password and password
-                final String username = etUsername.getText().toString();
-
-                final String password = etPassword.getText().toString();
-
-                final String email = etEmail.getText().toString();
-                signup(username, password, email);
-            }
-        });
+        ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
     }
 
         // User Signup
