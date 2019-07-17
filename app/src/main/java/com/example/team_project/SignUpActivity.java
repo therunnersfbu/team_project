@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -21,13 +22,19 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.etUsername) EditText etUsername;
     @BindView(R.id.etPassword) EditText etPassword;
     @BindView(R.id.etEmail) EditText etEmail;
+    @BindView(R.id.etPassword2) EditText etPassword2;
 
     @OnClick(R.id.btnSignUp)
     public void signupBK(Button button) {
         final String username = etUsername.getText().toString();
         final String password = etPassword.getText().toString();
+        final String password2 = etPassword2.getText().toString();
         final String email = etEmail.getText().toString();
-        signup(username, password, email);
+        if (password.equals(password2)) {
+            signup(username, password, email);
+        } else {
+            Toast.makeText(this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
