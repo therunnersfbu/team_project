@@ -7,41 +7,38 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="385dp"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogIn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
-
-    <EditText
         android:id="@+id/etUsername"
         android:layout_width="385dp"
         android:layout_height="50dp"
+        android:layout_marginTop="100dp"
         android:ems="10"
-        android:hint="Phone number, username, or email"
+        android:hint="Email"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/etPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="385dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPersonName|textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
 
     <Button
         android:id="@+id/btnLogIn"
         android:layout_width="380dp"
         android:layout_height="34dp"
+        android:layout_marginTop="32dp"
         android:background="#03A9F4"
         android:text="LOG IN"
         android:textColor="#FAFFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btnSignUp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etPassword" />
 
@@ -49,12 +46,11 @@
         android:id="@+id/btnSignUp"
         android:layout_width="383dp"
         android:layout_height="36dp"
+        android:layout_marginTop="16dp"
         android:background="#4CAF50"
         android:text="Sign Up"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogIn" />
 </android.support.constraint.ConstraintLayout>
