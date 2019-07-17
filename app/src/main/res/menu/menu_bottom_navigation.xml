@@ -12,7 +12,7 @@
         android:id="@+id/action_map"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_mapmode"
-        android:title="Map"
+        android:title="Explore"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_my_calendar"
