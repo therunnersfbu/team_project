@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_main) Toolbar toolbar;
 
 //     for testing
-     static PlacesApi api;
-//     static EventsApi api;
+//     static PlacesApi api;
+     static EventsApi api;
      static JSONArray array;
 
     @Override
@@ -43,15 +43,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
 //        for testing
-        MainActivity.api = new PlacesApi();
-        MainActivity.api.setRadius(3000);
-        MainActivity.api.setLocation(37.367890, -122.036905);
-        MainActivity.api.getTopPlaces();
+//        MainActivity.api = new PlacesApi();
+//        MainActivity.api.setRadius(3000);
+//        MainActivity.api.setLocation(37.367890, -122.036905);
+//        MainActivity.api.getTopPlaces();
 
-//        MainActivity.api = new EventsApi();
-//        MainActivity.api.setDate("Future");
-//        MainActivity.api.setLocation("San+Francisco");
-//        MainActivity.api.getTopEvents();
+        MainActivity.api = new EventsApi();
+        MainActivity.api.setDate("Future");
+        MainActivity.api.setLocation("San+Francisco");
+        MainActivity.api.getTopEvents();
 
 //        double[] origin = {37.480801, -122.159128};
 //        double[] destination = {37.367890, -122.036905};
@@ -59,20 +59,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 //    for testing
-    public static void setArray(JSONArray array) throws JSONException {
-        MainActivity.array = array;
-        Place place;
-        for (int i = 0; i < array.length(); i++) {
-            place = Place.placeFromJson(array.getJSONObject(i));
-            api.setDetails(place);
-        }
-    }
-
 //    public static void setArray(JSONArray array) throws JSONException {
 //        MainActivity.array = array;
-//        Event event;
+//        Place place;
 //        for (int i = 0; i < array.length(); i++) {
-//            event = Event.eventFromJson(array.getJSONObject(i));
+//            place = Place.placeFromJson(array.getJSONObject(i));
+//            api.setDetails(place);
 //        }
 //    }
+
+    public static void setArray(JSONArray array) throws JSONException {
+        MainActivity.array = array;
+        Event event;
+        for (int i = 0; i < array.length(); i++) {
+            event = Event.eventFromJson(array.getJSONObject(i));
+        }
+    }
 }

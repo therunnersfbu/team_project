@@ -20,10 +20,10 @@ public class Event {
         event.location = loc;
         event.name = object.getString("title");
         event.venueName = object.getString("venue_name");
-        String postalCode =  object.getString("postal_code").equals("null") ? "" : " " + object.getString("postal_code");
-        event.address = object.getString("venue_address") + ", " + object.getString("city_name")
-                + ", " + object.getString("region_abbr") + postalCode
-                + ", " + object.getString("country_abbr");
+        // String postalCode =  object.getString("postal_code").equals("null") ? "" : " " + object.getString("postal_code");
+        event.address = object.getString("venue_address") + ", " + object.getString("city_name");
+//                + ", " + object.getString("region_abbr") + postalCode
+//                + ", " + object.getString("country_abbr");
         event.startTime = object.getString("start_time");
         return event;
     }

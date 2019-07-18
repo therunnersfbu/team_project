@@ -62,7 +62,7 @@ public class EventsApi {
                     array = response.getJSONObject("events").getJSONArray("event");
 
 //                    for testing
-//                    MainActivity.setArray(array);
+                    MainActivity.setArray(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
