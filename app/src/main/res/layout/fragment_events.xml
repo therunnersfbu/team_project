@@ -7,27 +7,276 @@
 
     <SearchView
         android:id="@+id/svSearch"
-        android:layout_width="338dp"
+        android:layout_width="0dp"
         android:layout_height="51dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/ivProfilePicture"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search for a spot"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/ivProfilePicture"
-        android:layout_width="53dp"
-        android:layout_height="49dp"
-        android:layout_marginTop="8dp"
+    <ImageButton
+        android:id="@+id/ibtnBreakfast"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        tools:srcCompat="@tools:sample/avatars[0]" />
+
+    <ImageButton
+        android:id="@+id/ibtnBrunch"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnBreakfast"
+        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        tools:srcCompat="@tools:sample/avatars[1]" />
+
+    <ImageButton
+        android:id="@+id/ibtnLunch"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnBrunch"
+        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        tools:srcCompat="@tools:sample/avatars[2]" />
+
+    <ImageButton
+        android:id="@+id/ibtnDinner"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/svSearch"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:layout_constraintStart_toEndOf="@+id/ibtnLunch"
+        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        tools:srcCompat="@tools:sample/avatars[3]" />
+
+    <TextView
+        android:id="@+id/tvBreakfast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="breakfast"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnBreakfast"
+        app:layout_constraintStart_toStartOf="@+id/ibtnBreakfast"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnBreakfast" />
+
+    <TextView
+        android:id="@+id/tvBrunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="brunch"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnBrunch"
+        app:layout_constraintStart_toStartOf="@+id/ibtnBrunch"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnBrunch" />
+
+    <TextView
+        android:id="@+id/tvLunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="lunch"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnLunch"
+        app:layout_constraintStart_toStartOf="@+id/ibtnLunch"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnLunch" />
+
+    <TextView
+        android:id="@+id/tvDinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="dinner"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnDinner"
+        app:layout_constraintStart_toStartOf="@+id/ibtnDinner"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnDinner" />
+
+    <ImageButton
+        android:id="@+id/ibtnSights"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBreakfast"
+        tools:srcCompat="@tools:sample/avatars[5]" />
+
+    <ImageButton
+        android:id="@+id/ibtnDrinks"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnSights"
+        app:layout_constraintTop_toBottomOf="@+id/tvBrunch"
+        tools:srcCompat="@tools:sample/avatars[4]" />
+
+    <ImageButton
+        android:id="@+id/ibtnShopping"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnDrinks"
+        app:layout_constraintTop_toBottomOf="@+id/tvLunch"
+        tools:srcCompat="@tools:sample/avatars[6]" />
+
+    <ImageButton
+        android:id="@+id/ibtnConcerts"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnShopping"
+        app:layout_constraintTop_toBottomOf="@+id/tvDinner"
+        tools:srcCompat="@tools:sample/avatars[7]" />
+
+    <TextView
+        android:id="@+id/tvSights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="sights"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnSights"
+        app:layout_constraintStart_toStartOf="@+id/ibtnSights"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnSights" />
+
+    <TextView
+        android:id="@+id/tvDrinks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="drinks"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnDrinks"
+        app:layout_constraintStart_toStartOf="@+id/ibtnDrinks"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnDrinks" />
+
+    <TextView
+        android:id="@+id/tvShopping"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="shopping"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnShopping"
+        app:layout_constraintStart_toStartOf="@+id/ibtnShopping"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnShopping" />
+
+    <TextView
+        android:id="@+id/tvConcerts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="concerts"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnConcerts"
+        app:layout_constraintStart_toStartOf="@+id/ibtnConcerts"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnConcerts" />
+
+    <ImageButton
+        android:id="@+id/ibtnPop"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginLeft="31dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSights"
+        tools:srcCompat="@tools:sample/avatars[8]" />
+
+    <TextView
+        android:id="@+id/tvPop"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="pop-up events"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnPop"
+        app:layout_constraintStart_toStartOf="@+id/ibtnPop"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnPop" />
+
+    <ImageButton
+        android:id="@+id/ibtnBeauty"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnPop"
+        app:layout_constraintTop_toBottomOf="@+id/tvDrinks"
+        tools:srcCompat="@tools:sample/avatars[9]" />
+
+    <TextView
+        android:id="@+id/tvBeauty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="beauty"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnBeauty"
+        app:layout_constraintStart_toStartOf="@+id/ibtnBeauty"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnBeauty" />
+
+    <ImageButton
+        android:id="@+id/ibtnActive"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@+id/ibtnBeauty"
+        app:layout_constraintTop_toBottomOf="@+id/tvShopping"
+        tools:srcCompat="@tools:sample/avatars[10]" />
+
+    <TextView
+        android:id="@+id/tvActive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="active"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnActive"
+        app:layout_constraintStart_toStartOf="@+id/ibtnActive"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnActive" />
+
+    <ImageButton
+        android:id="@+id/ibtnParks"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginLeft="23dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ibtnActive"
+        app:layout_constraintTop_toBottomOf="@+id/tvConcerts"
+        tools:srcCompat="@tools:sample/avatars[11]" />
+
+    <TextView
+        android:id="@+id/tvParks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="parks"
+        app:layout_constraintEnd_toEndOf="@+id/ibtnParks"
+        app:layout_constraintStart_toStartOf="@+id/ibtnParks"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnParks" />
 
 </android.support.constraint.ConstraintLayout>

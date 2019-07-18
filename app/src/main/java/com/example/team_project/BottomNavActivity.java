@@ -1,5 +1,6 @@
 package com.example.team_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.fragments.MapFragment;
@@ -58,5 +61,23 @@ public class BottomNavActivity extends AppCompatActivity {
                 });
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_events);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.manu_profile, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.item_profile) {
+            Intent i = new Intent(this, ProfileActivity.class);
+            startActivity(i);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
