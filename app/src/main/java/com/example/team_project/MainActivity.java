@@ -61,6 +61,15 @@ public class MainActivity extends AppCompatActivity {
 //    for testing
 //    public static void setArray(JSONArray array) throws JSONException {
 //        MainActivity.array = array;
+//        Place place;
+//        for (int i = 0; i < array.length(); i++) {
+//            place = Place.placeFromJson(array.getJSONObject(i));
+//            api.setDetails(place);
+//        }
+//    }
+
+//    public static void setArray(JSONArray array) throws JSONException {
+//        MainActivity.array = array;
 //        Event event;
 //        for (int i = 0; i < array.length(); i++) {
 //            event = Event.eventFromJson(array.getJSONObject(i));

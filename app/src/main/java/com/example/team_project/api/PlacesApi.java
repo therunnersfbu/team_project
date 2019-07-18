@@ -30,6 +30,7 @@ public class PlacesApi {
         client = new AsyncHttpClient();
         location = "";
         radius = "";
+        array = new JSONArray();
     }
 
     public void setLocation(double lat, double lng) {
@@ -42,6 +43,7 @@ public class PlacesApi {
 
     public void getTopPlaces() {
         pageToken = "";
+        array = new JSONArray();
         getPlaces();
     }
 
@@ -57,7 +59,19 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     pageToken = "&pagetoken=" + response.getString("next_page_token");
-                    array = response.getJSONArray("results");
+                    JSONArray results = response.getJSONArray("results");
+                    for (int i = 0; i < results.length(); i++) {
+                        boolean isCity = false;
+                        JSONArray types = results.getJSONObject(i).getJSONArray("types");
+                        for (int j = 0; j < types.length(); j++) {
+                            if ("locality".equals(types.getString(j))) {
+                                isCity = true;
+                            }
+                        }
+                        if (!isCity) {
+                            array.put(results.getJSONObject(i));
+                        }
+                    }
 
 //                     for testing
 //                     MainActivity.setArray(array);
@@ -99,15 +113,9 @@ public class PlacesApi {
                 }
 
                 try {
-                    place.setAddress(details.getString("formatted_address"));
-                } catch (JSONException e) {
-                    place.setAddress("Not found!");
-                }
-
-                try {
                     place.setPhoneNumber(details.getString("formatted_phone_number"));
                 } catch (JSONException e) {
-                    place.setPhoneNumber("Not found!");
+                    place.setPhoneNumber("Not available!");
                 }
 
                 try {
@@ -119,7 +127,7 @@ public class PlacesApi {
                     place.setOpenHours(list);
                 } catch (JSONException e) {
                     ArrayList<String> list = new ArrayList<String>();
-                    list.add("Not found!");
+                    list.add("Not available!");
                     place.setOpenHours(list);
                 }
 

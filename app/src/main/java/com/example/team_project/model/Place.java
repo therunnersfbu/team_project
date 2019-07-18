@@ -10,9 +10,9 @@ public class Place {
     private String id;
     private double[] location;
     private String name;
+    private String address;
 
     // data for detail view
-    private String address;
     private String phoneNumber;
     private ArrayList<String> openHours;
     private int price;
@@ -25,6 +25,7 @@ public class Place {
         loc[1] = object.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
         place.location = loc;
         place.name = object.getString("name");
+        place.address = object.getString("vicinity");
         return place;
     }
 
