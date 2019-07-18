@@ -22,7 +22,7 @@ public class MyCalendarFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_my_calendar, container, false);
+        View view = inflater.inflate(R.layout.activity_calendar, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
 
