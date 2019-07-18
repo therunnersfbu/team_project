@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.team_project.api.EventsApi;
+import com.example.team_project.api.PlacesApi;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
