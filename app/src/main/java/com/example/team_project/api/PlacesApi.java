@@ -74,7 +74,7 @@ public class PlacesApi {
                     }
 
 //                     for testing
-                     MainActivity.setArray(array);
+//                     MainActivity.setArray(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

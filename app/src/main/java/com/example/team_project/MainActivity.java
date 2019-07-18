@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
 //     for testing
 //     static PlacesApi api;
-     static EventsApi api;
-     static JSONArray array;
+//     static EventsApi api;
+//     static JSONArray array;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
 //        MainActivity.api.setLocation(37.367890, -122.036905);
 //        MainActivity.api.getTopPlaces();
 
-        MainActivity.api = new EventsApi();
-        MainActivity.api.setDate("Future");
-        MainActivity.api.setLocation("San+Francisco");
-        MainActivity.api.getTopEvents();
+//        MainActivity.api = new EventsApi();
+//        MainActivity.api.setDate("Future");
+//        MainActivity.api.setLocation("San+Francisco");
+//        MainActivity.api.getTopEvents();
 
 //        double[] origin = {37.480801, -122.159128};
 //        double[] destination = {37.367890, -122.036905};
@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public static void setArray(JSONArray array) throws JSONException {
-        MainActivity.array = array;
-        Event event;
-        for (int i = 0; i < array.length(); i++) {
-            event = Event.eventFromJson(array.getJSONObject(i));
-        }
-    }
+//    public static void setArray(JSONArray array) throws JSONException {
+//        MainActivity.array = array;
+//        Event event;
+//        for (int i = 0; i < array.length(); i++) {
+//            event = Event.eventFromJson(array.getJSONObject(i));
+//        }
+//    }
 }
