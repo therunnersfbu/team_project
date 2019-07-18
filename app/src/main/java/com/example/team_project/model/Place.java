@@ -1,7 +1,6 @@
 package com.example.team_project.model;
 
 import android.util.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class Place {
         return location;
     }
 
-    public String getName() {
+    public String getPlaceName() {
         return name;
     }
 
@@ -69,7 +68,7 @@ public class Place {
         this.location = location;
     }
 
-    public void setName(String name) {
+    public void setPlaceName(String name) {
         this.name = name;
     }
 
