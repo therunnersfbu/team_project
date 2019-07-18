@@ -101,13 +101,13 @@ public class PlacesApi {
                 try {
                     place.setAddress(details.getString("formatted_address"));
                 } catch (JSONException e) {
-                    place.setAddress("Not found!");
+                    place.setAddress("Not available!");
                 }
 
                 try {
                     place.setPhoneNumber(details.getString("formatted_phone_number"));
                 } catch (JSONException e) {
-                    place.setPhoneNumber("Not found!");
+                    place.setPhoneNumber("Not available!");
                 }
 
                 try {
@@ -119,7 +119,7 @@ public class PlacesApi {
                     place.setOpenHours(list);
                 } catch (JSONException e) {
                     ArrayList<String> list = new ArrayList<String>();
-                    list.add("Not found!");
+                    list.add("Not available!");
                     place.setOpenHours(list);
                 }
 
