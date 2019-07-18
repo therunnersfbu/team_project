@@ -1,6 +1,8 @@
 package com.example.team_project.api;
 
 import android.util.Log;
+
+import com.example.team_project.MainActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -58,6 +60,9 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
+
+//                    for testing
+//                    MainActivity.setArray(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
