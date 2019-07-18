@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
@@ -51,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
 //        MainActivity.api.setDate("Future");
 //        MainActivity.api.setLocation("San+Francisco");
 //        MainActivity.api.getTopEvents();
+
+//        double[] origin = {37.480801, -122.159128};
+//        double[] destination = {37.367890, -122.036905};
+//        DirectionsApi.getDistance(origin, destination);
     }
 
 //    for testing
