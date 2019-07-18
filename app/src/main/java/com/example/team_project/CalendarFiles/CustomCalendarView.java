@@ -81,52 +81,52 @@ public class CustomCalendarView extends LinearLayout {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setCancelable(true);
-                final View addView = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_newevent_layout, null);
-                final EditText EventName = addView.findViewById(R.id.eventname);
-                final EditText EventTime = addView.findViewById(R.id.eventtime);
-                ImageButton SetTime = addView.findViewById(R.id.seteventtime);
-                Button AddEvent = addView.findViewById(R.id.addevent);
-                SetTime.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
-                        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minutes = calendar.get(Calendar.MINUTE);
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
-                                new TimePickerDialog.OnTimeSetListener() {
-                                    @Override
-                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        Calendar c = Calendar.getInstance();
-                                        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                                        c.set(Calendar.MINUTE, minute);
-                                        c.setTimeZone(TimeZone.getDefault());
-                                        SimpleDateFormat format = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
-                                        String event_Time = format.format(c.getTime());
-                                        EventTime.setText(event_Time);
-                                    }
-                                }, hours, minutes, false);
-                        timePickerDialog.show();
-                    }
-                });
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setCancelable(true);
+            final View addView = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_newevent_layout, null);
+            final EditText EventName = addView.findViewById(R.id.eventname);
+            final EditText EventTime = addView.findViewById(R.id.eventtime);
+            ImageButton SetTime = addView.findViewById(R.id.seteventtime);
+            Button AddEvent = addView.findViewById(R.id.addevent);
+            SetTime.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar calendar = Calendar.getInstance();
+                    int hours = calendar.get(Calendar.HOUR_OF_DAY);
+                    int minutes = calendar.get(Calendar.MINUTE);
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(addView.getContext(), R.style.Theme_AppCompat_Dialog,
+                            new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                    Calendar c = Calendar.getInstance();
+                                    c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                    c.set(Calendar.MINUTE, minute);
+                                    c.setTimeZone(TimeZone.getDefault());
+                                    SimpleDateFormat format = new SimpleDateFormat("K:mm a", Locale.ENGLISH);
+                                    String event_Time = format.format(c.getTime());
+                                    EventTime.setText(event_Time);
+                                }
+                            }, hours, minutes, false);
+                    timePickerDialog.show();
+                }
+            });
 
-                final String date = eventDateFormat.format(dates.get(position));
-                final String month = monthFormat.format(dates.get(position));
-                final String year = yearFormat.format(dates.get(position));
+            final String date = eventDateFormat.format(dates.get(position));
+            final String month = monthFormat.format(dates.get(position));
+            final String year = yearFormat.format(dates.get(position));
 
-                AddEvent.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SaveEvent(EventName.getText().toString(), EventTime.getText().toString(), date, month, year);
-                        SetUpCalendar();
-                        alertDialog.dismiss();
-                    }
-                });
+            AddEvent.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SaveEvent(EventName.getText().toString(), EventTime.getText().toString(), date, month, year);
+                    SetUpCalendar();
+                    alertDialog.dismiss();
+                }
+            });
 
-                builder.setView(addView);
-                alertDialog = builder.create();
-                alertDialog.show();
+            builder.setView(addView);
+            alertDialog = builder.create();
+            alertDialog.show();
             }
         });
 
