@@ -81,7 +81,7 @@ public class CustomCalendarView extends LinearLayout {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setCancelable(true);
             final View addView = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_newevent_layout, null);
             final EditText EventName = addView.findViewById(R.id.eventname);
@@ -132,7 +132,7 @@ public class CustomCalendarView extends LinearLayout {
 
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {*/
                 String date = eventDateFormat.format(dates.get(position));
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -151,7 +151,7 @@ public class CustomCalendarView extends LinearLayout {
                 alertDialog = builder.create();
                 alertDialog.show();
 
-                return true;
+                //return true;
             }
         });
 

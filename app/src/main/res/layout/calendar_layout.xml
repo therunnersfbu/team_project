@@ -26,19 +26,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_marginTop="10dp"
             android:text="CurrentDate"
             android:id="@+id/current_Date"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="27sp"
             android:layout_weight="3" />
 
         <ImageButton
             android:id="@+id/nextBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@mipmap/next"
-            android:layout_margin="10dp" />
+            android:background="@mipmap/back"
+            android:layout_margin="10dp"
+            android:rotation="180"/>
 
     </LinearLayout>
 
