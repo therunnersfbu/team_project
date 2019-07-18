@@ -30,6 +30,7 @@ public class PlacesApi {
         client = new AsyncHttpClient();
         location = "";
         radius = "";
+        array = new JSONArray();
     }
 
     public void setLocation(double lat, double lng) {
@@ -42,6 +43,7 @@ public class PlacesApi {
 
     public void getTopPlaces() {
         pageToken = "";
+        array = new JSONArray();
         getPlaces();
     }
 
@@ -57,10 +59,22 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     pageToken = "&pagetoken=" + response.getString("next_page_token");
-                    array = response.getJSONArray("results");
+                    JSONArray results = response.getJSONArray("results");
+                    for (int i = 0; i < results.length(); i++) {
+                        boolean isCity = false;
+                        JSONArray types = results.getJSONObject(i).getJSONArray("types");
+                        for (int j = 0; j < types.length(); j++) {
+                            if ("locality".equals(types.getString(j))) {
+                                isCity = true;
+                            }
+                        }
+                        if (!isCity) {
+                            array.put(results.getJSONObject(i));
+                        }
+                    }
 
 //                     for testing
-//                     MainActivity.setArray(array);
+                     MainActivity.setArray(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -96,12 +110,6 @@ public class PlacesApi {
                     details = response.getJSONObject("result");
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
-
-                try {
-                    place.setAddress(details.getString("formatted_address"));
-                } catch (JSONException e) {
-                    place.setAddress("Not available!");
                 }
 
                 try {
