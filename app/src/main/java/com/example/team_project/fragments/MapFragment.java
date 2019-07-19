@@ -77,7 +77,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         enableMyLocationIfPermitted();
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.setMinZoomPreference(5);
+        googleMap.setMinZoomPreference(3);
     }
 
     private void enableMyLocationIfPermitted() {
@@ -100,7 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Toast.makeText(getContext(), "Location permission not granted, " +
                         "showing default location",
                 Toast.LENGTH_SHORT).show();
-        LatLng redmond = new LatLng(47.6739881, -122.121512);
+        LatLng redmond = new LatLng(39.8283, -98.5795);
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(redmond));
     }
 
