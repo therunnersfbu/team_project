@@ -20,7 +20,8 @@ public class User extends ParseObject {
     public static final String KEY_LIKED_EVENTS = "likedEvents";
     public static final String KEY_ADDED_EVENTS = "addedEvents";
     public static final String KEY_PROFILE_PIC = "profilePic";
-    // TODO: initialize all survey items as booleans
+    public static final String KEY_CATEGORIES = "categoriesInterested";
+    public static final String KEY_TAGS = "tagsInterested";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -58,6 +59,16 @@ public class User extends ParseObject {
     public void setImage(ParseFile profilePic) {
         put(KEY_PROFILE_PIC, profilePic);
     }
-
-
+    public ArrayList<Boolean> getCategories() {
+        return (ArrayList<Boolean>) get(KEY_CATEGORIES);
+    }
+    public void setCategories(ArrayList<Boolean> categories) {
+        put(KEY_CATEGORIES, categories);
+    }
+    public ArrayList<Integer> getTags() {
+        return (ArrayList<Integer>) get(KEY_TAGS);
+    }
+    public void setTags(ArrayList<Integer> categories) {
+        put(KEY_TAGS, categories);
+    }
 }

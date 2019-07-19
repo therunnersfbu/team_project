@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchActivity">
+
+    <Button
+        android:id="@+id/btnCancel"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="13dp"
+        android:backgroundTint="@color/cardview_light_background"
+        android:text="Cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:backgroundTint="@color/cardview_light_background"
+        android:text="Search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etLocation"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:drawableLeft="@drawable/location_icon"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:text="Current Location"
+        android:textColor="@color/hyperlinkBlue"
+        android:inputType="textPersonName"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintEnd_toEndOf="@+id/btnSearch"
+        app:layout_constraintStart_toStartOf="@+id/btnCancel"
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
+
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:drawableLeft="@drawable/search_icon"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Search a spot"
+        android:inputType="textPersonName"
+        android:paddingLeft="6dp"
+        app:layout_constraintEnd_toEndOf="@+id/etLocation"
+        app:layout_constraintStart_toStartOf="@+id/etLocation"
+        app:layout_constraintTop_toBottomOf="@+id/etLocation" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTags"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etSearch" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvResults"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvTags" />
+</android.support.constraint.ConstraintLayout>

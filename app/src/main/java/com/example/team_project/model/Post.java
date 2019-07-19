@@ -1,11 +1,10 @@
 package com.example.team_project.model;
 
-import com.parse.Parse;
 import com.parse.ParseClassName;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
 
 @ParseClassName("Post")
 public class Post extends ParseObject {
@@ -14,7 +13,7 @@ public class Post extends ParseObject {
     public static final String KEY_REVIEW = "review";
     public static final String KEY_EVENT = "event";
     public static final String KEY_IS_LOCAL = "isLocal";
-    // TODO: initialize all tags as booleans
+    public static final String KEY_TAGS = "tags";
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
@@ -42,4 +41,7 @@ public class Post extends ParseObject {
 
     public void setIsLocal(boolean isLocal) {put(KEY_IS_LOCAL, isLocal); }
 
+    public ArrayList<Integer> getTags() { return (ArrayList<Integer>) get(KEY_TAGS); }
+
+    public void setTags(ArrayList<Integer> categories) { put(KEY_TAGS, categories); }
 }

@@ -5,30 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:id="@+id/svSearch"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search for a spot"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
         android:id="@+id/ibtnBreakfast"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars[0]" />
 
     <ImageButton
@@ -37,9 +22,9 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnBreakfast"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars[1]" />
 
     <ImageButton
@@ -48,10 +33,10 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnBrunch"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
-        tools:srcCompat="@tools:sample/avatars[2]" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <ImageButton
         android:id="@+id/ibtnDinner"
@@ -59,19 +44,19 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnLunch"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars[3]" />
 
     <TextView
         android:id="@+id/tvBreakfast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="breakfast"
         app:layout_constraintEnd_toEndOf="@+id/ibtnBreakfast"
         app:layout_constraintStart_toStartOf="@+id/ibtnBreakfast"
@@ -81,7 +66,7 @@
         android:id="@+id/tvBrunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="brunch"
         app:layout_constraintEnd_toEndOf="@+id/ibtnBrunch"
         app:layout_constraintStart_toStartOf="@+id/ibtnBrunch"
@@ -91,7 +76,7 @@
         android:id="@+id/tvLunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="lunch"
         app:layout_constraintEnd_toEndOf="@+id/ibtnLunch"
         app:layout_constraintStart_toStartOf="@+id/ibtnLunch"
@@ -101,7 +86,7 @@
         android:id="@+id/tvDinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="dinner"
         app:layout_constraintEnd_toEndOf="@+id/ibtnDinner"
         app:layout_constraintStart_toStartOf="@+id/ibtnDinner"
@@ -113,7 +98,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBreakfast"
         tools:srcCompat="@tools:sample/avatars[5]" />
@@ -124,7 +109,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnSights"
         app:layout_constraintTop_toBottomOf="@+id/tvBrunch"
         tools:srcCompat="@tools:sample/avatars[4]" />
@@ -135,7 +120,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnDrinks"
         app:layout_constraintTop_toBottomOf="@+id/tvLunch"
         tools:srcCompat="@tools:sample/avatars[6]" />
@@ -146,7 +131,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnShopping"
         app:layout_constraintTop_toBottomOf="@+id/tvDinner"
         tools:srcCompat="@tools:sample/avatars[7]" />
@@ -155,7 +140,7 @@
         android:id="@+id/tvSights"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="sights"
         app:layout_constraintEnd_toEndOf="@+id/ibtnSights"
         app:layout_constraintStart_toStartOf="@+id/ibtnSights"
@@ -165,7 +150,7 @@
         android:id="@+id/tvDrinks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="drinks"
         app:layout_constraintEnd_toEndOf="@+id/ibtnDrinks"
         app:layout_constraintStart_toStartOf="@+id/ibtnDrinks"
@@ -175,7 +160,7 @@
         android:id="@+id/tvShopping"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="shopping"
         app:layout_constraintEnd_toEndOf="@+id/ibtnShopping"
         app:layout_constraintStart_toStartOf="@+id/ibtnShopping"
@@ -185,7 +170,7 @@
         android:id="@+id/tvConcerts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="concerts"
         app:layout_constraintEnd_toEndOf="@+id/ibtnConcerts"
         app:layout_constraintStart_toStartOf="@+id/ibtnConcerts"
@@ -197,7 +182,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSights"
         tools:srcCompat="@tools:sample/avatars[8]" />
@@ -206,7 +191,7 @@
         android:id="@+id/tvPop"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:gravity="center"
         android:text="pop-up events"
         app:layout_constraintEnd_toEndOf="@+id/ibtnPop"
@@ -219,7 +204,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnPop"
         app:layout_constraintTop_toBottomOf="@+id/tvDrinks"
         tools:srcCompat="@tools:sample/avatars[9]" />
@@ -228,7 +213,7 @@
         android:id="@+id/tvBeauty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="beauty"
         app:layout_constraintEnd_toEndOf="@+id/ibtnBeauty"
         app:layout_constraintStart_toStartOf="@+id/ibtnBeauty"
@@ -240,7 +225,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnBeauty"
         app:layout_constraintTop_toBottomOf="@+id/tvShopping"
         tools:srcCompat="@tools:sample/avatars[10]" />
@@ -249,7 +234,7 @@
         android:id="@+id/tvActive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="active"
         app:layout_constraintEnd_toEndOf="@+id/ibtnActive"
         app:layout_constraintStart_toStartOf="@+id/ibtnActive"
@@ -261,7 +246,7 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -273,10 +258,58 @@
         android:id="@+id/tvParks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="1dp"
         android:text="parks"
         app:layout_constraintEnd_toEndOf="@+id/ibtnParks"
         app:layout_constraintStart_toStartOf="@+id/ibtnParks"
         app:layout_constraintTop_toBottomOf="@+id/ibtnParks" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvSuggestions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:scrollbars="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSuggestionsText"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tvSuggestionsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:text="Suggested spots for you"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPop" />
+
+    <Button
+        android:id="@+id/btnSearchBar"
+        android:layout_width="388dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_shadow"
+        android:drawableLeft="@drawable/search_icon"
+        android:drawablePadding="20dp"
+        android:paddingLeft="20dp"
+        android:gravity="left|center_vertical"
+        android:text="Search a spot"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>
