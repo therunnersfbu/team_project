@@ -2,14 +2,24 @@ package com.example.team_project;
 
 import android.app.Application;
 
+import com.example.team_project.model.Event;
+import com.example.team_project.model.PlaceEvent;
+import com.example.team_project.model.Post;
+import com.example.team_project.model.User;
 import com.parse.Parse;
 import com.parse.ParseObject;
+
+import org.w3c.dom.Comment;
 
 public class ParseApp extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ParseObject.registerSubclass(Post.class);
+        ParseObject.registerSubclass(PlaceEvent.class);
+        ParseObject.registerSubclass(User.class);
 
         //ParseObject.registerSubclass(Post.class);
 
