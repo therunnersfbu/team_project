@@ -5,30 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <SearchView
-        android:id="@+id/svSearch"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="3dp"
-        android:layout_marginLeft="3dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginRight="50dp"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search for a spot"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
         android:id="@+id/ibtnBreakfast"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars[0]" />
 
     <ImageButton
@@ -37,9 +22,9 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnBreakfast"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars[1]" />
 
     <ImageButton
@@ -48,9 +33,9 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toEndOf="@+id/ibtnBrunch"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ImageButton
@@ -59,12 +44,12 @@
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnLunch"
-        app:layout_constraintTop_toBottomOf="@+id/svSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         tools:srcCompat="@tools:sample/avatars[3]" />
 
     <TextView
@@ -298,15 +283,33 @@
     <TextView
         android:id="@+id/tvSuggestionsText"
         android:layout_width="wrap_content"
-        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:text="Suggested spots for you"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPop" />
+
+    <Button
+        android:id="@+id/btnSearchBar"
+        android:layout_width="388dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button_shadow"
+        android:drawableLeft="@drawable/search_icon"
+        android:drawablePadding="20dp"
+        android:paddingLeft="20dp"
+        android:gravity="left|center_vertical"
+        android:text="Search a spot"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

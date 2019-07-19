@@ -3,10 +3,10 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cvResult"
-    android:layout_width="100dp"
-    android:layout_height="130dp"
-    android:layout_margin="1dp"
-    card_view:cardBackgroundColor="@color/cardview_dark_background"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginBottom="10dp"
+    card_view:cardBackgroundColor="@color/cardview_light_background"
     card_view:cardCornerRadius="7dp"
     card_view:cardElevation="7dp"
     card_view:contentPadding="7dp">
@@ -17,8 +17,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="3dp"
-        android:textColor="#fff"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#000"
+        android:textSize="30sp"
         android:textStyle="bold"
         tools:text="Name" />
 
