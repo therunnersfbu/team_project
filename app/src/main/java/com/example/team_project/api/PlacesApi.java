@@ -66,6 +66,7 @@ public class PlacesApi {
                         for (int j = 0; j < types.length(); j++) {
                             if ("locality".equals(types.getString(j))) {
                                 isCity = true;
+                                break;
                             }
                         }
                         if (!isCity) {
