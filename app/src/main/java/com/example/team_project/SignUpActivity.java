@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,36 +34,22 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    public static Activity signupAct;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
+        signupAct = this;
     }
 
         // User Signup
         private void signup (String username, String password, String email){
-            // Create the ParseUser
-            ParseUser user = new ParseUser();
-            // Set core properties
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setEmail(email);
-            // Set custom properties
-            user.put("phone", "650-253-0000");
-            // Invoke signUpInBackground
-            user.signUpInBackground(new SignUpCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Log.d("SignUpActivity", "Login successful");
-                        final Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                            Log.e("SignUpActivity", "Sign Up failure");
-                            e.printStackTrace();
-                    }
-                }
-            });
+            final Intent intent = new Intent(this, SurveyActivity.class);
+            intent.putExtra("username", username);
+            intent.putExtra("email", email);
+            intent.putExtra("password", password);
+            startActivity(intent);
         }
     }

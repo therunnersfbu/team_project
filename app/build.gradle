@@ -45,8 +45,9 @@ dependencies {
     // for calendar
     implementation 'com.applandeo:material-calendar-view:1.4.0'
 
-
     // for maps
     implementation "com.google.android.gms:play-services-maps:$googlePlayVersion"
     implementation "com.google.android.gms:play-services-location:$googlePlayVersion"
+
+    implementation "com.nex3z:flow-layout:1.2.4"
 }
