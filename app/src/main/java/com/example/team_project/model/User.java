@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @ParseClassName("User")
 public class User extends ParseObject {
     // list the attributes
-    public static final String KEY_NAME = "username";
+    public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_LIKED_EVENTS = "likedEvents";

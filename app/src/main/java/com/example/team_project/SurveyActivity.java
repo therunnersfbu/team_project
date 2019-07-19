@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.team_project.model.User;
+import com.example.team_project.utils.RandomString;
 import com.nex3z.flowlayout.FlowLayout;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -24,7 +25,9 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -237,9 +240,10 @@ public class SurveyActivity extends AppCompatActivity {
     private void signup(){
         // create user to save with all properties
         ParseUser user = new ParseUser();
-        user.setUsername(username);
+        user.setUsername(RandomString.getAlphaNumericString(25));
         user.setEmail(email);
         user.setPassword(password);
+        user.put(User.KEY_NAME, username);
         user.put(User.KEY_CATEGORIES, categories);
         user.put(User.KEY_TAGS, tags);
         user.put(User.KEY_VERIFIED, false);
