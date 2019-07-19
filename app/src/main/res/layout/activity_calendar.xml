@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".CalendarFiles.CalendarActivity">
 
-
-   <com.applandeo.materialcalendarview.CalendarView
-        android:id="@+id/calendar"
+    <com.example.team_project.CalendarFiles.CustomCalendarView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:id="@+id/custom_calendar_view">
+
+    </com.example.team_project.CalendarFiles.CustomCalendarView>
+
 
 </android.support.constraint.ConstraintLayout>

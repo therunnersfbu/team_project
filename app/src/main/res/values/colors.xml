@@ -3,5 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+<<<<<<< HEAD
     <color name="hyperlinkBlue">#3e91f7</color>
+=======
+    <color name="green">@android:color/holo_green_dark</color>
+>>>>>>> 2bfc5d4d60f19c5aeae6d55100931e4bd4afb98f
 </resources>

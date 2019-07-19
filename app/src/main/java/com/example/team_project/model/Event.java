@@ -1,60 +1,78 @@
 package com.example.team_project.model;
 
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
+public class Event {
+    private String id;
+    private double[] location;
+    private String name;
+    private String venueName;
+    private String address;
+    private String startTime;
 
-@ParseClassName("Event")
-public class Event extends ParseObject {
-    // initialize types to be stored in Place parse object
-    public static final String KEY_NAME = "name";
-    public static final String KEY_LIKED = "liked";
-    // TODO: figure out how wa want to save the distance and link to directions on maps app
-    // TODO: initialize all tags as booleans
-    // public static final String KEY_DISTANCE = "distance";
-    // public static final String KEY_DIRECTIONS = "name";
-    public static final String KEY_IMAGES = "photoArray";
-    public static final String KEY_HOURS = "hours";
-    public static final String KEY_APIID = "apiId";
-    public static final String KEY_DATE = "eventDate";
+    public static Event eventFromJson(JSONObject object) throws JSONException {
+        Event event = new Event();
+        event.id = object.getString("id");
+        double[] loc = new double[2];
+        loc[0] = Double.parseDouble(object.getString("latitude"));
+        loc[1] = Double.parseDouble(object.getString("longitude"));
+        event.location = loc;
+        event.name = object.getString("title");
+        event.venueName = object.getString("venue_name");
+//        String postalCode =  object.getString("postal_code").equals("null") ? "" : " " + object.getString("postal_code");
+        event.address = object.getString("venue_address") + ", " + object.getString("city_name");
+//                + ", " + object.getString("region_abbr") + postalCode
+//                + ", " + object.getString("country_abbr");
+        event.startTime = object.getString("start_time");
+        return event;
+    }
 
-    public String getName() {
-        return getString(KEY_NAME);
+    public void setEventId(String id) {
+        this.id = id;
     }
-    public void setName(String name) {
-        put(KEY_NAME, name);
+
+    public void setLocation(double[] location) {
+        this.location = location;
     }
-    public boolean getLiked() {
-        return getBoolean(KEY_LIKED);
+
+    public void setEventName(String name) {
+        this.name = name;
     }
-    public void setLiked(boolean liked) {
-        put(KEY_LIKED, liked);
+
+    public void setVenueName(String venueName) {
+        this.venueName = venueName;
     }
-    public ArrayList<File> getPhotos() {
-        return (ArrayList<File>) get(KEY_IMAGES);
+
+    public void setAddress(String address) {
+        this.address = address;
     }
-    public void setPhotos(ArrayList<File> photos) {
-        put(KEY_IMAGES, photos);
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
-    public String getHours() {
-        return getString(KEY_HOURS);
+
+    public String getEventId() {
+        return id;
     }
-    public void setHours(String hours) {
-        put(KEY_HOURS, hours);
+
+    public double[] getLocation() {
+        return location;
     }
-    public String getAppId() {
-        return getString(KEY_APIID);
+
+    public String getEventName() {
+        return name;
     }
-    public void setAppId(String appId) {
-        put(KEY_APIID, appId);
+
+    public String getVenueName() {
+        return venueName;
     }
-    public Date getDate() {
-        return getDate(KEY_DATE);
+
+    public String getAddress() {
+        return address;
     }
-    public void setDate(Date date) {
-        put(KEY_DATE, date);
+
+    public String getStartTime() {
+        return startTime;
     }
 }

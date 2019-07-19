@@ -17,8 +17,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+<<<<<<< HEAD
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".ProfileActivity" />
+=======
+        <activity android:name=".CalendarFiles.CalendarActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+>>>>>>> 2bfc5d4d60f19c5aeae6d55100931e4bd4afb98f
         <activity android:name=".BottomNavActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
