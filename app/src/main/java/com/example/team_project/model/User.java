@@ -14,13 +14,15 @@ import java.util.ArrayList;
 @ParseClassName("User")
 public class User extends ParseObject {
     // list the attributes
-    public static final String KEY_NAME = "name";
+    public static final String KEY_NAME = "username";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_LIKED_EVENTS = "likedEvents";
     public static final String KEY_ADDED_EVENTS = "addedEvents";
     public static final String KEY_PROFILE_PIC = "profilePic";
-    // TODO: initialize all survey items as booleans
+    public static final String KEY_VERIFIED = "verifiedUser";
+    public static final String KEY_CATEGORIES = "categoriesInterested";
+    public static final String KEY_TAGS = "tagsInterested";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -52,12 +54,28 @@ public class User extends ParseObject {
     public void setAddedEvents(ArrayList<ParseObject> addedEvents) {
         put(KEY_ADDED_EVENTS, addedEvents);
     }
+    public boolean getVerified() {
+        return getBoolean(KEY_VERIFIED);
+    }
+    public void setVerified(boolean verified) {
+        put(KEY_VERIFIED, verified);
+    }
     public ParseFile getImage() {
         return getParseFile(KEY_PROFILE_PIC);
     }
     public void setImage(ParseFile profilePic) {
         put(KEY_PROFILE_PIC, profilePic);
     }
-
-
+    public ArrayList<Boolean> getCategories() {
+        return (ArrayList<Boolean>) get(KEY_CATEGORIES);
+    }
+    public void setCategories(ArrayList<Boolean> categories) {
+        put(KEY_CATEGORIES, categories);
+    }
+    public ArrayList<Boolean> getTags() {
+        return (ArrayList<Boolean>) get(KEY_TAGS);
+    }
+    public void setTags(ArrayList<Boolean> categories) {
+        put(KEY_TAGS, categories);
+    }
 }

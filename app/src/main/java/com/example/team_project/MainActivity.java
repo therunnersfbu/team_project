@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -12,6 +13,7 @@ import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;

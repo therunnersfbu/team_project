@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="hyperlinkBlue">#3e91f7</color>
     <color name="green">@android:color/holo_green_dark</color>
+    <color name="tagNotSelected">#adadad</color>
+    <color name="tagSelected">#ff3030</color>
 </resources>
