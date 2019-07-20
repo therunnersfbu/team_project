@@ -77,8 +77,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
-        // TODO on long click user can make posts and when click posts stuff then takes to profile of adventures
+        // TODO when review is made a marker is created with picture and place and description
+        // will get marker information from reviews within the "MyReview" page within the profile
+        // TODO need to figure out how to add multiple markers with just the below code
+        // or figure out way that as soon as something is reviewed a listener is triggered and marker is created
+        // sendalert or some functioning that calls onMapReady that will make the marker in said position
+        /*googleMap.addMarker(new MarkerOptions()
+                .position(get coordinates)
+                .title(get id from api)
+                .snippet(get description/review));
+        googleMap.setOnInfoWindowClickListener(this); */
 
+
+        //example for creating marker
         LatLng MELBOURNE = new LatLng(40.7128, -74.0060);
         Marker melbourne = googleMap.addMarker(new MarkerOptions()
                 .position(MELBOURNE)
@@ -95,7 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         googleMap.setMinZoomPreference(3);
 
         // on long click you can make a marker
-        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        /*googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
                 googleMap.addMarker(new MarkerOptions()
@@ -103,14 +114,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                         .title("Your marker title")
                         .snippet("Your marker snippet"));
             }
-        });
+        });*/
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getContext(), "Info window clicked",
                 Toast.LENGTH_SHORT).show();
-        // TODO send to review page for that location
+        // TODO send to detail review page for that location
     }
 
     private void enableMyLocationIfPermitted() {
@@ -165,23 +176,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             };
 
     private GoogleMap.OnMyLocationClickListener onMyLocationClickListener =
-            new GoogleMap.OnMyLocationClickListener() {
-                @Override
-                public void onMyLocationClick(@NonNull Location location) {
+        new GoogleMap.OnMyLocationClickListener() {
+            @Override
+            public void onMyLocationClick(@NonNull Location location) {
 
-                    googleMap.setMinZoomPreference(12);
+                googleMap.setMinZoomPreference(12);
 
-                    CircleOptions circleOptions = new CircleOptions();
+                CircleOptions circleOptions = new CircleOptions();
 
-                    circleOptions.center(new LatLng(location.getLatitude(),
-                            location.getLongitude()));
+                circleOptions.center(new LatLng(location.getLatitude(),
+                        location.getLongitude()));
 
-                    circleOptions.radius(200);
-                    circleOptions.fillColor(Color.RED);
-                    circleOptions.strokeWidth(6);
+                circleOptions.radius(200);
+                circleOptions.fillColor(Color.RED);
+                circleOptions.strokeWidth(6);
 
-                    googleMap.addCircle(circleOptions);
-                }
-            };
+                googleMap.addCircle(circleOptions);
+            }
+    };
 
 }

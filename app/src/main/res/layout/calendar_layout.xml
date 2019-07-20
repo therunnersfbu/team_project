@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/holo_orange_dark"
+        android:background="@android:color/holo_blue_light"
         android:orientation="horizontal"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@android:color/black"
         android:orientation="horizontal"
         android:paddingTop="4dp"
         android:paddingBottom="4dp">
