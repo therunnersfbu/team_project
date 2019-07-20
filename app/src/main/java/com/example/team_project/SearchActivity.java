@@ -56,12 +56,12 @@ public class SearchActivity extends AppCompatActivity {
 
     private void addTags() {
         names = new ArrayList<>();
-        names.add("ONE");
-        names.add("TWO");
-        names.add("THREE");
-        names.add("FOUR");
-        names.add("FIVE");
-        names.add("SIX");
+        names.add("TAG ONE");
+        names.add("TAG TWO");
+        names.add("TAG THREE");
+        names.add("TAG FOUR");
+        names.add("TAG FIVE");
+        names.add("TAG SIX");
 
     }
 }

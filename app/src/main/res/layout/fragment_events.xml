@@ -151,7 +151,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
-        android:text="drinks"
+        android:text="nightlife"
         app:layout_constraintEnd_toEndOf="@+id/ibtnDrinks"
         app:layout_constraintStart_toStartOf="@+id/ibtnDrinks"
         app:layout_constraintTop_toBottomOf="@+id/ibtnDrinks" />
@@ -272,7 +272,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         android:scrollbars="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
