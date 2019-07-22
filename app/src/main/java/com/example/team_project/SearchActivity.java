@@ -19,6 +19,7 @@ import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
+import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.google.android.gms.common.api.Api;
 
 import org.json.JSONArray;
@@ -38,6 +39,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private CardViewAdapter adapter;
     private ResultsAdapter resultsAdapter;
     private int category;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     private ArrayList<Event> listE;
     private ArrayList<Place> listP;
@@ -213,7 +215,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 results.add(event.getEventName());
                 ids.add(event.getEventId());
             } else {
-                Place place = Place.placeFromJson(array.getJSONObject(i));
+                Place place = Place.placeFromJson(array.getJSONObject(i), false);
                 listP.add(place);
                 dApi.addDestination(place.getLocation());
                 results.add(place.getPlaceName());
