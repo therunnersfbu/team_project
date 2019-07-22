@@ -3,6 +3,7 @@ package com.example.team_project.api;
 import android.util.Log;
 
 import com.example.team_project.MainActivity;
+import com.example.team_project.SearchActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -25,8 +26,10 @@ public class EventsApi {
     private String keywords;
     private String date;
     private JSONArray array;
+    private SearchActivity seAct;
 
-    public EventsApi() {
+    public EventsApi(SearchActivity seAct) {
+        this.seAct = seAct;
         client = new AsyncHttpClient();
         page = 1;
         location = "";
@@ -68,6 +71,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
+                    seAct.apiFinished(array);
 
 //                    for testing
 //                    MainActivity.setArray(array);

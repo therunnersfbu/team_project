@@ -20,6 +20,9 @@ import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.google.android.gms.common.api.Api;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -41,6 +44,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private double latitude;
     private Location location;
     private LocationManager locManager;
+    private boolean isEvent;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -53,6 +57,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         category = getIntent().getIntExtra("category", -1);
         listE = new ArrayList<>();
         listP = new ArrayList<>();
+        results = new ArrayList<>();
         isTags = true;
         setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
@@ -62,7 +67,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvTags.setLayoutManager(myManager);
         rvResults.setLayoutManager(resultsManager);
         addTags();
-        addResults();
+        // addResults();
         adapter = new CardViewAdapter(names, isTags);
         resultsAdapter = new ResultsAdapter(results);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -71,6 +76,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
+
+        // category = 0;
 
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -120,6 +127,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             if(location != null && location.getTime() > Calendar.getInstance().getTimeInMillis() - 2 * 60 * 1000) {
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
+                populateList();
             }
             else {
                 locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
@@ -130,9 +138,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     private void populateList() {
-        boolean isEvent = false;
-        EventsApi eApi = new EventsApi();
-        PlacesApi pApi = new PlacesApi();
+        isEvent = false;
+        EventsApi eApi = new EventsApi(this);
+        PlacesApi pApi = new PlacesApi(this);
         if (category == 7 || category == 8) {
             isEvent = true;
             eApi.setDate("Future");
@@ -179,15 +187,31 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 pApi.setKeywords("park");
                 break;
             default:
-                break;
+                return;
         }
         if (isEvent) {
-
+            eApi.getTopEvents();
+        } else {
+            pApi.getTopPlaces();
         }
     }
 
-    private void addResults() {
-        results = new ArrayList<>();
+    public void apiFinished(JSONArray array) throws JSONException {
+        for (int i = 0; i < array.length(); i++) {
+            if (isEvent) {
+                Event event = Event.eventFromJson(array.getJSONObject(i), false);
+                listE.add(event);
+                results.add(event.getEventName());
+            } else {
+                Place place = Place.placeFromJson(array.getJSONObject(i));
+                listP.add(place);
+                results.add(place.getPlaceName());
+            }
+        }
+        resultsAdapter.notifyDataSetChanged();
+    }
+
+    private void addResults(String name) {
         results.add("One");
         results.add("Two");
         results.add("Three");
@@ -216,6 +240,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             latitude = location.getLatitude();
             Log.d("location", longitude + ", " + latitude);
             locManager.removeUpdates(this);
+            populateList();
         }
     }
 

@@ -3,6 +3,7 @@ package com.example.team_project.api;
 import android.util.Log;
 
 import com.example.team_project.MainActivity;
+import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Place;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -26,8 +27,10 @@ public class PlacesApi {
     private String pageToken;
     private String keywords;
     private JSONArray array;
+    private SearchActivity seAct;
 
-    public PlacesApi() {
+    public PlacesApi(SearchActivity seAct) {
+        this.seAct = seAct;
         client = new AsyncHttpClient();
         location = "";
         radius = "";
@@ -78,6 +81,7 @@ public class PlacesApi {
                             array.put(results.getJSONObject(i));
                         }
                     }
+                    seAct.apiFinished(array);
 
 //                     for testing
 //                     MainActivity.setArray(array);
