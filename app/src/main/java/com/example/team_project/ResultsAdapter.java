@@ -1,5 +1,6 @@
 package com.example.team_project;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,13 +15,18 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
     private final List<String> list;
     private final List<String> distances;
+    private final List<String> ids;
+    private final boolean type;
 
-    public ResultsAdapter(ArrayList<String> list, ArrayList<String> distances) {
+    public ResultsAdapter(ArrayList<String> list, ArrayList<String> distances, ArrayList<String> ids, boolean type) {
         this.list = list;
         this.distances = distances;
+        this.ids = ids;
+        this.type = type;
+
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
         private TextView tvDistance;
@@ -30,6 +36,18 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
             tvName = (TextView) view.findViewById(R.id.tvName);
             tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if(position != RecyclerView.NO_POSITION) {
+                Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                intent.putExtra("eventID", ids.get(position));
+                intent.putExtra("type", type);
+                v.getContext().startActivity(intent);
+            }
         }
     }
 

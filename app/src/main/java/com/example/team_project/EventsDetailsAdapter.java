@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team_project.api.EventsApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Post;
 
@@ -19,9 +20,13 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     private List<Post> posts;
+    private String id;
+    private boolean type;
 
-    public EventsDetailsAdapter(List<Post>posts) {
+    public EventsDetailsAdapter(List<Post> posts, String id, Boolean type) {
         this.posts = posts;
+        this.id = id;
+        this.type = type;
 
     }
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -31,6 +36,10 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         public HeaderViewHolder(@NonNull View view) {
             super(view);
             tvEventName = (TextView) view.findViewById(R.id.tvEventName);
+            tvEventName.setText(id);
+            if(type) {
+                EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
+            }
         }
     }
 

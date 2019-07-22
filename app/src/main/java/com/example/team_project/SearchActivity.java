@@ -47,6 +47,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private LocationManager locManager;
     private boolean isEvent;
     private ArrayList<String> distances;
+    private ArrayList<String> ids;
+    private boolean type;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -61,7 +63,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         listP = new ArrayList<>();
         results = new ArrayList<>();
         distances = new ArrayList<>();
+        ids = new ArrayList<>();
         isTags = true;
+        type = true;
+        if(category == 7 || category == 8) type = false;
         setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
         rvResults = findViewById(R.id.rvResults);
@@ -71,7 +76,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvResults.setLayoutManager(resultsManager);
         addTags();
         adapter = new CardViewAdapter(names, isTags);
-        resultsAdapter = new ResultsAdapter(results, distances);
+        resultsAdapter = new ResultsAdapter(results, distances, ids, type);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvTags.setLayoutManager(horizontalLayout);
@@ -206,11 +211,13 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 listE.add(event);
                 dApi.addDestination(event.getLocation());
                 results.add(event.getEventName());
+                ids.add(event.getEventId());
             } else {
                 Place place = Place.placeFromJson(array.getJSONObject(i));
                 listP.add(place);
                 dApi.addDestination(place.getLocation());
                 results.add(place.getPlaceName());
+                ids.add(place.getPlaceId());
             }
         }
 
