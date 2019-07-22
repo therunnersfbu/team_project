@@ -28,10 +28,10 @@ public class PlacesApi {
     private String pageToken;
     private String keywords;
     private JSONArray array;
-    private Activity act;
+    private Object source;
 
-    public PlacesApi(Activity act) {
-        this.act = act;
+    public PlacesApi(Object source) {
+        this.source = source;
         client = new AsyncHttpClient();
         location = "";
         radius = "";
@@ -82,7 +82,7 @@ public class PlacesApi {
                             array.put(results.getJSONObject(i));
                         }
                     }
-                    ((SearchActivity) act).apiFinished(array);
+                    ((SearchActivity) source).apiFinished(array);
 
 //                     for testing
 //                     MainActivity.setArray(array);
@@ -120,7 +120,7 @@ public class PlacesApi {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // ((DetailsActivity) act).finishedApi(event);
+                // ((Adapter) source).finishedApi(event);
             }
 
             @Override

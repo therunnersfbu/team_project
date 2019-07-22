@@ -29,10 +29,10 @@ public class EventsApi {
     private String keywords;
     private String date;
     private JSONArray array;
-    private Activity act;
+    private Object source;
 
-    public EventsApi(Activity act) {
-        this.act = act;
+    public EventsApi(Object source) {
+        this.source = source;
         client = new AsyncHttpClient();
         page = 1;
         location = "";
@@ -74,7 +74,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
-                    ((SearchActivity) act).apiFinished(array);
+                    ((SearchActivity) source).apiFinished(array);
 
 //                    for testing
 //                    MainActivity.setArray(array);
@@ -109,7 +109,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Event event  = Event.eventFromJson(response, true);
-                    // ((DetailsActivity) act).finishedApi(event);
+                    // ((Adapter) source).finishedApi(event);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
