@@ -104,7 +104,7 @@
         tools:srcCompat="@tools:sample/avatars[5]" />
 
     <ImageButton
-        android:id="@+id/ibtnDrinks"
+        android:id="@+id/ibtnNight"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginStart="23dp"
@@ -121,7 +121,7 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
-        app:layout_constraintStart_toEndOf="@+id/ibtnDrinks"
+        app:layout_constraintStart_toEndOf="@+id/ibtnNight"
         app:layout_constraintTop_toBottomOf="@+id/tvLunch"
         tools:srcCompat="@tools:sample/avatars[6]" />
 
@@ -152,9 +152,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="nightlife"
-        app:layout_constraintEnd_toEndOf="@+id/ibtnDrinks"
-        app:layout_constraintStart_toStartOf="@+id/ibtnDrinks"
-        app:layout_constraintTop_toBottomOf="@+id/ibtnDrinks" />
+        app:layout_constraintEnd_toEndOf="@+id/ibtnNight"
+        app:layout_constraintStart_toStartOf="@+id/ibtnNight"
+        app:layout_constraintTop_toBottomOf="@+id/ibtnNight" />
 
     <TextView
         android:id="@+id/tvShopping"

@@ -11,7 +11,7 @@ public class Event {
     private String address;
     private String startTime;
 
-    public static Event eventFromJson(JSONObject object) throws JSONException {
+    public static Event eventFromJson(JSONObject object, boolean singleEvent) throws JSONException {
         Event event = new Event();
         event.id = object.getString("id");
         double[] loc = new double[2];
@@ -21,9 +21,9 @@ public class Event {
         event.name = object.getString("title");
         event.venueName = object.getString("venue_name");
 //        String postalCode =  object.getString("postal_code").equals("null") ? "" : " " + object.getString("postal_code");
-        event.address = object.getString("venue_address") + ", " + object.getString("city_name");
-//                + ", " + object.getString("region_abbr") + postalCode
-//                + ", " + object.getString("country_abbr");
+        event.address = singleEvent ?
+                object.getString("address") + ", " + object.getString("city") :
+                object.getString("venue_address") + ", " + object.getString("city_name");
         event.startTime = object.getString("start_time");
         return event;
     }
