@@ -2,6 +2,7 @@ package com.example.team_project.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.team_project.CardViewAdapter;
 import com.example.team_project.MainActivity;
@@ -21,6 +23,7 @@ import com.example.team_project.R;
 import com.example.team_project.SearchActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -32,7 +35,9 @@ public class EventsFragment extends Fragment {
     private boolean isTags;
     private ArrayList<String> names;
     private CardViewAdapter adapter;
+    private ArrayList<View> btnCat;
     private Button btnSearchBar;
+    private ImageButton mbtn;
     RecyclerView.LayoutManager myManager;
     LinearLayoutManager horizontalLayout;
 
@@ -60,6 +65,11 @@ public class EventsFragment extends Fragment {
         horizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvSuggested.setLayoutManager(horizontalLayout);
         rvSuggested.setAdapter(adapter);
+        btnCat = new ArrayList<>(Arrays.asList(view.findViewById(R.id.ibtnBreakfast), view.findViewById(R.id.ibtnBrunch),
+                view.findViewById(R.id.ibtnLunch), view.findViewById(R.id.ibtnDinner), view.findViewById(R.id.ibtnSights),
+                view.findViewById(R.id.ibtnNight), view.findViewById(R.id.ibtnShopping), view.findViewById(R.id.ibtnConcerts),
+                view.findViewById(R.id.ibtnPop), view.findViewById(R.id.ibtnBeauty), view.findViewById(R.id.ibtnActive),
+                view.findViewById(R.id.ibtnParks)));
         btnSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +77,19 @@ public class EventsFragment extends Fragment {
                 getContext().startActivity(intent);
             }
         });
+        for(int i = 0; i<12; i++)
+        {
+            final int index = i;
+            mbtn = (ImageButton) btnCat.get(i);
+            mbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), SearchActivity.class);
+                    intent.putExtra("categoty", index);
+                    getContext().startActivity(intent);
+                }
+            });
+        }
 
 
     }
