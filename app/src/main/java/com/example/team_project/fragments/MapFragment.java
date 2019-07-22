@@ -55,6 +55,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         unbinder = ButterKnife.bind(this, view);
         return view;
 
+        // TODO idea
+        // when the view is created this accesses the reviewed content on the profile and
+        // then iterates through each item and creates a marker for it
     }
 
     @Override
@@ -88,6 +91,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 .snippet(get description/review));
         googleMap.setOnInfoWindowClickListener(this); */
 
+        // TODO if we're utilizing an array list
+        //for (int x = 0; x < jsonarray.length(); x++) {
+        // Marker uniquename = mMap.addMarker(new MarkerOptions().position(new LatLng(lat,long)).title("Marker " + String.valueOf(x))));
 
         //example for creating marker
         LatLng MELBOURNE = new LatLng(40.7128, -74.0060);

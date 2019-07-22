@@ -51,6 +51,10 @@ public class CustomCalendarView extends LinearLayout {
     List<Date> dates = new ArrayList<>();
     List<Events> eventsList = new ArrayList<>();
     DBOpenHelper dbOpenHelper;
+    RecyclerView rvCal;
+    ArrayList<Event> eventsCal;
+    EventRecyclerAdapter calAdapter;
+
 
     public CustomCalendarView(Context context) {
         super(context);
@@ -83,11 +87,15 @@ public class CustomCalendarView extends LinearLayout {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             String date = eventDateFormat.format(dates.get(position));
 
+
+
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setCancelable(true);
+
+
             View showView = LayoutInflater.from(parent.getContext()).inflate(R.layout.show_events_layout, null);
-            RecyclerView recyclerView = showView.findViewById(R.id.eventsRV);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(showView.getContext());
+            RecyclerView recyclerView = findViewById(R.id.rvCal);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
             EventRecyclerAdapter eventRecyclerAdapter = new EventRecyclerAdapter(showView.getContext(),
@@ -101,7 +109,7 @@ public class CustomCalendarView extends LinearLayout {
 
             }
         });
-        // TODO in function that would be called as soon as the plus button is clicked in a event
+        // TODO, in function that would be called as soon as the plus button is clicked in a event
         // may need different placement
             /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setCancelable(true);
@@ -119,7 +127,7 @@ public class CustomCalendarView extends LinearLayout {
             alertDialog.show();*/
     }
 
-    // TODO go over
+
     private ArrayList<Events> CollectEventByDate(String date) {
         ArrayList<Events> arrayList = new ArrayList<>();
         dbOpenHelper = new DBOpenHelper(context);
