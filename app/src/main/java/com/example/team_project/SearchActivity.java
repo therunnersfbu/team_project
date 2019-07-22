@@ -207,7 +207,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 dApi.addDestination(event.getLocation());
                 results.add(event.getEventName());
             } else {
-                Place place = Place.placeFromJson(array.getJSONObject(i));
+                Place place = Place.placeFromJson(array.getJSONObject(i), false);
                 listP.add(place);
                 dApi.addDestination(place.getLocation());
                 results.add(place.getPlaceName());
