@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
@@ -45,6 +46,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private Location location;
     private LocationManager locManager;
     private boolean isEvent;
+    private ArrayList<String> distances;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -58,6 +60,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         listE = new ArrayList<>();
         listP = new ArrayList<>();
         results = new ArrayList<>();
+        distances = new ArrayList<>();
         isTags = true;
         setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
@@ -67,17 +70,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvTags.setLayoutManager(myManager);
         rvResults.setLayoutManager(resultsManager);
         addTags();
-        // addResults();
         adapter = new CardViewAdapter(names, isTags);
-        resultsAdapter = new ResultsAdapter(results);
+        resultsAdapter = new ResultsAdapter(results, distances);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvTags.setLayoutManager(horizontalLayout);
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
-
-        // category = 0;
 
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -197,17 +197,28 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     public void apiFinished(JSONArray array) throws JSONException {
+        DirectionsApi dApi = new DirectionsApi(this);
+        dApi.setOrigin(latitude, longitude);
+
         for (int i = 0; i < array.length(); i++) {
             if (isEvent) {
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
                 listE.add(event);
+                dApi.addDestination(event.getLocation());
                 results.add(event.getEventName());
             } else {
                 Place place = Place.placeFromJson(array.getJSONObject(i));
                 listP.add(place);
+                dApi.addDestination(place.getLocation());
                 results.add(place.getPlaceName());
             }
         }
+
+        dApi.getDistance();
+    }
+
+    public void getDistances(ArrayList<String> result) {
+        distances.addAll(result);
         resultsAdapter.notifyDataSetChanged();
     }
 

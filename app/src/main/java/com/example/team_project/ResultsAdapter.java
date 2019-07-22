@@ -13,19 +13,23 @@ import java.util.List;
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
 
     private final List<String> list;
+    private final List<String> distances;
 
-    public ResultsAdapter(ArrayList<String> list) {
+    public ResultsAdapter(ArrayList<String> list, ArrayList<String> distances) {
         this.list = list;
+        this.distances = distances;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvName;
+        private TextView tvName;
+        private TextView tvDistance;
 
         public ViewHolder(@NonNull View view) {
             super(view);
 
             tvName = (TextView) view.findViewById(R.id.tvName);
+            tvDistance = (TextView) view.findViewById(R.id.tvDistance);
         }
     }
 
@@ -39,7 +43,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvName.setText(list.get(position));
-
+        holder.tvDistance.setText(distances.get(position));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.team_project.api;
 
 import android.util.Log;
 
+import com.example.team_project.SearchActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -9,28 +10,49 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import cz.msebera.android.httpclient.Header;
 
 public class DirectionsApi {
-    private static final String API_BASE_URL = "https://maps.googleapis.com/maps/api/directions/json?";
+    private static final String API_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
     private static final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
 
-    private static AsyncHttpClient client;
+    private AsyncHttpClient client;
+    private String origin;
+    private String destinations;
+    private ArrayList<String> distances;
+    private SearchActivity seAct;
 
-    public static void getDistance(double[] origin, double[] destination) {
+    public DirectionsApi(SearchActivity seAct) {
         client = new AsyncHttpClient();
+        destinations = "&destinations=";
+        distances = new ArrayList<>();
+        this.seAct = seAct;
+    }
 
-        String locations = "&origin=" + origin[0] + "," + origin[1] + "&destination="
-                + destination[0] + "," + destination[1];
-        String url = API_BASE_URL + "key=" + API_KEY + locations;
+    public void setOrigin(double lat, double lng) {
+        origin = "&origins=" + lat + "," + lng;
+    }
+
+    public void addDestination(double[] destination) {
+        destinations += destination[0] + "," + destination[1] + "|";
+    }
+
+    public void getDistance() {
+        String url = API_BASE_URL + "key=" + API_KEY + "&units=imperial" +
+                origin + destinations.substring(0, destinations.length() - 1);
 
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    String distance = response.getJSONArray("routes").getJSONObject(0)
-                            .getJSONArray("legs").getJSONObject(0).getJSONObject("distance")
-                            .getString("text");
+                    JSONArray array = response.getJSONArray("rows").getJSONObject(0).getJSONArray("elements");
+                    for (int i = 0; i < array.length(); i++) {
+                        distances.add(array.getJSONObject(i).getJSONObject("distance").getString("text"));
+                    }
+
+                    seAct.getDistances(distances);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

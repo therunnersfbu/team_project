@@ -11,6 +11,7 @@ public class Place {
     private double[] location;
     private String name;
     private String address;
+    private String distance;
 
     // data for detail view
     private String phoneNumber;
@@ -87,5 +88,13 @@ public class Place {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public String getDistance() {
+        return distance;
     }
 }
