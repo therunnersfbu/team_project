@@ -85,7 +85,7 @@ public class EventsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), SearchActivity.class);
-                    intent.putExtra("categoty", index);
+                    intent.putExtra("category", index);
                     getContext().startActivity(intent);
                 }
             });
