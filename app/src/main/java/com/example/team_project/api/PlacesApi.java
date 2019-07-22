@@ -24,6 +24,7 @@ public class PlacesApi {
     private String location;
     private String radius;
     private String pageToken;
+    private String keywords;
     private JSONArray array;
 
     public PlacesApi() {
@@ -47,12 +48,16 @@ public class PlacesApi {
         getPlaces();
     }
 
+    public void setKeywords(String keywords) {
+        this.keywords = "&keyword=" + keywords;
+    }
+
     public void getMorePlaces() {
         getPlaces();
     }
 
     private void getPlaces() {
-        String url = API_BASE_URL + "key=" + API_KEY + location + radius + pageToken;
+        String url = API_BASE_URL + "key=" + API_KEY + location + radius + pageToken + keywords;
 
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
@@ -121,13 +126,13 @@ public class PlacesApi {
 
                 try {
                     JSONArray arrayTemp = details.getJSONObject("opening_hours").getJSONArray("weekday_text");
-                    ArrayList<String> list = new ArrayList<String>();
+                    ArrayList<String> list = new ArrayList<>();
                     for(int i = 0; i < arrayTemp.length(); i++){
                         list.add(arrayTemp.getString(i));
                     }
                     place.setOpenHours(list);
                 } catch (JSONException e) {
-                    ArrayList<String> list = new ArrayList<String>();
+                    ArrayList<String> list = new ArrayList<>();
                     list.add("Not available!");
                     place.setOpenHours(list);
                 }

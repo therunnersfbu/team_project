@@ -9,10 +9,14 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URL;
+
 import cz.msebera.android.httpclient.Header;
 
 public class EventsApi {
     private final  String API_BASE_URL = "http://api.eventful.com/json/events/search?";
+    private final String API_SINGLE_URL = "http://api.eventful.com/json/events/get?";
     private final  String  API_KEY = "sM8TM8LQGWR9Zkwr";
 
     private AsyncHttpClient client;
@@ -32,6 +36,10 @@ public class EventsApi {
 
     public void setLocation(String location) {
         this.location = "&location=" + location;
+    }
+
+    public void setLocation(double lat, double lng, int radius) {
+        this.location = "&location=" + lat + "," + lng + "&within=" + radius;
     }
 
     public void setKeywords(String keywords) {
@@ -82,6 +90,33 @@ public class EventsApi {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 throwable.printStackTrace();;
+            }
+        });
+    }
+
+    public void getSingleEvent(String id) {
+        String url = API_SINGLE_URL + "app_key=" + API_KEY + "&id=" + id;
+
+        client.get(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("EventsApi", responseString);
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                throwable.printStackTrace();
             }
         });
     }
