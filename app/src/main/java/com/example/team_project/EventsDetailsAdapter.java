@@ -2,17 +2,25 @@ package com.example.team_project;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.Post;
+import com.example.team_project.model.User;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // adapter for the item layouts used on the events details page. Includes header and item views that inflate in a RecyclerView
@@ -46,6 +54,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         public TextView tvNumber;
         public TextView tvPrice;
         public TextView tvHours;
+        public ImageView ivAdd;
 
 
         public HeaderViewHolder(@NonNull View view) {
@@ -58,6 +67,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvNumber = (TextView) view.findViewById(R.id.tvNumber);
             tvPrice = (TextView) view.findViewById(R.id.tvPrice);
             tvHours = (TextView) view.findViewById(R.id.tvHours);
+            ivAdd = (ImageView) view.findViewById(R.id.ivAdd);
 
             if(!type) {
                 EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
@@ -135,12 +145,36 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return posts.size();
     }
 
-    public void finishedApi(Event event) {
+    public void finishedApi(final Event event) {
         test.tvEventName.setText(event.getEventName());
         test.tvDistance.setText(distance);
         test.tvAddress.setText(event.getAddress());
         test.tvDate.setText(event.getStartTime());
         test.tvVenue.setText(event.getVenueName());
+        test.ivAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser user = ParseUser.getCurrentUser();
+                ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                String eventToAdd = event.getStartTime().substring(0, 10) + " " + event.getEventName();
+                if (added.contains(eventToAdd)) {
+                    Log.d(TAG, "already there");
+                } else {
+                    added.add(eventToAdd);
+                    user.put(User.KEY_ADDED_EVENTS, added);
+                    user.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                Log.d(TAG, "event added");
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     public void finishedApiPlace(Place place) {
