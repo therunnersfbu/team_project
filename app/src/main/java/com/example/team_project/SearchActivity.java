@@ -49,6 +49,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private LocationManager locManager;
     private boolean isEvent;
     private ArrayList<String> distances;
+    EventsApi eApi;
+    PlacesApi pApi;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -64,6 +66,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         results = new ArrayList<>();
         distances = new ArrayList<>();
         isTags = true;
+        eApi = new EventsApi(this);
+        pApi = new PlacesApi(this);
         setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
         rvResults = findViewById(R.id.rvResults);
@@ -75,11 +79,25 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         adapter = new CardViewAdapter(names, isTags);
         resultsAdapter = new ResultsAdapter(results, distances);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager llmForScrolling = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);;
+        verticalLayout = llmForScrolling;
         rvTags.setLayoutManager(horizontalLayout);
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(llmForScrolling) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (isEvent) {
+                    eApi.getMoreEvents();
+                } else {
+                    pApi.getMorePlaces();
+                }
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvResults.addOnScrollListener(scrollListener);
 
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -141,8 +159,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     private void populateList() {
         isEvent = false;
-        EventsApi eApi = new EventsApi(this);
-        PlacesApi pApi = new PlacesApi(this);
         if (category == 7 || category == 8) {
             isEvent = true;
             eApi.setDate("Future");
