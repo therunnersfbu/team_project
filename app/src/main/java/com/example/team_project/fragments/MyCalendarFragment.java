@@ -14,7 +14,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.team_project.CalendarFiles.CalendarActivity;
@@ -23,6 +25,7 @@ import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +39,9 @@ public class MyCalendarFragment extends Fragment {
     private Unbinder unbinder;
     CompactCalendarView compactCalendar;
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMM-yyyy", Locale.ENGLISH);
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
+    Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+    TextView CurrentDate;
 
 
     @Nullable
@@ -52,15 +57,19 @@ public class MyCalendarFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        CurrentDate = view.findViewById(R.id.current_Date);
+        String currentDate = dateFormat.format(calendar.getTime());
+        CurrentDate.setText(currentDate);
+
         final ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setTitle(null);
 
+
         compactCalendar = view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
-        // set as event for teach
-        // TODO get date and conver to milliseconds then create new event with random color
+        // TODO get date and convert to milliseconds then create new event with random color
         //iterate through list with event name begin name
         Event ev1 = new Event(Color.BLUE, 1563865200000L, "hey nott");
         Event ev2 = new Event(Color.BLACK, 1563865200000L, "hey nott");
@@ -76,19 +85,12 @@ public class MyCalendarFragment extends Fragment {
                 List<Event> events = compactCalendar.getEvents(dateClicked);
                 // get the exact name and id of the event
                 Toast.makeText(context, "teatt" + events, Toast.LENGTH_SHORT).show();
-                // Log.d("MainActivity", "Events: " + events);
-
-                /*if (dateClicked.toString().compareTo("Tue Jul 23 12:00:00 AST 2019") == 0) {
-                    Toast.makeText(context, "teatt", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "noooo", Toast.LENGTH_SHORT).show();
-                }*/
+                // TODO put events in recycler view at bottom of the page
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                actionBar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
-
+                CurrentDate.setText(dateFormat.format(firstDayOfNewMonth));
             }
         });
 

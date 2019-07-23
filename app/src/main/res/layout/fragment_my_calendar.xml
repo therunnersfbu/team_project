@@ -12,37 +12,22 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_marginBottom="8dp"
-       android:background="@android:color/holo_blue_light"
+       android:background="@android:color/holo_purple"
        android:orientation="horizontal"
        android:paddingTop="8dp"
        android:paddingBottom="8dp">
 
-      <ImageButton
-          android:id="@+id/previousBtn"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:background="@mipmap/back"
-          android:layout_margin="10dp" />
-
       <TextView
+          android:id="@+id/current_Date"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_weight="3"
+          android:fontFamily="@font/atma_semibold"
           android:gravity="center"
-          android:layout_marginTop="10dp"
           android:text="CurrentDate"
-          android:id="@+id/current_Date"
           android:textColor="@android:color/white"
-          android:textStyle="bold"
           android:textSize="27sp"
-          android:layout_weight="3" />
-
-      <ImageButton
-          android:id="@+id/nextBtn"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
-          android:background="@mipmap/back"
-          android:layout_margin="10dp"
-          android:rotation="180"/>
+          android:textStyle="bold" />
 
    </LinearLayout>
 
@@ -55,11 +40,16 @@
        android:layout_height="250dp"
        app:compactCalendarTargetHeight="250dp"
        app:compactCalendarTextSize="12sp"
-       app:compactCalendarBackgroundColor="#ffe95451"
-       app:compactCalendarTextColor="#fff"
+       app:compactCalendarBackgroundColor="#FFFFFF"
+       app:compactCalendarTextColor="#000"
        app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
        app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
        app:compactCalendarMultiEventIndicatorColor="#fff"
        />
+
+   <android.support.v7.widget.RecyclerView
+       android:id="@+id/rvCal"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" />
 
 </LinearLayout>
