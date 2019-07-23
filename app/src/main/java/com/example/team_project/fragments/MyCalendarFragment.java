@@ -60,7 +60,9 @@ public class MyCalendarFragment extends Fragment {
     Event events;
     CalendarAdapter calendarAdapter;
     //public static long currentTimeMillis();
-    long epochTime;
+    Long epochTime;
+    ParseUser user = ParseUser.getCurrentUser();
+    ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
 
     @Nullable
@@ -89,13 +91,16 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
 
-        //get the array list of events
-        // get the date
-        // make x each event date in the list
-        /* for (int x = 0; x < jsonarray.length(); x++) {
-            Event ev = new Event(Color.BLACK, mymultisecondconversion(arraylistdate));
-            compactCalendar.addEvent(ev);
-        } */
+        // put circle on calendar for each event
+         for (int x = 0; x < addedEvents.size(); x++) {
+             Event ev = null;
+             try {
+                 ev = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 9)));
+             } catch (ParseException e) {
+                 e.printStackTrace();
+             }
+             compactCalendar.addEvent(ev);
+        }
 
         //example on adding an event
         Event ev1 = new Event(Color.BLUE, 1564167600000L);
@@ -119,17 +124,14 @@ public class MyCalendarFragment extends Fragment {
                 ArrayList<String> theDaysEvents = new ArrayList<>();
                 Context context = getApplicationContext();
 
-                ParseUser user = ParseUser.getCurrentUser();
-                ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-
                  Log.d("MyCalendarFragment", "Array List:" + addedEvents);
 
-                String numberdate = simpleDateFormat.format(dateClicked);
-                Log.d("MyCalendarFragment", "new date:" + numberdate);
+                String numberDate = simpleDateFormat.format(dateClicked);
+                Log.d("MyCalendarFragment", "new date:" + numberDate);
 
 
                 for (int x = 0; x < addedEvents.size(); x++) {
-                    if (numberdate.equals(addedEvents.get(x).substring(0, 9))) {
+                    if (numberDate.equals(addedEvents.get(x).substring(0, 9))) {
                         String eventName = addedEvents.get(x).substring(11);
                         Log.d("MyCalendarFragment", "Same Day event:" +  eventName);
                         //make list with only events on clicked date
@@ -161,9 +163,11 @@ public class MyCalendarFragment extends Fragment {
         unbinder.unbind();
     }
 
-        /*public long mymillisecondsconversion (String date)
-        {
-            epochTime = date.currentTimeMillis().toString() + "L";
+        public long myMilliSecConvert (String date) throws ParseException {
+            // convert string to date
+            Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            //convert date to Milliseconds
+            epochTime = milliDate.getTime();
             return epochTime;
-        }*/
+        }
 }
