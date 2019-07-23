@@ -2,6 +2,7 @@ package com.example.team_project.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -60,7 +61,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
@@ -107,7 +107,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getContext(), "Info window clicked",
                 Toast.LENGTH_SHORT).show();
-        // TODO send to detail review page for that location
     }
 
     private void enableMyLocationIfPermitted() {
