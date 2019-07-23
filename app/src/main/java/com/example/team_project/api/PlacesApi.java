@@ -3,6 +3,7 @@ package com.example.team_project.api;
 import android.app.Activity;
 import android.util.Log;
 
+import com.example.team_project.EventsDetailsAdapter;
 import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Place;
@@ -117,10 +118,10 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
+                    ((EventsDetailsAdapter) source).finishedApiPlace(place);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                // ((Adapter) source).finishedApi(event);
             }
 
             @Override

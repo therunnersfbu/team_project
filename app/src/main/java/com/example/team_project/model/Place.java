@@ -82,11 +82,25 @@ public class Place {
     }
 
     public ArrayList<String> getOpenHours() {
+        if(openHours.isEmpty())
+        {
+            openHours.add(" ");
+        }
         return openHours;
     }
 
-    public int getPrice() {
-        return price;
+    public String getPrice() {
+        String pricetag = "";
+        if (price>=0)
+        {
+            for(int i = 0; i<=price; i++)
+            {
+                pricetag = pricetag+"$";
+            }
+            return pricetag;
+        }
+        else
+        return "no price information";
     }
 
     public void setPlaceId(String id) {
