@@ -51,6 +51,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private ArrayList<String> distances;
     EventsApi eApi;
     PlacesApi pApi;
+    private ArrayList<String> ids;
+    private boolean type;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -65,9 +67,12 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         listP = new ArrayList<>();
         results = new ArrayList<>();
         distances = new ArrayList<>();
+        ids = new ArrayList<>();
         isTags = true;
         eApi = new EventsApi(this);
         pApi = new PlacesApi(this);
+        type = true;
+        if(category == 7 || category == 8) type = false;
         setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
         rvResults = findViewById(R.id.rvResults);
@@ -77,7 +82,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvResults.setLayoutManager(resultsManager);
         addTags();
         adapter = new CardViewAdapter(names, isTags);
-        resultsAdapter = new ResultsAdapter(results, distances);
+        resultsAdapter = new ResultsAdapter(results, distances, ids, type);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager llmForScrolling = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);;
         verticalLayout = llmForScrolling;
@@ -224,11 +229,13 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 listE.add(event);
                 dApi.addDestination(event.getLocation());
                 results.add(event.getEventName());
+                ids.add(event.getEventId());
             } else {
                 Place place = Place.placeFromJson(array.getJSONObject(i), false);
                 listP.add(place);
                 dApi.addDestination(place.getLocation());
                 results.add(place.getPlaceName());
+                ids.add(place.getPlaceId());
             }
         }
 

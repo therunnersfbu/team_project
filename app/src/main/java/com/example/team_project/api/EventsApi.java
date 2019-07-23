@@ -2,8 +2,10 @@ package com.example.team_project.api;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.Adapter;
 
 import com.example.team_project.DetailsActivity;
+import com.example.team_project.EventsDetailsAdapter;
 import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Event;
@@ -109,7 +111,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Event event  = Event.eventFromJson(response, true);
-                    // ((Adapter) source).finishedApi(event);
+                    ((EventsDetailsAdapter) source).finishedApi(event);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
