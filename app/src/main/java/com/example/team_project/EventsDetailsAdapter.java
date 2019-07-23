@@ -1,11 +1,14 @@
 package com.example.team_project;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 // adapter for the item layouts used on the events details page. Includes header and item views that inflate in a RecyclerView
@@ -33,16 +37,17 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private String id;
     private boolean type;
     private String distance;
-
+    private DatePickerDialog picker;
     private HeaderViewHolder test;
     private ItemViewHolder testP;
+    private Context context;
 
-    public EventsDetailsAdapter(List<Post> posts, String id, Boolean type, String distance) {
+    public EventsDetailsAdapter(List<Post> posts, String id, Boolean type, String distance, Context context) {
         this.posts = posts;
         this.id = id;
         this.type = type;
         this.distance = distance;
-
+        this.context = context;
     }
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
@@ -177,12 +182,54 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
     }
 
-    public void finishedApiPlace(Place place) {
+    public void finishedApiPlace(final Place place) {
         test.tvEventName.setText(place.getPlaceName());
         test.tvDistance.setText(distance);
         test.tvAddress.setText(place.getAddress());
         test.tvHours.setText(place.getOpenHours().get(0));
         test.tvNumber.setText(place.getPhoneNumber());
         test.tvPrice.setText(place.getPrice());
+        test.ivAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+                picker = new DatePickerDialog(context,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                ParseUser user = ParseUser.getCurrentUser();
+                                ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                                String placeToAdd = year + "-" +
+                                        ((monthOfYear + 1) < 10 ? "0" + (monthOfYear + 1) : (monthOfYear + 1))
+                                        + "-" +
+                                        (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth)
+                                        + " " + place.getPlaceName();
+                                Log.d(TAG, placeToAdd);
+                                if (added.contains(placeToAdd)) {
+                                    Log.d(TAG, "already there");
+                                } else {
+                                    added.add(placeToAdd);
+                                    user.put(User.KEY_ADDED_EVENTS, added);
+                                    user.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                Log.d(TAG, "place added");
+                                            } else {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }, year, month, day);
+                picker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                picker.show();
+            }
+        });
     }
 }
