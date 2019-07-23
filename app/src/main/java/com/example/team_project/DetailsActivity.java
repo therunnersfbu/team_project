@@ -16,14 +16,17 @@ public class DetailsActivity extends AppCompatActivity {
     private String id;
     private boolean type;
     private String distance;
+    private static final String EVENT_ID = "eventID";
+    private static final String TYPE = "type";
+    private static final String DISTANCE = "distance";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        id = getIntent().getStringExtra("eventID");
-        type = getIntent().getBooleanExtra("type", true);
-        distance = getIntent().getStringExtra("distance");
+        id = getIntent().getStringExtra(EVENT_ID);
+        type = getIntent().getBooleanExtra(TYPE, true);
+        distance = getIntent().getStringExtra(DISTANCE);
         rvEventsDetail = (RecyclerView)findViewById(R.id.rvEventsDetail);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
