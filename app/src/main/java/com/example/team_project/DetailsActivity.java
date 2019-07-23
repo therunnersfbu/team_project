@@ -15,6 +15,7 @@ public class DetailsActivity extends AppCompatActivity {
     private RecyclerView rvEventsDetail;
     private String id;
     private boolean type;
+    private String distance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +23,11 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         id = getIntent().getStringExtra("eventID");
         type = getIntent().getBooleanExtra("type", true);
+        distance = getIntent().getStringExtra("distance");
         rvEventsDetail = (RecyclerView)findViewById(R.id.rvEventsDetail);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
-        EventsDetailsAdapter adapter = new EventsDetailsAdapter(getData(), id, type);
+        EventsDetailsAdapter adapter = new EventsDetailsAdapter(getData(), id, type, distance);
         rvEventsDetail.setAdapter(adapter);
     }
 

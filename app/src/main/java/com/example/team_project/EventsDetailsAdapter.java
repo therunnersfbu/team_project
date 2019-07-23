@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.team_project.api.EventsApi;
+import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Post;
 
@@ -22,23 +23,38 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private List<Post> posts;
     private String id;
     private boolean type;
+    private String distance;
 
-    public EventsDetailsAdapter(List<Post> posts, String id, Boolean type) {
+    private HeaderViewHolder test;
+
+    public EventsDetailsAdapter(List<Post> posts, String id, Boolean type, String distance) {
         this.posts = posts;
         this.id = id;
         this.type = type;
+        this.distance = distance;
 
     }
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         public TextView tvEventName;
+        public TextView tvDistance;
+        public TextView tvVenue;
+        public TextView tvDate;
+        public TextView tvAddress;
 
         public HeaderViewHolder(@NonNull View view) {
             super(view);
             tvEventName = (TextView) view.findViewById(R.id.tvEventName);
-            tvEventName.setText(id);
-            if(type) {
+            tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+            tvVenue = (TextView) view.findViewById(R.id.tvVenue);
+            tvDate = (TextView) view.findViewById(R.id.tvDate);
+            tvAddress = (TextView) view.findViewById(R.id.tvAddress);
+            if(!type) {
                 EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
+                eApi.getSingleEvent(id);
+            }
+            else {
+                PlacesApi pApi = new PlacesApi(EventsDetailsAdapter.this);
             }
         }
     }
@@ -58,7 +74,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == TYPE_HEADER) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header_details, parent, false);
-            return new HeaderViewHolder(layoutView);
+            test = new HeaderViewHolder(layoutView);
+            return test;
         } else if (viewType == TYPE_ITEM) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment_preview, parent, false);
             return new ItemViewHolder(layoutView);
@@ -100,5 +117,13 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+    public void finishedApi(Event event) {
+        test.tvEventName.setText(event.getEventName());
+        test.tvDistance.setText(distance);
+        test.tvAddress.setText(event.getAddress());
+        test.tvDate.setText(event.getStartTime());
+        test.tvVenue.setText(event.getVenueName());
     }
 }

@@ -46,6 +46,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
                 Intent intent = new Intent(v.getContext(), DetailsActivity.class);
                 intent.putExtra("eventID", ids.get(position));
                 intent.putExtra("type", type);
+                intent.putExtra("distance", distances.get(position));
                 v.getContext().startActivity(intent);
             }
         }
