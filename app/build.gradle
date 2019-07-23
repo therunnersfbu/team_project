@@ -51,4 +51,6 @@ dependencies {
 
     // a
     implementation "com.nex3z:flow-layout:1.2.4"
+
+    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
 }
