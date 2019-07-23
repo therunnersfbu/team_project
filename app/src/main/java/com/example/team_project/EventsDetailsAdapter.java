@@ -51,8 +51,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(view);
             tvEventName = (TextView) view.findViewById(R.id.tvEventName);
             tvDistance = (TextView) view.findViewById(R.id.tvDistance);
-            //tvVenue = (TextView) view.findViewById(R.id.tvVenue);
-            //tvDate = (TextView) view.findViewById(R.id.tvDate);
+            tvVenue = (TextView) view.findViewById(R.id.tvVenue);
+            tvDate = (TextView) view.findViewById(R.id.tvDate);
             tvAddress = (TextView) view.findViewById(R.id.tvAddress);
             tvNumber = (TextView) view.findViewById(R.id.tvNumber);
             tvPrice = (TextView) view.findViewById(R.id.tvPrice);
