@@ -1,24 +1,19 @@
 package com.example.team_project.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.team_project.CardViewAdapter;
-import com.example.team_project.MainActivity;
+import com.example.team_project.HorizontalScrollAdapter;
 import com.example.team_project.R;
 import com.example.team_project.SearchActivity;
 
@@ -34,7 +29,7 @@ public class EventsFragment extends Fragment {
     private RecyclerView rvSuggested;
     private boolean isTags;
     private ArrayList<String> names;
-    private CardViewAdapter adapter;
+    private HorizontalScrollAdapter adapter;
     private ArrayList<View> btnCat;
     private Button btnSearchBar;
     private ImageButton mbtn;
@@ -61,7 +56,7 @@ public class EventsFragment extends Fragment {
         myManager = new LinearLayoutManager(getContext());
         rvSuggested.setLayoutManager(myManager);
         addItems();
-        adapter = new CardViewAdapter(names, isTags);
+        adapter = new HorizontalScrollAdapter(names, isTags);
         horizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvSuggested.setLayoutManager(horizontalLayout);
         rvSuggested.setAdapter(adapter);

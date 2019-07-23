@@ -20,7 +20,6 @@ import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
-import com.google.android.gms.common.api.Api;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +27,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+// Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity implements LocationListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -36,13 +36,13 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private boolean isTags;
     private ArrayList<String> names;
     private ArrayList<String> results;
-    private CardViewAdapter adapter;
+    private HorizontalScrollAdapter adapter;
     private ResultsAdapter resultsAdapter;
     private int category;
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    private ArrayList<Event> listE;
-    private ArrayList<Place> listP;
+    private ArrayList<Event> mEventList;
+    private ArrayList<Place> mPlaceList;
     private double longitude;
     private double latitude;
     private Location location;
@@ -52,7 +52,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     EventsApi eApi;
     PlacesApi pApi;
     private ArrayList<String> ids;
-    private boolean type;
+    private boolean isPlace;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -62,22 +62,19 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeVars();
         category = getIntent().getIntExtra("category", -1);
-        listE = new ArrayList<>();
-        listP = new ArrayList<>();
-        results = new ArrayList<>();
-        distances = new ArrayList<>();
-        ids = new ArrayList<>();
         isTags = true;
         eApi = new EventsApi(this);
         pApi = new PlacesApi(this);
         type = true;
         if(category == 7 || category == 8) type = false;
+        isPlace = true;
+        // set type to either place or event
+        if(category == 7 || category == 8) isPlace = false;
         setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
         rvResults = findViewById(R.id.rvResults);
-        myManager = new LinearLayoutManager(this);
-        resultsManager = new LinearLayoutManager(this);
         rvTags.setLayoutManager(myManager);
         rvResults.setLayoutManager(resultsManager);
         addTags();
@@ -86,6 +83,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager llmForScrolling = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);;
         verticalLayout = llmForScrolling;
+        adapter = new HorizontalScrollAdapter(names, isTags);
+        resultsAdapter = new ResultsAdapter(results, distances, ids, isPlace);
         rvTags.setLayoutManager(horizontalLayout);
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
@@ -226,13 +225,13 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         for (int i = 0; i < array.length(); i++) {
             if (isEvent) {
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
-                listE.add(event);
+                mEventList.add(event);
                 dApi.addDestination(event.getLocation());
                 results.add(event.getEventName());
                 ids.add(event.getEventId());
             } else {
                 Place place = Place.placeFromJson(array.getJSONObject(i), false);
-                listP.add(place);
+                mPlaceList.add(place);
                 dApi.addDestination(place.getLocation());
                 results.add(place.getPlaceName());
                 ids.add(place.getPlaceId());
@@ -265,6 +264,19 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         names.add("TAG FIVE");
         names.add("TAG SIX");
 
+    }
+
+    public void initializeVars()
+    {
+        mEventList = new ArrayList<>();
+        mPlaceList = new ArrayList<>();
+        results = new ArrayList<>();
+        distances = new ArrayList<>();
+        ids = new ArrayList<>();
+        myManager = new LinearLayoutManager(this);
+        resultsManager = new LinearLayoutManager(this);
+        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
     }
 
     @Override

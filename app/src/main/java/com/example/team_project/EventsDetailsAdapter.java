@@ -15,6 +15,7 @@ import com.example.team_project.model.Post;
 
 import java.util.List;
 
+// adapter for the item layouts used on the events details page. Includes header and item views that inflate in a RecyclerView
 public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = EventsDetailsAdapter.class.getSimpleName();
@@ -118,14 +119,14 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if (isPositionHeader(position)) {
+        if (isHeader(position)) {
             return TYPE_HEADER;
         } else {
             return TYPE_ITEM;
         }
     }
 
-    private boolean isPositionHeader(int position) {
+    private boolean isHeader(int position) {
         return position == 0;
     }
 
