@@ -1,9 +1,14 @@
 package com.example.team_project.api;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Adapter;
 
+import com.example.team_project.DetailsActivity;
+import com.example.team_project.EventsDetailsAdapter;
 import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
+import com.example.team_project.model.Event;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -26,10 +31,10 @@ public class EventsApi {
     private String keywords;
     private String date;
     private JSONArray array;
-    private SearchActivity seAct;
+    private Object source;
 
-    public EventsApi(SearchActivity seAct) {
-        this.seAct = seAct;
+    public EventsApi(Object source) {
+        this.source = source;
         client = new AsyncHttpClient();
         page = 1;
         location = "";
@@ -71,7 +76,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
-                    seAct.apiFinished(array);
+                    ((SearchActivity) source).apiFinished(array);
 
 //                    for testing
 //                    MainActivity.setArray(array);
@@ -104,7 +109,12 @@ public class EventsApi {
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
+                try {
+                    Event event  = Event.eventFromJson(response, true);
+                    ((EventsDetailsAdapter) source).finishedApi(event);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

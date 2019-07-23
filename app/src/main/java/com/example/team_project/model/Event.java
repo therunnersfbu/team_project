@@ -10,6 +10,7 @@ public class Event {
     private String venueName;
     private String address;
     private String startTime;
+    private String distance;
 
     public static Event eventFromJson(JSONObject object, boolean singleEvent) throws JSONException {
         Event event = new Event();
@@ -74,5 +75,13 @@ public class Event {
 
     public String getStartTime() {
         return startTime;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public String getDistance() {
+        return distance;
     }
 }

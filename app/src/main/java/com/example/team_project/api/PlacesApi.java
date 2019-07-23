@@ -1,7 +1,9 @@
 package com.example.team_project.api;
 
+import android.app.Activity;
 import android.util.Log;
 
+import com.example.team_project.EventsDetailsAdapter;
 import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Place;
@@ -27,10 +29,10 @@ public class PlacesApi {
     private String pageToken;
     private String keywords;
     private JSONArray array;
-    private SearchActivity seAct;
+    private Object source;
 
-    public PlacesApi(SearchActivity seAct) {
-        this.seAct = seAct;
+    public PlacesApi(Object source) {
+        this.source = source;
         client = new AsyncHttpClient();
         location = "";
         radius = "";
@@ -81,7 +83,7 @@ public class PlacesApi {
                             array.put(results.getJSONObject(i));
                         }
                     }
-                    seAct.apiFinished(array);
+                    ((SearchActivity) source).apiFinished(array);
 
 //                     for testing
 //                     MainActivity.setArray(array);
@@ -108,46 +110,18 @@ public class PlacesApi {
         });
     }
 
-    public void setDetails(final Place place) {
-        String id = place.getPlaceId();
+    public void getDetails(String id) {
         String url = API_DETAILS_URL + "key=" + API_KEY + "&placeid=" + id;
 
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                JSONObject details = null;
                 try {
-                    details = response.getJSONObject("result");
+                    Place place = Place.placeFromJson(response.getJSONObject("result"), true);
+                    ((EventsDetailsAdapter) source).finishedApiPlace(place);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                try {
-                    place.setPhoneNumber(details.getString("formatted_phone_number"));
-                } catch (JSONException e) {
-                    place.setPhoneNumber("Not available!");
-                }
-
-                try {
-                    JSONArray arrayTemp = details.getJSONObject("opening_hours").getJSONArray("weekday_text");
-                    ArrayList<String> list = new ArrayList<>();
-                    for(int i = 0; i < arrayTemp.length(); i++){
-                        list.add(arrayTemp.getString(i));
-                    }
-                    place.setOpenHours(list);
-                } catch (JSONException e) {
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add("Not available!");
-                    place.setOpenHours(list);
-                }
-
-                try {
-                    place.setPrice(details.getInt("price_level"));
-                } catch (JSONException e) {
-                    place.setPrice(-1);
-                }
-
-                place.setDetailsFinished();
             }
 
             @Override

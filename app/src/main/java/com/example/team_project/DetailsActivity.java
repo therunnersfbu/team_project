@@ -1,5 +1,6 @@
 package com.example.team_project;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,15 +13,21 @@ import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
     private RecyclerView rvEventsDetail;
+    private String id;
+    private boolean type;
+    private String distance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        id = getIntent().getStringExtra("eventID");
+        type = getIntent().getBooleanExtra("type", true);
+        distance = getIntent().getStringExtra("distance");
         rvEventsDetail = (RecyclerView)findViewById(R.id.rvEventsDetail);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
-        EventsDetailsAdapter adapter = new EventsDetailsAdapter(getData());
+        EventsDetailsAdapter adapter = new EventsDetailsAdapter(getData(), id, type, distance);
         rvEventsDetail.setAdapter(adapter);
     }
 

@@ -11,16 +11,33 @@
     card_view:cardElevation="7dp"
     card_view:contentPadding="7dp">
 
-    <TextView
-        android:id="@+id/tvName"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/clResult"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="3dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#000"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        tools:text="Name" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:text="distance"
+            android:textSize="18dp"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvName" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#000"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            tools:text="Name" />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_main) Toolbar toolbar;
 
 //     for testing
+//    static DirectionsApi api;
 //     static PlacesApi api;
 //     static EventsApi api;
 //     static JSONArray array;
@@ -55,9 +56,12 @@ public class MainActivity extends AppCompatActivity {
 //        MainActivity.api.setLocation("San+Francisco");
 //        MainActivity.api.getTopEvents();
 
-//        double[] origin = {37.480801, -122.159128};
-//        double[] destination = {37.367890, -122.036905};
-//        DirectionsApi.getDistance(origin, destination);
+//        api = new DirectionsApi();
+//        api.setOrigin(37.367890, -122.036905);
+//        api.addDestination(37.8684249, -122.2690096);
+//        api.addDestination(37.598614, -122.499499);
+//        api.addDestination(37.8717, -122.272);
+//        api.getDistance();
     }
 
 //    for testing
