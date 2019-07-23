@@ -82,49 +82,29 @@ public class CustomCalendarView extends LinearLayout {
             }
         });
 
+        // when you click on date it shows events for that date
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            String date = eventDateFormat.format(dates.get(position));
+                String date = eventDateFormat.format(dates.get(position));
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setCancelable(true);
+                View showView = LayoutInflater.from(parent.getContext()).inflate(R.layout.show_events_layout, null);
+                RecyclerView recyclerView = findViewById(R.id.eventsRV);
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setHasFixedSize(true);
+                EventRecyclerAdapter eventRecyclerAdapter = new EventRecyclerAdapter(showView.getContext(),
+                        CollectEventByDate(date));
+                recyclerView.setAdapter(eventRecyclerAdapter);
+                eventRecyclerAdapter.notifyDataSetChanged();
 
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setCancelable(true);
-
-
-            View showView = LayoutInflater.from(parent.getContext()).inflate(R.layout.show_events_layout, null);
-            RecyclerView recyclerView = findViewById(R.id.rvCal);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setHasFixedSize(true);
-            EventRecyclerAdapter eventRecyclerAdapter = new EventRecyclerAdapter(showView.getContext(),
-                    CollectEventByDate(date));
-            recyclerView.setAdapter(eventRecyclerAdapter);
-            eventRecyclerAdapter.notifyDataSetChanged();
-
-            builder.setView(showView);
-            alertDialog = builder.create();
-            alertDialog.show();
+                builder.setView(showView);
+                alertDialog = builder.create();
+                alertDialog.show();
 
             }
         });
-        // TODO, in function that would be called as soon as the plus button is clicked in a event
-        // may need different placement
-            /*AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setCancelable(true);
-
-            // would change position to have to access event api and retrieve info
-            final String date = eventDateFormat.format(dates.get(position));
-            final String month = monthFormat.format(dates.get(position));
-            final String year = yearFormat.format(dates.get(position));
-            SaveEvent(EventName.getText().toString(), EventTime.getText().toString(), date, month, year);
-            SetUpCalendar();
-            alertDialog.dismiss();
-
-            builder.setView(addView);
-            alertDialog = builder.create();
-            alertDialog.show();*/
     }
 
 
@@ -139,7 +119,7 @@ public class CustomCalendarView extends LinearLayout {
             String Date = cursor.getString(cursor.getColumnIndex(DBStructure.DATE));
             String month = cursor.getString(cursor.getColumnIndex(DBStructure.MONTH));
             String Year = cursor.getString(cursor.getColumnIndex(DBStructure.YEAR));
-            Events events = new Events(event,time,Date,month,Year);
+            Events events = new Events(event, time, Date, month, Year);
             arrayList.add(events);
         }
         cursor.close();
@@ -151,14 +131,6 @@ public class CustomCalendarView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    private void SaveEvent(String event, String time, String date, String month, String year){
-        dbOpenHelper = new DBOpenHelper(context);
-        SQLiteDatabase database = dbOpenHelper.getWritableDatabase();
-        dbOpenHelper.SaveEvent(event, time, date, month, year, database);
-        dbOpenHelper.close();
-        Toast.makeText(context, "Event Saved", Toast.LENGTH_SHORT).show();
-
-    }
 
     private void InitializeLayout() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -170,28 +142,10 @@ public class CustomCalendarView extends LinearLayout {
 
     }
 
-    private void SetUpCalendar() {
-        String currentDate = dateFormat.format(calendar.getTime());
-        CurrentDate.setText(currentDate);
-        dates.clear();
-        Calendar monthCalendar = (Calendar) calendar.clone();
-        monthCalendar.set(Calendar.DAY_OF_MONTH,1);
-        int FirstDayofMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) -1;
-        monthCalendar.add(Calendar.DAY_OF_MONTH, -FirstDayofMonth);
-        CollectEventsPerMonth(monthFormat.format(calendar.getTime()),yearFormat.format(calendar.getTime()));
-
-        while (dates.size() < MAX_CALENDAR_DAYS) {
-            dates.add(monthCalendar.getTime());
-            monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
-
-        myGridAdapter = new MyGridAdapter(context, dates, calendar, eventsList);
-        gridView.setAdapter(myGridAdapter);
-
-    }
-
     private void CollectEventsPerMonth(String Month, String year) {
         eventsList.clear();
+
+        // TODO this will iterate through the arraylist of saved events instead of utilizing database
 
         dbOpenHelper = new DBOpenHelper(context);
         SQLiteDatabase database = dbOpenHelper.getReadableDatabase();
@@ -203,11 +157,33 @@ public class CustomCalendarView extends LinearLayout {
             String month = cursor.getString(cursor.getColumnIndex(DBStructure.MONTH));
             String Year = cursor.getString(cursor.getColumnIndex(DBStructure.YEAR));
             Events events = new Events(event, time, date, month, Year);
-            eventsList.add(events);
-
-
+            //eventsList.add(events);
+            eventsList.add(new Events("her", "6:00 PM", "10", "July", "2019"));
         }
         cursor.close();
         dbOpenHelper.close();
     }
+
+    private void SetUpCalendar() {
+        String currentDate = dateFormat.format(calendar.getTime());
+        CurrentDate.setText(currentDate);
+        dates.clear();
+        Calendar monthCalendar = (Calendar) calendar.clone();
+        monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        int FirstDayofMonth = monthCalendar.get(Calendar.DAY_OF_WEEK) - 1;
+        monthCalendar.add(Calendar.DAY_OF_MONTH, -FirstDayofMonth);
+        CollectEventsPerMonth(monthFormat.format(calendar.getTime()), yearFormat.format(calendar.getTime()));
+
+        while (dates.size() < MAX_CALENDAR_DAYS) {
+            dates.add(monthCalendar.getTime());
+            monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
+        myGridAdapter = new MyGridAdapter(context, dates, calendar, eventsList);
+        gridView.setAdapter(myGridAdapter);
+
+    }
+
+
 }
+

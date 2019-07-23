@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,9 +7,59 @@
     android:orientation="vertical">
 
 
-   <com.applandeo.materialcalendarview.CalendarView
-        android:id="@+id/calendar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+   <LinearLayout
+       android:id="@+id/calendar"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginBottom="8dp"
+       android:background="@android:color/holo_blue_light"
+       android:orientation="horizontal"
+       android:paddingTop="8dp"
+       android:paddingBottom="8dp">
 
-</android.support.constraint.ConstraintLayout>
+      <ImageButton
+          android:id="@+id/previousBtn"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:background="@mipmap/back"
+          android:layout_margin="10dp" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:gravity="center"
+          android:layout_marginTop="10dp"
+          android:text="CurrentDate"
+          android:id="@+id/current_Date"
+          android:textColor="@android:color/white"
+          android:textStyle="bold"
+          android:textSize="27sp"
+          android:layout_weight="3" />
+
+      <ImageButton
+          android:id="@+id/nextBtn"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:background="@mipmap/back"
+          android:layout_margin="10dp"
+          android:rotation="180"/>
+
+   </LinearLayout>
+
+   <com.github.sundeepk.compactcalendarview.CompactCalendarView
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       android:id="@+id/compactcalendar_view"
+       android:layout_width="fill_parent"
+       android:paddingRight="10dp"
+       android:paddingLeft="10dp"
+       android:layout_height="250dp"
+       app:compactCalendarTargetHeight="250dp"
+       app:compactCalendarTextSize="12sp"
+       app:compactCalendarBackgroundColor="#ffe95451"
+       app:compactCalendarTextColor="#fff"
+       app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
+       app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+       app:compactCalendarMultiEventIndicatorColor="#fff"
+       />
+
+</LinearLayout>

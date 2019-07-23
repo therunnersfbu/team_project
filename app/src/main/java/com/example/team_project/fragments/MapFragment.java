@@ -54,10 +54,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
-
-        // TODO idea
-        // when the view is created this accesses the reviewed content on the profile and
-        // then iterates through each item and creates a marker for it
     }
 
     @Override
@@ -80,20 +76,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
-        // TODO when review is made a marker is created with picture and place and description
-        // will get marker information from reviews within the "MyReview" page within the profile
-        // TODO need to figure out how to add multiple markers with just the below code
-        // or figure out way that as soon as something is reviewed a listener is triggered and marker is created
-        // sendalert or some functioning that calls onMapReady that will make the marker in said position
-        /*googleMap.addMarker(new MarkerOptions()
-                .position(get coordinates)
-                .title(get id from api)
-                .snippet(get description/review));
-        googleMap.setOnInfoWindowClickListener(this); */
-
         // TODO if we're utilizing an array list
-        //for (int x = 0; x < jsonarray.length(); x++) {
-        // Marker uniquename = mMap.addMarker(new MarkerOptions().position(new LatLng(lat,long)).title("Marker " + String.valueOf(x))));
+        /*for (int x = 0; x < jsonarray.length(); x++) {
+         Marker uniquename = googleMap.addMarker(new MarkerOptions()
+            .position(new LatLng(lat,long)) *get coordinates
+            .title("Marker " + String.valueOf(x))) * get id name from api
+            .snippet(get description/review) *get review
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)) *get image list parse);
+            googleMap.setOnInfoWindowClickListener(this); */
 
         //example for creating marker
         LatLng MELBOURNE = new LatLng(40.7128, -74.0060);
@@ -111,16 +101,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.setMinZoomPreference(3);
 
-        // on long click you can make a marker
-        /*googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                googleMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title("Your marker title")
-                        .snippet("Your marker snippet"));
-            }
-        });*/
     }
 
     @Override
