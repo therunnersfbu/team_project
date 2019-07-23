@@ -40,14 +40,12 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private ResultsAdapter resultsAdapter;
     private int category;
     private EndlessRecyclerViewScrollListener scrollListener;
-
     private ArrayList<Event> mEventList;
     private ArrayList<Place> mPlaceList;
     private double longitude;
     private double latitude;
     private Location location;
     private LocationManager locManager;
-    private boolean isEvent;
     private ArrayList<String> distances;
     private ArrayList<String> ids;
     private boolean isPlace;
@@ -138,11 +136,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     private void populateList() {
-        isEvent = false;
         EventsApi eApi = new EventsApi(this);
         PlacesApi pApi = new PlacesApi(this);
-        if (category == 7 || category == 8) {
-            isEvent = true;
+        if (!isPlace) {
             eApi.setDate("Future");
             eApi.setLocation(latitude, longitude, 10000);
         } else {
@@ -189,7 +185,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             default:
                 return;
         }
-        if (isEvent) {
+        if (!isPlace) {
             eApi.getTopEvents();
         } else {
             pApi.getTopPlaces();
@@ -201,7 +197,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         dApi.setOrigin(latitude, longitude);
 
         for (int i = 0; i < array.length(); i++) {
-            if (isEvent) {
+            if (!isPlace) {
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
                 mEventList.add(event);
                 dApi.addDestination(event.getLocation());
