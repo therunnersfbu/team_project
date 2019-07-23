@@ -9,24 +9,24 @@ import android.widget.TextView;
 
 import java.util.List;
 
+// This adapter handles horizontal scrolling for the Tag and Suggestion CardViews. Used in Search Activity
 
-public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHolder> {
+public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScrollAdapter.ViewHolder> {
 
     private final List<String> list;
     private final boolean isTags;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvName;
+        private TextView tvName;
 
         public ViewHolder(@NonNull View view) {
             super(view);
-
             tvName = (TextView) view.findViewById(R.id.tvName);
         }
     }
 
-    public CardViewAdapter(List<String> horizontalList, boolean isTags) {
+    public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags) {
         this.list = horizontalList;
         this.isTags = isTags;
     }
@@ -35,14 +35,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.ViewHo
     @Override
 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        if(!isTags) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_suggestion, parent, false);
-            return new ViewHolder(itemView);
-        }
-        else {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tag, parent, false);
-            return new ViewHolder(itemView);
-        }
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(isTags? R.layout.item_tag : R.layout.item_suggestion, parent, false);
+        return new ViewHolder(itemView);
     }
 
     @Override
