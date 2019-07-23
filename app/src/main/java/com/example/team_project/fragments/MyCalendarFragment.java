@@ -33,6 +33,7 @@ import com.parse.ParseUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,7 +49,7 @@ public class MyCalendarFragment extends Fragment {
     private Unbinder unbinder;
     CompactCalendarView compactCalendar;
     //private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMM-yyyy", Locale.ENGLISH);
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH);
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     TextView CurrentDate;
@@ -88,7 +89,6 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
 
-        // TODO once add event button is implemented
         //get the array list of events
         // get the date
         // make x each event date in the list
@@ -113,29 +113,36 @@ public class MyCalendarFragment extends Fragment {
         Log.d("MyCalendarFragment", "Events: " + events);
 
 
-// go/open to the user and then get the array of added events
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
+                ArrayList<String> theDaysEvents = new ArrayList<>();
                 Context context = getApplicationContext();
 
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                Log.d("MyCalendarFragment", "Array List:" + addedEvents);
+
+                 Log.d("MyCalendarFragment", "Array List:" + addedEvents);
+
+                String numberdate = simpleDateFormat.format(dateClicked);
+                Log.d("MyCalendarFragment", "new date:" + numberdate);
 
 
-                /*for (int x = 0; x < addedEvents.size(); x++) {
-                    // figure out truth value
-                    if (dateClicked.substring(0, 9).compareto(addedEvents.substring(0, 9)) == 0) {
-                        // TODO put events in recycler view at bottom of the page
+                for (int x = 0; x < addedEvents.size(); x++) {
+                    if (numberdate.equals(addedEvents.get(x).substring(0, 9))) {
+                        String eventName = addedEvents.get(x).substring(11);
+                        Log.d("MyCalendarFragment", "Same Day event:" +  eventName);
+                        //make list with only events on clicked date
+                        theDaysEvents.add(eventName);
+                        // TODO implement adding to recycler view
+                    }
+                }
 
-
-                    }*/
-
-                    List<Event> events = compactCalendar.getEvents(dateClicked);
-                    Log.d("MyCalendarFragment", "Day was clicked: " + dateClicked + " with events " + events);
-                    // get the exact name and id of the event
-                    Toast.makeText(context, "teatt" + events, Toast.LENGTH_LONG).show();
+                // Extra information for testing
+                List<Event> events = compactCalendar.getEvents(dateClicked);
+                Log.d("MyCalendarFragment", "Day was clicked: " + dateClicked + " with events " + events);
+                // get the exact name and id of the event
+                Toast.makeText(context, "teatt" + events, Toast.LENGTH_LONG).show();
 
 
                 }
