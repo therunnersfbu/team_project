@@ -49,6 +49,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private ArrayList<String> distances;
     private ArrayList<String> ids;
     private boolean isPlace;
+    private EventsApi eApi;
+    private PlacesApi pApi;
+    private boolean canGetMore;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -62,6 +65,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         category = getIntent().getIntExtra("category", -1);
         isTags = true;
         isPlace = true;
+        canGetMore = true;
         // set type to either place or event
         if(category == 7 || category == 8) isPlace = false;
         setContentView(R.layout.activity_search);
@@ -76,6 +80,22 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(verticalLayout) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                if (canGetMore) {
+                    Log.d("searchActivity", "endless scroll");
+                    if (!isPlace) {
+                        eApi.getMoreEvents();
+                    } else {
+                        pApi.getMorePlaces();
+                    }
+                }
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvResults.addOnScrollListener(scrollListener);
 
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -136,11 +156,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     private void populateList() {
-        EventsApi eApi = new EventsApi(this);
-        PlacesApi pApi = new PlacesApi(this);
         if (!isPlace) {
             eApi.setDate("Future");
-            eApi.setLocation(latitude, longitude, 10000);
+            eApi.setLocation(latitude, longitude, 60);
         } else {
             pApi.setLocation(latitude, longitude);
             pApi.setRadius(10000);
@@ -196,14 +214,16 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
 
-        for (int i = 0; i < array.length(); i++) {
-            if (!isPlace) {
+        if (!isPlace) {
+            for (int i = 0; i < array.length(); i++) {
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
                 mEventList.add(event);
                 dApi.addDestination(event.getLocation());
                 results.add(event.getEventName());
                 ids.add(event.getEventId());
-            } else {
+            }
+        } else {
+            for (int i = 0; i < array.length(); i++) {
                 Place place = Place.placeFromJson(array.getJSONObject(i), false);
                 mPlaceList.add(place);
                 dApi.addDestination(place.getLocation());
@@ -251,6 +271,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         resultsManager = new LinearLayoutManager(this);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        eApi = new EventsApi(this);
+        pApi = new PlacesApi(this);
     }
 
     @Override
@@ -279,5 +301,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    public void setCanGetMore(boolean canGetMore) {
+        this.canGetMore = canGetMore;
     }
 }
