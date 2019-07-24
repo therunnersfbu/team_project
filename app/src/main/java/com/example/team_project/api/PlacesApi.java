@@ -3,6 +3,7 @@ package com.example.team_project.api;
 import android.app.Activity;
 import android.util.Log;
 
+import com.example.team_project.DetailsActivity;
 import com.example.team_project.EventsDetailsAdapter;
 import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
@@ -58,6 +59,7 @@ public class PlacesApi {
     }
 
     public void getMorePlaces() {
+        array = new JSONArray();
         getPlaces();
     }
 
@@ -69,6 +71,11 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     pageToken = "&pagetoken=" + response.getString("next_page_token");
+                } catch (JSONException e) {
+                    ((SearchActivity) source).setCanGetMore(false);
+                    pageToken = "";
+                }
+                try {
                     JSONArray results = response.getJSONArray("results");
                     for (int i = 0; i < results.length(); i++) {
                         boolean isCity = false;

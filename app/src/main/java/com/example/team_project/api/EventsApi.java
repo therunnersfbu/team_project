@@ -32,6 +32,7 @@ public class EventsApi {
     private String date;
     private JSONArray array;
     private Object source;
+    private int pageCount;
 
     public EventsApi(Object source) {
         this.source = source;
@@ -40,6 +41,7 @@ public class EventsApi {
         location = "";
         keywords = "";
         date = "";
+        pageCount = Integer.MAX_VALUE;
     }
 
     public void setLocation(String location) {
@@ -65,6 +67,9 @@ public class EventsApi {
 
     public void getMoreEvents() {
         page++;
+        if (page + 1 >= pageCount) {
+            ((SearchActivity) source).setCanGetMore(false);
+        }
         getEvents();
     }
 
@@ -76,6 +81,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
+                    pageCount = Integer.parseInt(response.getString("page_count"));
                     ((SearchActivity) source).apiFinished(array);
 
 //                    for testing

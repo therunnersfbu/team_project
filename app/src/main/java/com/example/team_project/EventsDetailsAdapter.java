@@ -1,5 +1,6 @@
 package com.example.team_project;
 
+import android.content.Intent;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +39,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private String id;
     private boolean type;
     private String distance;
+    private Event mEvent;
+    private Place mPlace;
     private DatePickerDialog picker;
     private HeaderViewHolder test;
     private ItemViewHolder testP;
@@ -51,14 +55,15 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvEventName;
-        public TextView tvDistance;
-        public TextView tvVenue;
-        public TextView tvDate;
-        public TextView tvAddress;
-        public TextView tvNumber;
-        public TextView tvPrice;
-        public TextView tvHours;
+        private TextView tvEventName;
+        private TextView tvDistance;
+        private TextView tvVenue;
+        private TextView tvDate;
+        private TextView tvAddress;
+        private TextView tvNumber;
+        private TextView tvPrice;
+        private TextView tvHours;
+        private Button btnReview;
         public ImageView ivAdd;
 
 
@@ -72,6 +77,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvNumber = (TextView) view.findViewById(R.id.tvNumber);
             tvPrice = (TextView) view.findViewById(R.id.tvPrice);
             tvHours = (TextView) view.findViewById(R.id.tvHours);
+            btnReview = (Button) view.findViewById(R.id.btnReview);
             ivAdd = (ImageView) view.findViewById(R.id.ivAdd);
 
             if(!type) {
@@ -82,6 +88,20 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 PlacesApi pApi = new PlacesApi(EventsDetailsAdapter.this);
                 pApi.getDetails(id);
             }
+
+            btnReview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), ComposeReviewActivity.class);
+                    intent.putExtra("eventID", id);
+                    if(type) {
+                        intent.putExtra("eventName", mPlace.getPlaceName());
+                    } else {
+                        intent.putExtra("eventName", mEvent.getEventName());
+                    }
+                    v.getContext().startActivity(intent);
+                }
+            });
         }
     }
 
@@ -156,6 +176,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvAddress.setText(event.getAddress());
         test.tvDate.setText(event.getStartTime());
         test.tvVenue.setText(event.getVenueName());
+        mEvent = event;
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,6 +210,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvHours.setText(place.getOpenHours().get(0));
         test.tvNumber.setText(place.getPhoneNumber());
         test.tvPrice.setText(place.getPrice());
+        mPlace = place;
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

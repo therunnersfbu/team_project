@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".DetailsActivity"></activity>
+        <activity android:name=".ComposeReviewActivity"></activity>
+        <activity android:name=".DetailsActivity" />
         <activity android:name=".SurveyActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".CalendarFiles.CalendarActivity" />
