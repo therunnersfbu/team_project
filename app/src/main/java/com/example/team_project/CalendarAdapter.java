@@ -13,47 +13,40 @@ import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
-    private List<String> mEvents;
-    Context context;
-    // pass in the Tweets array into the constructor
-    public CalendarAdapter(ArrayList<String> theDaysEvents) {
-        mEvents = theDaysEvents;
-    }
+    ArrayList<String> events;
 
+    public CalendarAdapter(ArrayList<String> theDaysEvents) {
+        this.events = theDaysEvents;
+    }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_calevent, viewGroup, false);
+    public CalendarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_calevent, viewGroup, false);
         return new ViewHolder(view);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        String events = mEvents.get(position);
-        viewHolder.bind(events);
+    public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
+        //where we associate data with actual row
+        viewHolder.tvEventName.setText(" - " + events.get(i));
+
     }
 
     @Override
     public int getItemCount() {
-        return mEvents.size();
+        return events.size();
     }
 
-    // create ViewHolder class
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         public TextView tvEventName;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvEventName = itemView.findViewById(R.id.tvEventName);
-
-        }
-
-        public void bind(String events) {
-            // bind the view elements to the post
-            tvEventName.setText(events);
         }
     }
-
 }
