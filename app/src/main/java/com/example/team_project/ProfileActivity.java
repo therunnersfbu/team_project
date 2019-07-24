@@ -11,7 +11,8 @@ import com.parse.ParseUser;
 
 
 public class ProfileActivity extends AppCompatActivity {
-     public Button btnLogout;
+     private Button btnLogout;
+     private Button btnSurvey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +26,19 @@ public class ProfileActivity extends AppCompatActivity {
                 ParseUser.logOut();
                 final Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
                 startActivity(intent);
+                BottomNavActivity.bottomNavAct.finish();
+                finish();
             }
         });
 
+        btnSurvey = findViewById((R.id.btnSurvey));
+        btnSurvey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(ProfileActivity.this, SurveyActivity.class);
+                intent.putExtra("retaking", true);
+                startActivity(intent);
+            }
+        });
     }
 }

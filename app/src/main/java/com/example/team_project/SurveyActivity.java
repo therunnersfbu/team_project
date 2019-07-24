@@ -2,10 +2,6 @@ package com.example.team_project;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -15,21 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.team_project.model.User;
 import com.example.team_project.utils.RandomString;
 import com.nex3z.flowlayout.FlowLayout;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
-
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Set;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,6 +26,7 @@ import butterknife.OnClick;
 public class SurveyActivity extends AppCompatActivity {
     @BindView(R.id.flSurvey) FlowLayout flSurvey;
     @BindView(R.id.tvGreeting) TextView tvGreeting;
+    @BindView(R.id.btnSignUp) Button btnSignUp;
     @OnClick(R.id.btnSignUp)
     public void signupBK(Button button) {
         boolean selectedOne = false;
@@ -55,7 +45,11 @@ public class SurveyActivity extends AppCompatActivity {
             }
         }
         if (selectedOne) {
-            signup();
+            if (retaking) {
+                retake();
+            } else {
+                signup();
+            }
         } else {
             Toast.makeText(this, "Please select at least one item.", Toast.LENGTH_SHORT).show();
         }
@@ -70,6 +64,7 @@ public class SurveyActivity extends AppCompatActivity {
     private String username;
     private String email;
     private String password;
+    private boolean retaking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +72,14 @@ public class SurveyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_survey);
         ButterKnife.bind(this);
 
-        username = getIntent().getStringExtra("username");
-        email = getIntent().getStringExtra("email");
-        password = getIntent().getStringExtra("password");
+        retaking = getIntent().getBooleanExtra("retaking", false);
+        if (!retaking) {
+            username = getIntent().getStringExtra("username");
+            email = getIntent().getStringExtra("email");
+            password = getIntent().getStringExtra("password");
+        } else {
+            btnSignUp.setText("Update");
+        }
 
         items = new ArrayList<>();
         itemsSelected = new ArrayList<>();
@@ -237,7 +237,7 @@ public class SurveyActivity extends AppCompatActivity {
     }
 
     // User Signup
-    private void signup(){
+    private void signup() {
         // create user to save with all properties
         ParseUser user = new ParseUser();
         user.setUsername(RandomString.getAlphaNumericString(25));
@@ -263,6 +263,22 @@ public class SurveyActivity extends AppCompatActivity {
                     Log.e("SurveyActivity", "Sign Up failure");
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void retake() {
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put(User.KEY_CATEGORIES, categories);
+        user.put(User.KEY_TAGS, tags);
+        user.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    finish();
+                } else {
+                    e.printStackTrace();
                 }
             }
         });

@@ -23,12 +23,16 @@ public class BottomNavActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_main) Toolbar toolbar;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
+    public static BottomNavActivity bottomNavAct;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_nav);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        BottomNavActivity.bottomNavAct = this;
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
