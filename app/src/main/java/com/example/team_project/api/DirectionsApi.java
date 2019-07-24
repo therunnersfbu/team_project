@@ -22,13 +22,13 @@ public class DirectionsApi {
     private String origin;
     private String destinations;
     private ArrayList<String> distances;
-    private SearchActivity seAct;
+    private SearchActivity searchActivity;
 
-    public DirectionsApi(SearchActivity seAct) {
+    public DirectionsApi(SearchActivity searchActivity) {
         client = new AsyncHttpClient();
         destinations = "&destinations=";
         distances = new ArrayList<>();
-        this.seAct = seAct;
+        this.searchActivity = searchActivity;
     }
 
     public void setOrigin(double lat, double lng) {
@@ -52,7 +52,7 @@ public class DirectionsApi {
                         distances.add(array.getJSONObject(i).getJSONObject("distance").getString("text"));
                     }
 
-                    seAct.getDistances(distances);
+                    searchActivity.getDistances(distances);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
