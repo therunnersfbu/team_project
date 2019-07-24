@@ -111,7 +111,7 @@ public class MyCalendarFragment extends Fragment {
             public void onDayClick(Date dateClicked) {
                 Context context = getApplicationContext();
 
-                Log.d("MyCalendarFragment", "Array List:" + addedEvents);
+                Log.d("MyCalendarFragment", "Array List(Added Events:" + addedEvents);
 
                 String numberDate = simpleDateFormat.format(dateClicked);
                 Log.d("MyCalendarFragment", "new date:" + numberDate);
