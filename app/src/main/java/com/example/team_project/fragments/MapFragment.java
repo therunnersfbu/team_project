@@ -23,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.team_project.DetailsActivity;
 import com.example.team_project.R;
+import com.example.team_project.model.Post;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,11 +33,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -47,7 +52,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     Context context;
     private MapView mapView;
     private GoogleMap googleMap;
-    //Location location;
+    protected List<Post> mPosts;
+    public static final String EVENT_ID = "eventID";
+    public static final String TYPE = "type";
+    public static final String DISTANCE = "distance";
 
     @Nullable
     @Override
@@ -76,16 +84,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onMapReady(GoogleMap map) {
         googleMap = map;
 
-        // TODO if we're utilizing an array list
-        /*for (int x = 0; x < jsonarray.length(); x++) {
-         Marker uniquename = googleMap.addMarker(new MarkerOptions()
-            .position(new LatLng(lat,long)) *get coordinates
-            .title("Marker " + String.valueOf(x))) * get id name from api
-            .snippet(get description/review) *get review
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)) *get image list parse);
-            googleMap.setOnInfoWindowClickListener(this); */
+        // TODO once review ability is implemented, will put marker at each place event has been reviewed
+        /*for (int x = 0; x < mPosts.size(); x++) {
+         Marker name = googleMap.addMarker(new MarkerOptions()
+            .position(new LatLng(mPosts.get(i).getLat,mPosts.get(i).getLon)) //get coordinates
+            .title("Marker " + String.valueOf(x))) // get id name from api
+            .snippet(get description/review) //get review
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)); //get image list parse)
+            googleMap.setOnInfoWindowClickListener(this);
+        }*/
 
-        //example for creating marker
+        //example for creating marker for testing
         LatLng MELBOURNE = new LatLng(40.7128, -74.0060);
         Marker melbourne = googleMap.addMarker(new MarkerOptions()
                 .position(MELBOURNE)
@@ -100,13 +109,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.setMinZoomPreference(3);
-
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getContext(), "Info window clicked",
                 Toast.LENGTH_SHORT).show();
+
+        // TODO after detailed page implemented, will send to detail review page for that location
+        /*Intent intent = new Intent(getActivity(),DetailsActivity.class);
+        intent.putExtra(EVENT_ID, *method to retrieve event/place id*)
+        startActivity(intent);*/
     }
 
     private void enableMyLocationIfPermitted() {
