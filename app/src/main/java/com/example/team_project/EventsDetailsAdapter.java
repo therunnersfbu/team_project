@@ -64,7 +64,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private TextView tvPrice;
         private TextView tvHours;
         private Button btnReview;
-        public ImageView ivAdd;
+        private ImageView ivAdd;
+        private ImageView ivLike;
 
 
         public HeaderViewHolder(@NonNull View view) {
@@ -79,6 +80,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             tvHours = (TextView) view.findViewById(R.id.tvHours);
             btnReview = (Button) view.findViewById(R.id.btnReview);
             ivAdd = (ImageView) view.findViewById(R.id.ivAdd);
+            ivLike = (ImageView) view.findViewById(R.id.ivLike);
 
             if(!type) {
                 EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
@@ -177,6 +179,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvDate.setText(event.getStartTime());
         test.tvVenue.setText(event.getVenueName());
         mEvent = event;
+
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,6 +204,29 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             }
         });
+
+        test.ivLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser user = ParseUser.getCurrentUser();
+                ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+                String toLike = event.getEventId() + "{}" + event.getEventName();
+                if (!liked.remove(toLike)) {
+                    liked.add(toLike);
+                }
+                user.put(User.KEY_LIKED_EVENTS, liked);
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Log.d(TAG, "liked!");
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void finishedApiPlace(final Place place) {
@@ -211,6 +237,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvNumber.setText(place.getPhoneNumber());
         test.tvPrice.setText(place.getPrice());
         mPlace = place;
+
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,6 +278,29 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         }, year, month, day);
                 picker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 picker.show();
+            }
+        });
+
+        test.ivLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser user = ParseUser.getCurrentUser();
+                ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+                String toLike = place.getPlaceId() + "{}" + place.getPlaceName();
+                if (!liked.remove(toLike)) {
+                    liked.add(toLike);
+                }
+                user.put(User.KEY_LIKED_EVENTS, liked);
+                user.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Log.d(TAG, "liked!");
+                        } else {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
     }
