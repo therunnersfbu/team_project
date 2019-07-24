@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ComposeReviewActivity"></activity>
+        <activity android:name=".ComposeReviewActivity" />
         <activity android:name=".DetailsActivity" />
         <activity android:name=".SurveyActivity" />
         <activity android:name=".SearchActivity" />
@@ -34,7 +34,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".MainActivity" /> <!-- <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" /> -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

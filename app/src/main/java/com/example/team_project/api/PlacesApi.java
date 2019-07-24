@@ -1,11 +1,7 @@
 package com.example.team_project.api;
 
-import android.app.Activity;
 import android.util.Log;
-
-import com.example.team_project.DetailsActivity;
 import com.example.team_project.EventsDetailsAdapter;
-import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Place;
 import com.loopj.android.http.AsyncHttpClient;
@@ -13,10 +9,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import cz.msebera.android.httpclient.Header;
 
 public class PlacesApi {
@@ -91,9 +83,6 @@ public class PlacesApi {
                         }
                     }
                     ((SearchActivity) source).apiFinished(array);
-
-//                     for testing
-//                     MainActivity.setArray(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
