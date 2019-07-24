@@ -87,16 +87,12 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar = view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
-        //example and testing on adding an event
-        Event ev1 = new Event(Color.BLUE, 1564167600000L);
-        compactCalendar.addEvent(ev1);
-
         // add all events to calendar
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
                 Event ev = null;
                 try {
-                    ev = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 9)));
+                    ev = new Event(Color.BLUE, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -109,29 +105,25 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                Context context = getApplicationContext();
 
-                Log.d("MyCalendarFragment", "Array List(Added Events:" + addedEvents);
+                Log.d("MyCalendarFragment", "Array List(Added Events:)" + addedEvents);
 
                 String numberDate = simpleDateFormat.format(dateClicked);
                 Log.d("MyCalendarFragment", "new date:" + numberDate);
 
                 if (addedEvents != null) {
                     for (int x = 0; x < addedEvents.size(); x++) {
-                        if (numberDate.equals(addedEvents.get(x).substring(0, 9))) {
+                        Log.d("MyCalendarFragment", "addedevent substring:" + addedEvents.get(x).substring(0, 10));
+                        if (numberDate.equals(addedEvents.get(x).substring(0, 10))) {
+                            Log.d("MyCalendarFragment", "inside loop");
                             String eventName = addedEvents.get(x).substring(11);
                             Log.d("MyCalendarFragment", "Same Day event:" + eventName);
                             //make list with only events on clicked date
                             theDaysEvents.add(eventName);
+                            Log.d("MyCalendarFragment", "the days event:" + theDaysEvents);
                         }
                     }
                 }
-
-                // Extra information for testing
-                List<Event> events = compactCalendar.getEvents(dateClicked);
-                Log.d("MyCalendarFragment", "Day was clicked: " + dateClicked + " with events " + events);
-                // get the exact name and id of the event
-                Toast.makeText(context, "teatt" + events, Toast.LENGTH_LONG).show();
             }
 
             @Override
