@@ -8,9 +8,9 @@
     <TextView
         android:id="@+id/tvEventName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_height="40dp"
         android:fontFamily="sans-serif-thin"
-        android:textSize="30dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:text="TextView"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="30dp" />
 </LinearLayout>

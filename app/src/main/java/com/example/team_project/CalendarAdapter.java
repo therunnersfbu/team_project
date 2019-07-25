@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
+    ArrayList<String> neweventlist;
+    Context context;
 
     public CalendarAdapter(ArrayList<String> theDaysEvents) {
         this.events = theDaysEvents;
@@ -43,10 +46,22 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
         public TextView tvEventName;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             tvEventName = itemView.findViewById(R.id.tvEventName);
+
+            itemView.setOnTouchListener(new OnSwipeTouchListener(context) {
+                public void onSwipeLeft() {
+
+                    //make a new array list with what i want to remove and then user"remove" to get it
+                    // get array list from parse then remove item and then send it back to parse
+                    //get, then remove it, then put
+                      //      notifydatasetchanged();
+                }
+
+            });
         }
+
     }
 }
