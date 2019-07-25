@@ -2,6 +2,7 @@ package com.example.team_project.api;
 
 import android.util.Log;
 import com.example.team_project.EventsDetailsAdapter;
+import com.example.team_project.LocationActivity;
 import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Place;
 import com.loopj.android.http.AsyncHttpClient;
@@ -116,6 +117,39 @@ public class PlacesApi {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
                     //TODO Memory leak!
                     ((EventsDetailsAdapter) source).finishedApiPlace(place);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.e("Places", responseString);
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                throwable.printStackTrace();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                throwable.printStackTrace();;
+            }
+        });
+    }
+
+    public void getLocation(String id) {
+        String url = API_DETAILS_URL + "key=" + API_KEY + "&placeid=" + id;
+
+        client.get(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    Place place = Place.placeFromJson(response.getJSONObject("result"), true);
+                    //TODO Memory leak!
+                    ((LocationActivity) source).apiFinishedGetLocation(place.getLocation(), place.getPlaceName());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
