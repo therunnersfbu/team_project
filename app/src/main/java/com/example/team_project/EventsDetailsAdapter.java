@@ -30,12 +30,15 @@ import java.util.Calendar;
 import java.util.List;
 
 // adapter for the item layouts used on the events details page. Includes header and item views that inflate in a RecyclerView
+//TODO: mXXX
+//TODO: folder for events, maps, etc (each main feature should have own folder)
 public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String TAG = EventsDetailsAdapter.class.getSimpleName();
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private List<Post> posts;
+    //TODO private static string tags for eventsID etc
+    private List<Post> mPosts;
     private String id;
     private boolean type;
     private String distance;
@@ -45,9 +48,10 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private HeaderViewHolder test;
     private ItemViewHolder testP;
     private Context context;
+    private boolean isLocal;
 
-    public EventsDetailsAdapter(List<Post> posts, String id, Boolean type, String distance, Context context) {
-        this.posts = posts;
+    public EventsDetailsAdapter(List<Post> mPosts, String id, Boolean type, String distance, Context context) {
+        this.mPosts = mPosts;
         this.id = id;
         this.type = type;
         this.distance = distance;
@@ -82,6 +86,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             ivAdd = (ImageView) view.findViewById(R.id.ivAdd);
             ivLike = (ImageView) view.findViewById(R.id.ivLike);
 
+            //TODO enum place / event
             if(!type) {
                 EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
                 eApi.getSingleEvent(id);
@@ -139,7 +144,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Post mPost = posts.get(position);
+        Post mPost = mPosts.get(position);
         if(holder instanceof HeaderViewHolder) {
             //TODO
             //((HeaderViewHolder) holder).tvEventName.setText(((Event) mPost.getEvent()).getEventName());
@@ -151,7 +156,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private Post getPost(int position) {
-        return posts.get(position);
+        return mPosts.get(position);
     }
 
     @Override
@@ -169,7 +174,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return mPosts.size();
     }
 
     public void finishedApi(final Event event) {
@@ -179,7 +184,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvDate.setText(event.getStartTime());
         test.tvVenue.setText(event.getVenueName());
         mEvent = event;
-
+        ParseUser user = ParseUser.getCurrentUser();
+        ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+        String toLike = event.getEventId() + "{}" + event.getEventName();
+        if (liked.contains(toLike)) {
+            test.ivLike.setActivated(true);
+        }
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,10 +197,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
                 String eventToAdd = event.getStartTime().substring(0, 10) + " " + event.getEventName();
                 if (added.contains(eventToAdd)) {
+                    Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
                 } else {
                     added.add(eventToAdd);
                     user.put(User.KEY_ADDED_EVENTS, added);
+                    Toast.makeText(context, "Event added to your calendar", Toast.LENGTH_LONG).show();
                     user.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -208,6 +220,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
                 String toLike = event.getEventId() + "{}" + event.getEventName();
@@ -237,7 +250,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvNumber.setText(place.getPhoneNumber());
         test.tvPrice.setText(place.getPrice());
         mPlace = place;
-
+        ParseUser user = ParseUser.getCurrentUser();
+        ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+        String toLike = place.getPlaceId() + "{}" + place.getPlaceName();
+        if (liked.contains(toLike)) {
+            test.ivLike.setActivated(true);
+        }
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,10 +277,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         + " " + place.getPlaceName();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
+                                    Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                                     Log.d(TAG, "already there");
                                 } else {
                                     added.add(placeToAdd);
                                     user.put(User.KEY_ADDED_EVENTS, added);
+                                    Toast.makeText(context, "Event added to your calendar", Toast.LENGTH_LONG).show();
                                     user.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
@@ -284,6 +304,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
                 String toLike = place.getPlaceId() + "{}" + place.getPlaceName();
