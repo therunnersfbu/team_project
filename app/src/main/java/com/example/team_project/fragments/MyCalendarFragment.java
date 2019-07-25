@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.team_project.CalendarAdapter;
 import com.example.team_project.R;
+import com.example.team_project.SwipeToDeleteCallback;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -138,6 +140,8 @@ public class MyCalendarFragment extends Fragment {
         mAdapter = new CalendarAdapter(theDaysEvents);
         rvCal.setLayoutManager(mLayoutManager);
         rvCal.setAdapter(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
+        itemTouchHelper.attachToRecyclerView(rvCal);
 
     }
 
