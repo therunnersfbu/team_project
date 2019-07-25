@@ -29,11 +29,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.team_project.fragments.EventsFragment;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.utils.BitmapScaler;
 import com.nex3z.flowlayout.FlowLayout;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -46,6 +51,19 @@ public class ComposeReviewActivity extends AppCompatActivity{
 
     private static final String EVENT_ID = "eventID";
     private static final String NAME = "eventName";
+    private static final int[][] tagsToShow = {
+        {2, 4, 6, 7, 18},
+        {1, 2, 4, 6, 7, 18},
+        {2, 4, 6, 7, 18},
+        {2, 4, 6, 7, 18},
+        {2, 7, 18, 19},
+        {2, 3, 10, 12, 5},
+        {2, 11},
+        {9, 8, 2, 12, 18},
+        {12, 18},
+        {13, 14, 18},
+        {15, 16, 17},
+        {12, 18}};
     private final int YOUR_SELECT_PICTURE_REQUEST_CODE = 150;
     private TextView tvHeader;
     private EditText etBody;
@@ -56,14 +74,17 @@ public class ComposeReviewActivity extends AppCompatActivity{
     private Switch sLocal;
     private String id;
     private String name;
-    public File photoFile;
+    private PlaceEvent placeEvent;
     private Uri outputFileUri;
     private String photoPath;
+    private File photoFile;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_review);
+        photoFile = null;
         tvHeader = findViewById(R.id.tvHeader);
         etBody = findViewById(R.id.etBody);
         btnPhoto = findViewById(R.id.btnPhoto);
@@ -73,6 +94,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
         sLocal = findViewById(R.id.sLocal);
         id = getIntent().getStringExtra(EVENT_ID);
         name = getIntent().getStringExtra(NAME);
+        location = getIntent().getStringExtra("location");
         tvHeader.setText(name);
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,8 +105,8 @@ public class ComposeReviewActivity extends AppCompatActivity{
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etBody.getText().length()>1) {
-                    savePost(etBody.getText().toString(), ParseUser.getCurrentUser(), photoFile, id);
+                if(etBody.getText().length()>0) {
+                    checkPlaceEventExists();
                 }
             }
         });
@@ -96,7 +118,6 @@ public class ComposeReviewActivity extends AppCompatActivity{
         });
     }
 
-    // result code is 0 not -1
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == YOUR_SELECT_PICTURE_REQUEST_CODE) {
@@ -119,35 +140,82 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 Bitmap resizedBitmap = com.example.team_project.utils.BitmapScaler.scaleToFitWidth(takenImage, 400);
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(resizedBitmap);
+                photoFile = new File(photoPath);
                 btnPhoto.setText("Replace Photo");
-                btnPost.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        savePost(etBody.getText().toString(), ParseUser.getCurrentUser(), photoFile, id);
-                    }
-                });
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void savePost(String body, ParseUser user, File photoFile, final String id)    {
+    private void checkPlaceEventExists() {
+        final ArrayList<PlaceEvent> placeEventList = new ArrayList<>();
+        ParseQuery parseQuery = new ParseQuery("PlaceEvent");
+        parseQuery.setLimit(1000);
+
+        parseQuery.findInBackground(new FindCallback<PlaceEvent>() {
+            @Override
+            public void done(List<PlaceEvent> objects, ParseException e) {
+                if (e == null) {
+                    placeEventList.addAll(objects);
+                    for (int i = 0; i < placeEventList.size(); i++) {
+                        if (id.equals(placeEventList.get(i).getAppId())) {
+                            placeEvent = placeEventList.get(i);
+                            savePost();
+                            return;
+                        }
+                    }
+
+                    placeEvent = new PlaceEvent();
+                    ArrayList<Boolean> categories = new ArrayList<>();
+                    ArrayList<Integer> tags = new ArrayList<>();
+                    for (int i = 0; i < 12; i++) {
+                        categories.add(false);
+                    }
+                    for (int i = 0; i < 20; i++) {
+                        tags.add(0);
+                    }
+                    if (EventsFragment.categoryToMark > -1) {
+                        categories.set(EventsFragment.categoryToMark, true);
+                    }
+
+                    placeEvent.put(PlaceEvent.KEY_API, id);
+                    placeEvent.put(PlaceEvent.KEY_CATEGORIES, categories);
+                    placeEvent.put(PlaceEvent.KEY_TAGS, tags);
+                    placeEvent.setName(name);
+                    placeEvent.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                savePost();
+                            } else {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void savePost() {
         Post myPost = new Post();
-        myPost.setUser(user);
+        myPost.setUser(ParseUser.getCurrentUser());
         myPost.setImage(new ParseFile(photoFile));
-        myPost.setReview(body);
-        myPost.setId(id);
+        myPost.setReview(etBody.getText().toString());
+        myPost.setEventPlace(placeEvent);
         myPost.setIsLocal(sLocal.isChecked());
-        // TODO myPost.setIsLocal(false);
+        myPost.setCoordinates(location);
         myPost.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if(e==null) {
-                    Log.d("CameraActivity", "post successful");
+                    Log.d("PostActivity", "post successful");
                     finish();
                 } else {
-                    Log.d("CameraActivity", "post unsuccessful");
+                    Log.d("PostActivity", "post unsuccessful");
                     e.printStackTrace();
                 }
             }
@@ -218,6 +286,53 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 }
                 return;
             }
+        }
+    }
+
+    public static String getTagStr(int i) {
+        switch (i) {
+            case 0:
+        return "TrendyCity verified";
+            case 1:
+        return "bottomless";
+            case 2:
+        return "upscale";
+            case 3:
+        return "young";
+            case 4:
+        return "dress cute";
+            case 5:
+        return "rooftop";
+            case 6:
+        return "dress comfy";
+            case 7:
+        return "insta-worthy";
+            case 8:
+        return "outdoors";
+            case 9:
+        return "indoors";
+            case 10:
+        return "clubby";
+            case 11:
+        return "mall";
+            case 12:
+        return "food available";
+            case 13:
+        return "barber";
+            case 14:
+        return "spa";
+            case 15:
+        return "classes";
+            case 16:
+        return "trails";
+            case 17:
+        return "gyms";
+            case 18:
+        return "family friendly";
+            case 19:
+        return "museums";
+        default:
+            return "";
         }
     }
 }
