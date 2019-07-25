@@ -114,6 +114,7 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
+                    //TODO Memory leak!
                     ((EventsDetailsAdapter) source).finishedApiPlace(place);
                 } catch (JSONException e) {
                     e.printStackTrace();

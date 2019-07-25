@@ -73,6 +73,7 @@ public class EventsApi {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
                     pageCount = Integer.parseInt(response.getString("page_count"));
+                    //TODO Memory leak
                     ((SearchActivity) source).apiFinished(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
