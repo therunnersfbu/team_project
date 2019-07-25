@@ -17,6 +17,13 @@ public class Post extends ParseObject {
     public static final String KEY_TAGS = "tags";
     public static final String KEY_ID = "eventId";
     public static final String KEY_IMAGE ="photoFile";
+    public static final String KEY_COORDINATES ="coordinates";
+
+
+    public String getCoordinates() {
+        return getString(KEY_COORDINATES);
+    }
+
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);

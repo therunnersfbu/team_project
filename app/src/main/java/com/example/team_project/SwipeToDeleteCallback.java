@@ -13,7 +13,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.team_project.fragments.MyCalendarFragment;
+import com.example.team_project.model.Event;
 import com.example.team_project.model.User;
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     CalendarAdapter mAdapter;
-    RecyclerView.Adapter rvAdapter;
+    CompactCalendarView compactCalendar;
     Context context;
 
 
@@ -42,7 +45,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
         int position = viewHolder.getAdapterPosition();
-        mAdapter.deleteItem(position);
 
         ParseUser user = ParseUser.getCurrentUser();
         // get events grom parse
@@ -62,17 +64,19 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         for (int x = 0; x < parseevents.size(); x++) {
             if (eventToDelete.equals(parseevents.get(x).substring(11))) {
                 Log.d("SwipeToDeleteCallBack", "in loop");
-                // get the position of the parse event
-                //int eventDeletePosition = parseevents.indexOf(x);
-                //delete item at that position
-                //parseevents.remove(parseevents.indexOf(eventDeletePosition));
                 parseevents.remove(x);
                 Log.d("SwipeToDeleteCallBack", "new parse events list" + parseevents);
                 user.put(User.KEY_ADDED_EVENTS, parseevents);
             }
         }
 
+        // need to make an event at designated date
+
+
         user.saveInBackground();
+        mAdapter.deleteItem(position);
+        // TODO remove dot
+        //compactCalendar.removeEvent(circle_event);
         mAdapter.notifyDataSetChanged();
     }
 }

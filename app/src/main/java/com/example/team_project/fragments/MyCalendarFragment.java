@@ -56,7 +56,6 @@ public class MyCalendarFragment extends Fragment {
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     TextView CurrentDate;
-    TextView tvEventName;
     RecyclerView rvCal;
     Long epochTime;
     ParseUser user = ParseUser.getCurrentUser();
@@ -152,11 +151,11 @@ public class MyCalendarFragment extends Fragment {
         unbinder.unbind();
     }
 
-        public long myMilliSecConvert (String date) throws ParseException {
-            // convert string to date
-            Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-            //convert date to Milliseconds
-            epochTime = milliDate.getTime();
-            return epochTime;
-        }
+    public long myMilliSecConvert(String date) throws ParseException {
+        // convert string to date
+        Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        //convert date to Milliseconds
+        epochTime = milliDate.getTime();
+        return epochTime;
+    }
 }
