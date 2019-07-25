@@ -255,7 +255,7 @@ public class SurveyActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     Log.d("SurveyActivity", "Sign up successful");
-                    final Intent intent = new Intent(SurveyActivity.this, MainActivity.class);
+                    final Intent intent = new Intent(SurveyActivity.this, BottomNavActivity.class);
                     startActivity(intent);
                     SignUpActivity.signupAct.finish();
                     finish();

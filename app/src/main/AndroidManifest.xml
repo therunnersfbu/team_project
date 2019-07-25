@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".ParseApp"
@@ -18,11 +20,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ComposeReviewActivity"></activity>
+        <activity android:name=".ComposeReviewActivity" />
         <activity android:name=".DetailsActivity" />
         <activity android:name=".SurveyActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".CalendarFiles.CalendarActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".BottomNavActivity" />
         <activity android:name=".LoginActivity">
@@ -42,7 +43,6 @@
                 android:resource="@xml/fileprovider" />
         </provider>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".MainActivity" /> <!-- <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" /> -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

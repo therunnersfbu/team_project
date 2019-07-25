@@ -1,23 +1,14 @@
 package com.example.team_project.api;
 
-import android.app.Activity;
 import android.util.Log;
-import android.widget.Adapter;
-
-import com.example.team_project.DetailsActivity;
 import com.example.team_project.EventsDetailsAdapter;
-import com.example.team_project.MainActivity;
 import com.example.team_project.SearchActivity;
 import com.example.team_project.model.Event;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
-
 import cz.msebera.android.httpclient.Header;
 
 public class EventsApi {
@@ -84,9 +75,6 @@ public class EventsApi {
                     pageCount = Integer.parseInt(response.getString("page_count"));
                     //TODO Memory leak
                     ((SearchActivity) source).apiFinished(array);
-
-//                    for testing
-//                    MainActivity.setArray(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
