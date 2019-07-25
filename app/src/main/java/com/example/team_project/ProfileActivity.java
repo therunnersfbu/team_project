@@ -155,7 +155,6 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     isCamera = MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
                 }
-
                 Uri selectedImageUri;
                 Bitmap rawTakenImage;
                 if (isCamera) {
