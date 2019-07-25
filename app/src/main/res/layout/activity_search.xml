@@ -44,7 +44,8 @@
         android:textColor="@color/hyperlinkBlue"
         app:layout_constraintEnd_toEndOf="@+id/btnSearch"
         app:layout_constraintStart_toStartOf="@+id/btnCancel"
-        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel"
+        tools:text="Location" />
 
     <EditText
         android:id="@+id/etSearch"
