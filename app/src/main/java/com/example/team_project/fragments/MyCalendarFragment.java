@@ -123,7 +123,6 @@ public class MyCalendarFragment extends Fragment {
                         theDaysEvents.add("NONE!");
                     }
                 }
-
                 mAdapter.notifyDataSetChanged();
             }
 

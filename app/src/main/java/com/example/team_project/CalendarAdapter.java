@@ -51,7 +51,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
             tvEventName = itemView.findViewById(R.id.tvEventName);
 
-            itemView.setOnTouchListener(new OnSwipeTouchListener(context) {
+            /*itemView.setOnTouchListener(new OnSwipeTouchListener(context) {
                 public void onSwipeLeft() {
 
                     //make a new array list with what i want to remove and then user"remove" to get it
@@ -60,7 +60,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                       //      notifydatasetchanged();
                 }
 
-            });
+            });*/
         }
 
     }
