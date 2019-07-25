@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -22,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.team_project.DetailsActivity;
@@ -35,6 +37,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -58,6 +61,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private GoogleMap googleMap;
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<Post> reviewCoordinatesList;
+    ImageButton mapicon;
 
     @Nullable
     @Override
@@ -74,6 +78,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
+        Drawable loginActivityBackground = view.findViewById(R.id.mapicon).getBackground();
+        loginActivityBackground.setAlpha(230);
+
+        mapicon = view.findViewById(R.id.mapicon);
+        mapicon.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               enableMyLocationIfPermitted();
+               googleMap.setMinZoomPreference(3);
+           }
+        });
     }
 
     @Override
@@ -88,20 +103,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reviewCoordinatesList = new ArrayList<>();
         queryReviews();
 
-        //example for creating marker for testing
-        LatLng MELBOURNE = new LatLng(40.7128, -74.0060);
-        Marker melbourne = googleMap.addMarker(new MarkerOptions()
-                .position(MELBOURNE)
-                .title("Melbourne")
-                .snippet("Population: 4,137,400"));
-        googleMap.setOnInfoWindowClickListener(this);
-
-
         googleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
         googleMap.setOnMyLocationClickListener(onMyLocationClickListener);
         enableMyLocationIfPermitted();
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.setMinZoomPreference(3);
     }
 
@@ -157,13 +164,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
+
+
     private GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
             new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
                     // smaller number means less zoom in
                     googleMap.setMinZoomPreference(5);
+                    Log.d("imapfragment", "buttonclicklistener");
                     return false;
+
                 }
             };
 
@@ -184,8 +195,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 circleOptions.strokeWidth(6);
 
                 googleMap.addCircle(circleOptions);
+                Log.d("imapfragment", "locationclicklistener");
+
+                // if youre already at this view then go back to initial view
 
             }
+
     };
 
 
