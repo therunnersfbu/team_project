@@ -17,6 +17,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     ArrayList<String> events;
     ArrayList<String> neweventlist;
     Context context;
+    String mRecentlyDeletedItem;
+    int mRecentlyDeletedItemPosition;
 
     public CalendarAdapter(ArrayList<String> theDaysEvents) {
         this.events = theDaysEvents;
@@ -41,6 +43,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     public int getItemCount() {
         return events.size();
     }
+
+    public void deleteItem(int position) {
+        mRecentlyDeletedItem = events.get(position);
+        mRecentlyDeletedItemPosition = position;
+        events.remove(position);
+        notifyItemRemoved(position);
+        //showUndoSnackbar();
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

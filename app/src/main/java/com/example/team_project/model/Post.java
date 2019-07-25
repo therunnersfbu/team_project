@@ -12,11 +12,11 @@ public class Post extends ParseObject {
 
     public static final String KEY_USER = "user";
     public static final String KEY_REVIEW = "review";
-    public static final String KEY_EVENT = "event";
     public static final String KEY_IS_LOCAL = "isLocal";
     public static final String KEY_TAGS = "tags";
-    public static final String KEY_ID = "eventId";
-    public static final String KEY_IMAGE ="photoFile";
+    public static final String KEY_EVENT_PLACE = "eventPointer";
+    public static final String KEY_IMAGE = "photoFile";
+    public static final String KEY_COORDINATES = "coordinates";
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
@@ -30,14 +30,6 @@ public class Post extends ParseObject {
 
     public void setReview(String review) {
         put(KEY_REVIEW, review);
-    }
-
-    public ParseObject getEvent() {
-        return getParseObject(KEY_EVENT);
-    }
-
-    public void setEvent(ParseObject event) {
-        put(KEY_EVENT, event);
     }
 
     public boolean getIsLocal() { return getBoolean(KEY_IS_LOCAL); }
@@ -56,11 +48,19 @@ public class Post extends ParseObject {
 
     public void setTags(ArrayList<Integer> categories) { put(KEY_TAGS, categories); }
 
-    public String getId() {
-        return getString(KEY_ID);
+    public ParseObject getEventPlace() {
+        return getParseObject(KEY_EVENT_PLACE);
     }
 
-    public void setId (String id){
-        put(KEY_ID, id);
+    public void setEventPlace (ParseObject eventPlace){
+        put(KEY_EVENT_PLACE, eventPlace);
+    }
+
+    public String getCoordinates() {
+        return getString(KEY_COORDINATES);
+    }
+
+    public void setCoordinates(String coordinates) {
+        put(KEY_COORDINATES, coordinates);
     }
 }

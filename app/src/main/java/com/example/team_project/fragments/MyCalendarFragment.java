@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.team_project.CalendarAdapter;
 import com.example.team_project.R;
+import com.example.team_project.SwipeToDeleteCallback;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -54,7 +56,6 @@ public class MyCalendarFragment extends Fragment {
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     TextView CurrentDate;
-    TextView tvEventName;
     RecyclerView rvCal;
     Long epochTime;
     ParseUser user = ParseUser.getCurrentUser();
@@ -138,6 +139,8 @@ public class MyCalendarFragment extends Fragment {
         mAdapter = new CalendarAdapter(theDaysEvents);
         rvCal.setLayoutManager(mLayoutManager);
         rvCal.setAdapter(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
+        itemTouchHelper.attachToRecyclerView(rvCal);
 
     }
 
@@ -148,11 +151,11 @@ public class MyCalendarFragment extends Fragment {
         unbinder.unbind();
     }
 
-        public long myMilliSecConvert (String date) throws ParseException {
-            // convert string to date
-            Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-            //convert date to Milliseconds
-            epochTime = milliDate.getTime();
-            return epochTime;
-        }
+    public long myMilliSecConvert(String date) throws ParseException {
+        // convert string to date
+        Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        //convert date to Milliseconds
+        epochTime = milliDate.getTime();
+        return epochTime;
+    }
 }

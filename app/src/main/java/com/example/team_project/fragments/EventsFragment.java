@@ -25,7 +25,6 @@ import butterknife.Unbinder;
 
 public class EventsFragment extends Fragment {
     private Unbinder unbinder;
-
     private RecyclerView rvSuggested;
     private boolean isTags;
     private ArrayList<String> names;
@@ -36,7 +35,7 @@ public class EventsFragment extends Fragment {
     RecyclerView.LayoutManager myManager;
     LinearLayoutManager horizontalLayout;
 
-
+    public static int categoryToMark;
 
     @Nullable
     @Override
@@ -68,6 +67,7 @@ public class EventsFragment extends Fragment {
         btnSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EventsFragment.categoryToMark = -1;
                 Intent intent = new Intent(getContext(), SearchActivity.class);
                 getContext().startActivity(intent);
             }
@@ -79,14 +79,13 @@ public class EventsFragment extends Fragment {
             mbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    EventsFragment.categoryToMark = index;
                     Intent intent = new Intent(getContext(), SearchActivity.class);
                     intent.putExtra("category", index);
                     getContext().startActivity(intent);
                 }
             });
         }
-
-
     }
 
     private void addItems() {

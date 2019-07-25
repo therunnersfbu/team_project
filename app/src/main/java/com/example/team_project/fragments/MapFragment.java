@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -18,14 +19,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.team_project.DetailsActivity;
 import com.example.team_project.R;
 import com.example.team_project.model.Post;
+import com.example.team_project.model.User;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,13 +37,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -48,14 +58,10 @@ import butterknife.Unbinder;
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private Unbinder unbinder;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    public MapFragment map;
-    Context context;
-    private MapView mapView;
     private GoogleMap googleMap;
-    protected List<Post> mPosts;
-    public static final String EVENT_ID = "eventID";
-    public static final String TYPE = "type";
-    public static final String DISTANCE = "distance";
+    ParseUser user = ParseUser.getCurrentUser();
+    ArrayList<Post> reviewCoordinatesList;
+    ImageButton mapicon;
 
     @Nullable
     @Override
@@ -72,6 +78,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
+        Drawable loginActivityBackground = view.findViewById(R.id.mapicon).getBackground();
+        loginActivityBackground.setAlpha(230);
+
+        mapicon = view.findViewById(R.id.mapicon);
+        mapicon.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               enableMyLocationIfPermitted();
+               googleMap.setMinZoomPreference(3);
+           }
+        });
     }
 
     @Override
@@ -83,31 +100,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onMapReady(GoogleMap map) {
         googleMap = map;
-
-        // TODO once review ability is implemented, will put marker at each place event has been reviewed
-        /*for (int x = 0; x < mPosts.size(); x++) {
-         Marker name = googleMap.addMarker(new MarkerOptions()
-            .position(new LatLng(mPosts.get(i).getLat,mPosts.get(i).getLon)) //get coordinates
-            .title("Marker " + String.valueOf(x))) // get id name from api
-            .snippet(get description/review) //get review
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)); //get image list parse)
-            googleMap.setOnInfoWindowClickListener(this);
-        }*/
-
-        //example for creating marker for testing
-        LatLng MELBOURNE = new LatLng(40.7128, -74.0060);
-        Marker melbourne = googleMap.addMarker(new MarkerOptions()
-                .position(MELBOURNE)
-                .title("Melbourne")
-                .snippet("Population: 4,137,400"));
-        googleMap.setOnInfoWindowClickListener(this);
-
+        reviewCoordinatesList = new ArrayList<>();
+        queryReviews();
 
         googleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
         googleMap.setOnMyLocationClickListener(onMyLocationClickListener);
         enableMyLocationIfPermitted();
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.setMinZoomPreference(3);
     }
 
@@ -163,13 +164,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
+
+
     private GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
             new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
                     // smaller number means less zoom in
                     googleMap.setMinZoomPreference(5);
+                    Log.d("imapfragment", "buttonclicklistener");
                     return false;
+
                 }
             };
 
@@ -190,7 +195,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 circleOptions.strokeWidth(6);
 
                 googleMap.addCircle(circleOptions);
+                Log.d("imapfragment", "locationclicklistener");
+
+                // if youre already at this view then go back to initial view
+
             }
+
     };
+
+
+    protected void queryReviews(){
+        ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
+        //when we get post back we'll also get the full details of the user
+        reviewQuery.setLimit(1000);
+        reviewQuery.include(Post.KEY_USER);
+
+        reviewQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                if (e != null) {
+                    Log.e("MapFragment", "error with query");
+                    e.printStackTrace();
+                    return;
+                }
+
+                for(int i = 0; i < posts.size(); i++) {
+                    Post post = posts.get(i);
+                    String reviewCoordinates = post.getCoordinates();
+                    String review = post.getReview();
+                    String name = post.getObjectId();
+                    double latitude = Double.parseDouble(reviewCoordinates.substring(0,8));
+                    double longitude = Double.parseDouble(reviewCoordinates.substring(9));
+                    Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(latitude, -longitude))
+                            .title(name)
+                            .snippet(review));
+                    //googleMap.setOnInfoWindowClickListener(this);
+
+                }
+
+            }
+
+        });
+    }
 
 }
