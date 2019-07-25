@@ -23,11 +23,7 @@
         <activity android:name=".ComposeReviewActivity" />
         <activity android:name=".DetailsActivity" />
         <activity android:name=".SurveyActivity" />
-        <activity android:name=".SearchActivity" >
-            <meta-data
-                android:name="com.google.android.maps.v2.API_KEY"
-                android:value="@string/google_maps_api_key" />
-        </activity>
+        <activity android:name=".SearchActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".BottomNavActivity" />
         <activity android:name=".LoginActivity">
