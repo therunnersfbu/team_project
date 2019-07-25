@@ -7,53 +7,61 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
-    private List<String> mEvents;
+    ArrayList<String> events;
+    ArrayList<String> neweventlist;
     Context context;
-    // pass in the Tweets array into the constructor
-    public CalendarAdapter(ArrayList<String> theDaysEvents) {
-        mEvents = theDaysEvents;
-    }
 
+    public CalendarAdapter(ArrayList<String> theDaysEvents) {
+        this.events = theDaysEvents;
+    }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_calevent, viewGroup, false);
+    public CalendarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_calevent, viewGroup, false);
         return new ViewHolder(view);
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        String events = mEvents.get(position);
-        viewHolder.bind(events);
+    public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
+        //where we associate data with actual row
+        viewHolder.tvEventName.setText(" - " + events.get(i));
+
     }
 
     @Override
     public int getItemCount() {
-        return mEvents.size();
+        return events.size();
     }
 
-    // create ViewHolder class
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         public TextView tvEventName;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             tvEventName = itemView.findViewById(R.id.tvEventName);
 
+            /*itemView.setOnTouchListener(new OnSwipeTouchListener(context) {
+                public void onSwipeLeft() {
+
+                    //make a new array list with what i want to remove and then user"remove" to get it
+                    // get array list from parse then remove item and then send it back to parse
+                    //get, then remove it, then put
+                      //      notifydatasetchanged();
+                }
+
+            });*/
         }
 
-        public void bind(String events) {
-            // bind the view elements to the post
-            tvEventName.setText(events);
-        }
     }
-
 }

@@ -56,29 +56,33 @@ public class MyCalendarFragment extends Fragment {
     TextView CurrentDate;
     TextView tvEventName;
     RecyclerView rvCal;
-    CalendarAdapter calendarAdapter;
     Long epochTime;
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     ArrayList<String> theDaysEvents;
+    RecyclerView.LayoutManager mLayoutManager;
+    RecyclerView.Adapter mAdapter;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_my_calendar, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
-
     }
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+
         rvCal = view.findViewById(R.id.rvCal);
-        tvEventName = view.findViewById(R.id.tvEventName);
         theDaysEvents = new ArrayList<>();
+        setRecyclerView(view);
+
 
         CurrentDate = view.findViewById(R.id.current_Date);
         String currentDate = dateFormat.format(calendar.getTime());
@@ -87,12 +91,13 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar = view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
+
         // add all events to calendar
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
                 Event ev = null;
                 try {
-                    ev = new Event(Color.BLUE, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
+                    ev = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -105,25 +110,20 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-
-                Log.d("MyCalendarFragment", "Array List(Added Events:)" + addedEvents);
-
+                theDaysEvents.clear();
                 String numberDate = simpleDateFormat.format(dateClicked);
-                Log.d("MyCalendarFragment", "new date:" + numberDate);
-
                 if (addedEvents != null) {
                     for (int x = 0; x < addedEvents.size(); x++) {
-                        Log.d("MyCalendarFragment", "addedevent substring:" + addedEvents.get(x).substring(0, 10));
                         if (numberDate.equals(addedEvents.get(x).substring(0, 10))) {
-                            Log.d("MyCalendarFragment", "inside loop");
                             String eventName = addedEvents.get(x).substring(11);
-                            Log.d("MyCalendarFragment", "Same Day event:" + eventName);
-                            //make list with only events on clicked date
                             theDaysEvents.add(eventName);
-                            Log.d("MyCalendarFragment", "the days event:" + theDaysEvents);
                         }
                     }
+                    if (theDaysEvents.size() == 0) {
+                        theDaysEvents.add("NONE!");
+                    }
                 }
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -131,27 +131,16 @@ public class MyCalendarFragment extends Fragment {
                 CurrentDate.setText(dateFormat.format(firstDayOfNewMonth));
             }
         });
-
-        if (theDaysEvents != null) {
-            setRecyclerView(view);
-        }
     }
-
 
     private void setRecyclerView(View view) {
-        calendarAdapter = new CalendarAdapter(theDaysEvents);
-        rvCal.setAdapter(calendarAdapter);
-        rvCal.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        //create endless recycling view
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-
-        // RecyclerView setup (layout manager, use adapter)
-        rvCal.setLayoutManager(linearLayoutManager);
-        // set the adapter
-        rvCal.setAdapter(calendarAdapter);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mAdapter = new CalendarAdapter(theDaysEvents);
+        rvCal.setLayoutManager(mLayoutManager);
+        rvCal.setAdapter(mAdapter);
 
     }
+
 
     @Override
     public void onDestroyView() {
