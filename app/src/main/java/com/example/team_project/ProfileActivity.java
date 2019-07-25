@@ -1,5 +1,6 @@
 package com.example.team_project;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,10 +11,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -77,7 +81,7 @@ public class ProfileActivity extends AppCompatActivity {
         ivProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openImageIntent();
+                askFilePermission();
             }
         });
 
@@ -193,6 +197,31 @@ public class ProfileActivity extends AppCompatActivity {
         }
         cursor.close();
         return filePath;
+    }
+
+    private void askFilePermission() {
+        ActivityCompat.requestPermissions(ProfileActivity.this,
+        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openImageIntent();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(ProfileActivity.this, "Permission denied to read your External storage",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
     }
 
     private void savePicture() {

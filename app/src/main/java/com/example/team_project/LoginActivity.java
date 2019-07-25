@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            final Intent intent = new Intent(LoginActivity.this, BottomNavActivity.class);
             startActivity(intent);
             // so user not logged out
             finish();
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (e == null) { // there are no errors
                     Log.d("LoginActivity", "Login successful");
 
-                    final Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    final Intent intent = new Intent(LoginActivity.this, BottomNavActivity.class);
                     startActivity(intent);
 
                     // so that when user go backs they are not logged out

@@ -1,6 +1,7 @@
 package com.example.team_project.model;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
@@ -14,6 +15,8 @@ public class Post extends ParseObject {
     public static final String KEY_EVENT = "event";
     public static final String KEY_IS_LOCAL = "isLocal";
     public static final String KEY_TAGS = "tags";
+    public static final String KEY_ID = "eventId";
+    public static final String KEY_IMAGE ="photoFile";
 
     public ParseUser getUser() {
         return getParseUser(KEY_USER);
@@ -41,7 +44,23 @@ public class Post extends ParseObject {
 
     public void setIsLocal(boolean isLocal) {put(KEY_IS_LOCAL, isLocal); }
 
+    public ParseFile getImage() {
+        return getParseFile(KEY_IMAGE);
+    }
+
+    public void setImage(ParseFile parseFile) {
+        put(KEY_IMAGE, parseFile);
+    }
+
     public ArrayList<Integer> getTags() { return (ArrayList<Integer>) get(KEY_TAGS); }
 
     public void setTags(ArrayList<Integer> categories) { put(KEY_TAGS, categories); }
+
+    public String getId() {
+        return getString(KEY_ID);
+    }
+
+    public void setId (String id){
+        put(KEY_ID, id);
+    }
 }

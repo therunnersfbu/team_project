@@ -39,10 +39,9 @@
         android:drawableLeft="@drawable/location_icon"
         android:drawablePadding="10dp"
         android:ems="10"
-        android:text="Current Location"
-        android:textColor="@color/hyperlinkBlue"
         android:inputType="textPersonName"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/hyperlinkBlue"
         app:layout_constraintEnd_toEndOf="@+id/btnSearch"
         app:layout_constraintStart_toStartOf="@+id/btnCancel"
         app:layout_constraintTop_toBottomOf="@+id/btnCancel" />

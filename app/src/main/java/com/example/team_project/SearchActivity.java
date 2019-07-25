@@ -2,6 +2,7 @@ package com.example.team_project;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +14,10 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
@@ -20,10 +25,12 @@ import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
-
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.compat.ui.PlacePicker;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -31,6 +38,7 @@ import java.util.Calendar;
 public class SearchActivity extends AppCompatActivity implements LocationListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private final int PLACE_PICKER_REQUEST = 160;
     private RecyclerView rvTags;
     private RecyclerView rvResults;
     private boolean isTags;
@@ -52,6 +60,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private EventsApi eApi;
     private PlacesApi pApi;
     private boolean canGetMore;
+    private PlacePicker.IntentBuilder builder;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -61,14 +70,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
         initializeVars();
+
         category = getIntent().getIntExtra("category", -1);
         isTags = true;
         isPlace = true;
         canGetMore = true;
-        // set type to either place or event
         if(category == 7 || category == 8) isPlace = false;
-        setContentView(R.layout.activity_search);
         rvTags = findViewById(R.id.rvTags);
         rvResults = findViewById(R.id.rvResults);
         rvTags.setLayoutManager(myManager);
@@ -80,6 +89,19 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
+
+        ((Button) findViewById(R.id.btnCancel)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    startActivityForResult(builder.build(SearchActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         scrollListener = new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -240,13 +262,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         resultsAdapter.notifyDataSetChanged();
     }
 
-    private void addResults(String name) {
-        results.add("One");
-        results.add("Two");
-        results.add("Three");
-        results.add("Four");
-        results.add("Five");
-        results.add("Six");
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                com.google.android.libraries.places.compat.Place place = PlacePicker.getPlace(data, this);
+                LatLng latLng = place.getLatLng();
+                Log.d("date picker", latLng.latitude + " " + latLng.longitude);
+            }
+        }
     }
 
     private void addTags() {
@@ -273,6 +296,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         eApi = new EventsApi(this);
         pApi = new PlacesApi(this);
+        builder = new PlacePicker.IntentBuilder();
     }
 
     @Override
