@@ -111,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void openImageIntent() {
 
         // Determine Uri of camera image to save.
-        final File root = new File(Environment.getExternalStorageDirectory() + File.separator + "MyDir" + File.separator);
+        final File root = new File(Environment.getExternalStorageDirectory() + File.separator + "Pctures" + File.separator);
         root.mkdirs();
         final String fname = "img_"+ System.currentTimeMillis() + ".jpg";
         final File sdImageMainDirectory = new File(root, fname);
