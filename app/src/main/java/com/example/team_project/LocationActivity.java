@@ -29,6 +29,7 @@ public class LocationActivity extends AppCompatActivity {
     private LocationAdapter mLocationAdapter;
     private Button btnSearch;
     private int category;
+    public static LocationActivity locationActivity;
 
     RecyclerView.LayoutManager resultsManager;
     LinearLayoutManager linearLayoutManager;
@@ -47,6 +48,7 @@ public class LocationActivity extends AppCompatActivity {
         mLocNames = new ArrayList<>();
         rvLocResults.setLayoutManager(resultsManager);
         btnSearch = findViewById(R.id.btnSearch);
+        locationActivity = this;
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

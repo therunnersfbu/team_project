@@ -17,12 +17,17 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     private final List<String> names;
     private final List<String> ids;
     private final int category;
+    public static String locName;
+    public static String newLoc;
+    public static boolean isCurLoc;
+
 
     public LocationAdapter(ArrayList<String> locs, ArrayList<String> names, ArrayList<String> ids, int category) {
         this.locs = locs;
         this.names = names;
         this.ids = ids;
         this.category = category;
+        isCurLoc = true;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -39,11 +44,16 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         public void onClick(View v) {
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                Intent intent = new Intent(v.getContext(), SearchActivity.class);
+                locName = names.get(position);
+                newLoc = locs.get(position);
+                isCurLoc = false;
+                LocationActivity.locationActivity.finish();
+                /*Intent intent = new Intent(v.getContext(), SearchActivity.class);
                 intent.putExtra("newLocation", locs.get(position));
                 intent.putExtra("isCurLoc", false);
                 intent.putExtra("category", category);
-                v.getContext().startActivity(intent);
+                intent.putExtra("name", names.get(position));
+                v.getContext().startActivity(intent);*/
             }
         }
     }
