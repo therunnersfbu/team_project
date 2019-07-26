@@ -35,8 +35,8 @@ public class DirectionsApi {
         origin = "&origins=" + lat + "," + lng;
     }
 
-    public void addDestination(double[] destination) {
-        destinations += destination[0] + "," + destination[1] + "|";
+    public void addDestination(String destination) {
+        destinations += destination.replace(" ", ",") + "|";
     }
 
     public void getDistance() {

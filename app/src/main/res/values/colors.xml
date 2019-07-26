@@ -9,4 +9,5 @@
     <color name="green">@android:color/holo_green_dark</color>
     <color name="tagNotSelected">#adadad</color>
     <color name="tagSelected">#ff3030</color>
+    <color name="reviewNot">#ACE0FF</color>
 </resources>

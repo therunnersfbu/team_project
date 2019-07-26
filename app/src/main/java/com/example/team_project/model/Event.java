@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 public class Event {
     private String id;
-    private double[] location;
+    private String location;
     private String name;
     private String venueName;
     private String address;
@@ -15,10 +15,7 @@ public class Event {
     public static Event eventFromJson(JSONObject object, boolean singleEvent) throws JSONException {
         Event event = new Event();
         event.id = object.getString("id");
-        double[] loc = new double[2];
-        loc[0] = Double.parseDouble(object.getString("latitude"));
-        loc[1] = Double.parseDouble(object.getString("longitude"));
-        event.location = loc;
+        event.location = object.getString("latitude") + " " + object.getString("longitude");
         event.name = object.getString("title");
         event.venueName = object.getString("venue_name");
 //        String postalCode =  object.getString("postal_code").equals("null") ? "" : " " + object.getString("postal_code");
@@ -33,7 +30,7 @@ public class Event {
         this.id = id;
     }
 
-    public void setLocation(double[] location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -57,7 +54,7 @@ public class Event {
         return id;
     }
 
-    public double[] getLocation() {
+    public String getLocation() {
         return location;
     }
 

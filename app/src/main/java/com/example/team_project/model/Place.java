@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Place {
     // data for an event
     private String id;
-    private double[] location;
+    private String location;
     private String name;
     private String address;
     private String distance;
@@ -24,10 +24,8 @@ public class Place {
         Place place = new Place();
         try {
             place.id = object.getString("place_id");
-            double[] loc = new double[2];
-            loc[0] = object.getJSONObject("geometry").getJSONObject("location").getDouble("lat");
-            loc[1] = object.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
-            place.location = loc;
+            place.location = object.getJSONObject("geometry").getJSONObject("location").getDouble("lat")
+                    + " " + object.getJSONObject("geometry").getJSONObject("location").getDouble("lng");
             place.name = object.getString("name");
             place.address = object.getString("vicinity");
         } catch (JSONException e) {
@@ -65,7 +63,7 @@ public class Place {
         return id;
     }
 
-    public double[] getLocation() {
+    public String getLocation() {
         return location;
     }
 
@@ -107,7 +105,7 @@ public class Place {
         this.id = id;
     }
 
-    public void setLocation(double[] location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 

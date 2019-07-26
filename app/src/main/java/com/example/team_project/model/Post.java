@@ -44,13 +44,11 @@ public class Post extends ParseObject {
         put(KEY_IMAGE, parseFile);
     }
 
-    public ArrayList<Integer> getTags() { return (ArrayList<Integer>) get(KEY_TAGS); }
+    public ArrayList<Boolean> getTags() { return (ArrayList<Boolean>) get(KEY_TAGS); }
 
-    public void setTags(ArrayList<Integer> categories) { put(KEY_TAGS, categories); }
+    public void setTags(ArrayList<Boolean> categories) { put(KEY_TAGS, categories); }
 
-    public ParseObject getEventPlace() {
-        return getParseObject(KEY_EVENT_PLACE);
-    }
+    public PlaceEvent getEventPlace() { return (PlaceEvent) getParseObject(KEY_EVENT_PLACE); }
 
     public void setEventPlace (ParseObject eventPlace){
         put(KEY_EVENT_PLACE, eventPlace);

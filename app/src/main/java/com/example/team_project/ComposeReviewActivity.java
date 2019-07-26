@@ -19,7 +19,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,7 +54,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
 
     private static final String EVENT_ID = "eventID";
     private static final String NAME = "eventName";
-    private static final int[][] tagsToShow = {
+    /* private static final int[][] tagsToShow = {
         {2, 4, 6, 7, 18},
         {1, 2, 4, 6, 7, 18},
         {2, 4, 6, 7, 18},
@@ -63,7 +66,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
         {12, 18},
         {13, 14, 18},
         {15, 16, 17},
-        {12, 18}};
+        {12, 18}}; */
     private final int YOUR_SELECT_PICTURE_REQUEST_CODE = 150;
     private TextView tvHeader;
     private EditText etBody;
@@ -79,7 +82,10 @@ public class ComposeReviewActivity extends AppCompatActivity{
     private String photoPath;
     private File photoFile;
     private String location;
+    private ArrayList<View> tags;
+    private ArrayList<Boolean> tagsSelected;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +122,54 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 finish();
             }
         });
+        etBody.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (etBody.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_SCROLL:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        tags = new ArrayList<>();
+        tagsSelected = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            tagsSelected.add(false);
+        }
+        for (int i = 1; i < 20; i++) {
+            View view = createReviewItem(getTagStr(i));
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickTag(v);
+                }
+            });
+            ((CardView) view).setCardBackgroundColor(getResources().getColor(R.color.reviewNot));
+            tags.add(view);
+            flTags.addView(view);
+        }
+
+    }
+
+    private void clickTag(View view) {
+        int index = tags.indexOf(view) + 1;
+        tagsSelected.set(index, !tagsSelected.get(index));
+        setColor(index);
+    }
+
+    private void setColor(int index) {
+        CardView card = (CardView) tags.get(index - 1);
+        if (tagsSelected.get(index)) {
+            card.setCardBackgroundColor(getResources().getColor(R.color.hyperlinkBlue));
+        } else {
+            card.setCardBackgroundColor(getResources().getColor(R.color.reviewNot));
+        }
     }
 
     @Override
@@ -146,6 +200,14 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private View createReviewItem(String name) {
+        LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.item_tag, null);
+        TextView tvName = view.findViewById(R.id.tvName);
+        tvName.setText(name);
+        return view;
     }
 
     private void checkPlaceEventExists() {
@@ -208,10 +270,31 @@ public class ComposeReviewActivity extends AppCompatActivity{
         myPost.setEventPlace(placeEvent);
         myPost.setIsLocal(sLocal.isChecked());
         myPost.setCoordinates(location);
+        myPost.setTags(tagsSelected);
+
+        ArrayList<Integer> placeEventTags = placeEvent.getTags();
+        for (int i = 0; i < tagsSelected.size(); i++) {
+            if (tagsSelected.get(i)) {
+                placeEventTags.set(i, placeEventTags.get(i) + 1);
+            }
+        }
+        placeEvent.setTags(placeEventTags);
+        placeEvent.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null) {
+                    Log.d("PostActivity", "event update successful");
+                } else {
+                    Log.d("PostActivity", "event update unsuccessful");
+                    e.printStackTrace();
+                }
+            }
+        });
+
         myPost.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e==null) {
+                if(e == null) {
                     Log.d("PostActivity", "post successful");
                     finish();
                 } else {
