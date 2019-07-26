@@ -116,11 +116,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getContext(), "Info window clicked",
                 Toast.LENGTH_SHORT).show();
-
-        // TODO after detailed page implemented, will send to detail review page for that location
-        /*Intent intent = new Intent(getActivity(),DetailsActivity.class);
-        intent.putExtra(EVENT_ID, *method to retrieve event/place id*)
-        startActivity(intent);*/
     }
 
     private void enableMyLocationIfPermitted() {
@@ -134,7 +129,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         } else if (googleMap != null) {
             googleMap.setMyLocationEnabled(true);
             googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0) );
-
         }
     }
 
@@ -160,21 +154,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
                 return;
             }
-
         }
     }
-
 
 
     private GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
             new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
-                    // smaller number means less zoom in
                     googleMap.setMinZoomPreference(5);
-                    Log.d("imapfragment", "buttonclicklistener");
                     return false;
-
                 }
             };
 
@@ -195,13 +184,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 circleOptions.strokeWidth(6);
 
                 googleMap.addCircle(circleOptions);
-                Log.d("imapfragment", "locationclicklistener");
-
-                // if youre already at this view then go back to initial view
 
             }
-
-    };
+        };
 
 
     protected void queryReviews(){
@@ -209,6 +194,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         //when we get post back we'll also get the full details of the user
         reviewQuery.setLimit(1000);
         reviewQuery.include(Post.KEY_USER);
+        reviewQuery.include(Post.KEY_EVENT_PLACE);
 
         reviewQuery.findInBackground(new FindCallback<Post>() {
             @Override
@@ -223,15 +209,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     Post post = posts.get(i);
                     String reviewCoordinates = post.getCoordinates();
                     String review = post.getReview();
-                    String name = post.getObjectId();
+                    String name = post.getEventPlace().getName();
                     double latitude = Double.parseDouble(reviewCoordinates.substring(0,8));
                     double longitude = Double.parseDouble(reviewCoordinates.substring(9));
                     Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(latitude, -longitude))
                             .title(name)
                             .snippet(review));
-                    //googleMap.setOnInfoWindowClickListener(this);
-
                 }
 
             }

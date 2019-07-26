@@ -48,9 +48,7 @@ public class Post extends ParseObject {
 
     public void setTags(ArrayList<Integer> categories) { put(KEY_TAGS, categories); }
 
-    public ParseObject getEventPlace() {
-        return getParseObject(KEY_EVENT_PLACE);
-    }
+    public PlaceEvent getEventPlace() { return (PlaceEvent) getParseObject(KEY_EVENT_PLACE); }
 
     public void setEventPlace (ParseObject eventPlace){
         put(KEY_EVENT_PLACE, eventPlace);
