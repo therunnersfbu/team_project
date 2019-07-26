@@ -49,7 +49,6 @@ import butterknife.Unbinder;
 import static com.parse.Parse.getApplicationContext;
 
 public class MyCalendarFragment extends Fragment {
-    Context context;
     private Unbinder unbinder;
     CompactCalendarView compactCalendar;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -61,6 +60,7 @@ public class MyCalendarFragment extends Fragment {
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     ArrayList<String> theDaysEvents;
+    public List<Event> calendarEvents;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
 
@@ -80,6 +80,8 @@ public class MyCalendarFragment extends Fragment {
 
 
 
+
+
         rvCal = view.findViewById(R.id.rvCal);
         theDaysEvents = new ArrayList<>();
         setRecyclerView(view);
@@ -93,18 +95,33 @@ public class MyCalendarFragment extends Fragment {
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
 
-        // add all events to calendar
-        if (addedEvents != null) {
+        // add each individual event to calendar
+        /*if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
-                Event ev = null;
+                Event event = null;
                 try {
-                    ev = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
+                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                compactCalendar.addEvent(ev);
+                compactCalendar.addEvent(event);
             }
+        }*/
+
+        // add list of events to calendar
+        if (addedEvents != null) {
+            for (int x = 0; x < addedEvents.size(); x++) {
+                Event event = null;
+                try {
+                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                calendarEvents.add(event);
+            }
+            compactCalendar.addEvents(calendarEvents);
         }
+
 
         // retrieve events on clicked on day and display in recycler view
         // multiple Log outputs are present for testing purposes

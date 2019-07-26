@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.team_project.DetailsActivity;
@@ -207,19 +208,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 for(int i = 0; i < posts.size(); i++) {
                     Post post = posts.get(i);
-                    String reviewCoordinates = post.getCoordinates();
+                    String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                     String review = post.getReview();
                     String name = post.getEventPlace().getName();
-                    double latitude = Double.parseDouble(reviewCoordinates.substring(0,8));
-                    double longitude = Double.parseDouble(reviewCoordinates.substring(9));
+                    double latitude = Double.parseDouble(reviewCoordinates[0]);
+                    double longitude = Double.parseDouble(reviewCoordinates[1]);
                     Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(latitude, -longitude))
+                            .position(new LatLng(latitude, longitude))
                             .title(name)
                             .snippet(review));
                 }
-
             }
-
         });
     }
 
