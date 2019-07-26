@@ -149,7 +149,9 @@ public class PlacesApi {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
                     //TODO Memory leak!
-                    ((LocationActivity) source).apiFinishedGetLocation(place.getLocation(), place.getPlaceName());
+                    double[] doubLocs = place.getLocation();
+                    String mLocs = doubLocs[1]+ " " + doubLocs[2];
+                    ((LocationActivity) source).apiFinishedGetLocation(mLocs, place.getPlaceName());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

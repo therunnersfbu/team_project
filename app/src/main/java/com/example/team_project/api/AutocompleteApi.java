@@ -26,6 +26,7 @@ public class AutocompleteApi {
     private String input;
     private JSONArray array;
     private ArrayList<String> ids;
+    private ArrayList<String> names;
     private Object source;
 
     public AutocompleteApi(Object source) {
@@ -54,15 +55,17 @@ public class AutocompleteApi {
     private void getPlaces() {
         String url = API_BASE_URL + input + key;
         ids = new ArrayList<>();
+        names = new ArrayList<>();
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     JSONArray results = response.getJSONArray("predictions");
-                    for (int i = 0; i < results.length()||i<5; i++) {
+                    for (int i = 0; i<5; i++) {
                         ids.add(results.getJSONObject(i).getString("place_id"));
+                        names.add(results.getJSONObject(i).getString("description"));
                     }
-                    ((LocationActivity) source).apiFinishedLocation(ids);
+                    ((LocationActivity) source).apiFinishedLocation(ids, names);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

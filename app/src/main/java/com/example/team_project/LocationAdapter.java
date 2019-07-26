@@ -13,11 +13,11 @@ import java.util.List;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
-    private final List<double[]> locs;
+    private final List<String> locs;
     private final List<String> names;
     private final List<String> ids;
 
-    public LocationAdapter(ArrayList<double[]> locs, ArrayList<String> names, ArrayList<String> ids) {
+    public LocationAdapter(ArrayList<String> locs, ArrayList<String> names, ArrayList<String> ids) {
         this.locs = locs;
         this.names = names;
         this.ids = ids;
