@@ -1,5 +1,6 @@
 package com.example.team_project;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
@@ -49,6 +52,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ItemViewHolder testP;
     private Context context;
     private boolean isLocal;
+    private float lastX;
 
     public EventsDetailsAdapter(List<Post> mPosts, String id, Boolean type, String distance, Context context) {
         this.mPosts = mPosts;
@@ -70,8 +74,9 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private Button btnReview;
         private ImageView ivAdd;
         private ImageView ivLike;
+        private ViewFlipper vfGallery;
 
-
+        @SuppressLint("ClickableViewAccessibility")
         public HeaderViewHolder(@NonNull View view) {
             super(view);
             tvEventName = (TextView) view.findViewById(R.id.tvEventName);
@@ -85,6 +90,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             btnReview = (Button) view.findViewById(R.id.btnReview);
             ivAdd = (ImageView) view.findViewById(R.id.ivAdd);
             ivLike = (ImageView) view.findViewById(R.id.ivLike);
+            vfGallery = (ViewFlipper) view.findViewById(R.id.vfGallery);
 
             //TODO enum place / event
             if(!type) {
@@ -111,6 +117,61 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                     intent.putExtra("location", location);
                     v.getContext().startActivity(intent);
+                }
+            });
+
+            for (int i = 0; i < 10; i++) {
+                TextView tv = new TextView(context);
+                tv.setText("number: " + i);
+                vfGallery.addView(tv);
+            }
+
+            vfGallery.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent touchevent) {
+                    switch (touchevent.getAction())
+                    {
+                        // when user first touches the screen to swap
+                        case MotionEvent.ACTION_DOWN:
+                        {
+                            lastX = touchevent.getX();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP:
+                        {
+                            float currentX = touchevent.getX();
+
+                            // if left to right swipe on screen
+                            if (lastX < currentX)
+                            {
+                                // If no more View/Child to flip
+                                if (vfGallery.getDisplayedChild() == 0)
+                                    break;
+
+                                // set the required Animation type to ViewFlipper
+                                // The Next screen will come in form Left and current Screen will go OUT from Right
+                                vfGallery.setInAnimation(context, R.anim.in_from_left);
+                                vfGallery.setOutAnimation(context, R.anim.out_to_right);
+                                // Show the next Screen
+                                vfGallery.showNext();
+                            }
+
+                            // if right to left swipe on screen
+                            if (lastX > currentX)
+                            {
+                                if (vfGallery.getDisplayedChild() == 1)
+                                    break;
+                                // set the required Animation type to ViewFlipper
+                                // The Next screen will come in form Right and current Screen will go OUT from Left
+                                vfGallery.setInAnimation(context, R.anim.in_from_right);
+                                vfGallery.setOutAnimation(context, R.anim.out_to_left);
+                                // Show The Previous Screen
+                                vfGallery.showPrevious();
+                            }
+                            break;
+                        }
+                    }
+                    return true;
                 }
             });
         }
