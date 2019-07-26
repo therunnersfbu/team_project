@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.team_project.DetailsActivity;
+import com.example.team_project.EventsDetailsAdapter;
 import com.example.team_project.R;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
@@ -63,6 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<Post> reviewCoordinatesList;
     ImageButton mapicon;
+    Context context;
 
     @Nullable
     @Override
@@ -114,9 +116,49 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getContext(), "Info window clicked",
-                Toast.LENGTH_SHORT).show();
+    public void onInfoWindowClick(final Marker marker) {
+
+        final LatLng windowPosition = marker.getPosition();
+        ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
+        //when we get post back we'll also get the full details of the user
+        reviewQuery.setLimit(1000);
+        reviewQuery.include(Post.KEY_USER);
+        reviewQuery.include(Post.KEY_EVENT_PLACE);
+
+        reviewQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts, ParseException e) {
+                if (e != null) {
+                    Log.e("MapFragment", "error with query");
+                    e.printStackTrace();
+                    return;
+                }
+
+                for (int i = 0; i < posts.size(); i++) {
+                    Post post = posts.get(i);
+                    String[] reviewCoordinates = post.getCoordinates().split("\\s+");
+                    String review = post.getReview();
+                    String name = post.getEventPlace().getName();
+                    double latitude = Double.parseDouble(reviewCoordinates[0]);
+                    double longitude = Double.parseDouble(reviewCoordinates[1]);
+                    LatLng markerPosition = new LatLng(latitude, longitude);
+                    Boolean type;
+                    if (markerPosition.equals(windowPosition)) {
+                        String eventApiId = post.getEventPlace().getAppId();
+                        if ('E' != eventApiId.charAt(0)) {
+                            type = true;
+                        } else {
+                            type = false;
+                        }
+                        Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                        intent.putExtra("eventID", eventApiId);
+                        intent.putExtra("type", type);
+                        intent.putExtra("distance", "unknown");
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
     }
 
     private void enableMyLocationIfPermitted() {
@@ -217,6 +259,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                             .position(new LatLng(latitude, longitude))
                             .title(name)
                             .snippet(review));
+                    googleMap.setOnInfoWindowClickListener(MapFragment.this);
                 }
             }
         });
