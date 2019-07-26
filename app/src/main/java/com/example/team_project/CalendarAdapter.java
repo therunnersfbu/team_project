@@ -15,8 +15,6 @@ import java.util.List;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
-    ArrayList<String> neweventlist;
-    Context context;
     String mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
 
@@ -28,6 +26,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public CalendarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_calevent, viewGroup, false);
+
         return new ViewHolder(view);
 
     }
@@ -49,7 +48,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         mRecentlyDeletedItemPosition = position;
         events.remove(position);
         notifyItemRemoved(position);
-        //showUndoSnackbar();
     }
 
 
@@ -61,17 +59,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             super(itemView);
 
             tvEventName = itemView.findViewById(R.id.tvEventName);
-
-            /*itemView.setOnTouchListener(new OnSwipeTouchListener(context) {
-                public void onSwipeLeft() {
-
-                    //make a new array list with what i want to remove and then user"remove" to get it
-                    // get array list from parse then remove item and then send it back to parse
-                    //get, then remove it, then put
-                      //      notifydatasetchanged();
-                }
-
-            });*/
         }
 
     }

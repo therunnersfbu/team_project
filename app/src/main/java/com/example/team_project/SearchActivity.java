@@ -15,7 +15,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +27,23 @@ import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity implements LocationListener {
+public class SearchActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private final int PLACE_PICKER_REQUEST = 160;
+    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168), new LatLng(71,136));
     private RecyclerView rvTags;
     private RecyclerView rvResults;
     private boolean isTags;
@@ -56,6 +65,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private EventsApi eApi;
     private PlacesApi pApi;
     private boolean canGetMore;
+    private EditText tvLocation;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -84,6 +94,15 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvTags.setAdapter(adapter);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
+        tvLocation = findViewById(R.id.etLocation);
+
+        tvLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), LocationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         scrollListener = new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -273,7 +292,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     @Override
     public void onLocationChanged(Location location) {
         if (location != null) {
-            Log.v("Location Changed", location.getLatitude() + " and " + location.getLongitude());
+            Log.v("Location  Changed", location.getLatitude() + " and " + location.getLongitude());
             this.location = location;
             longitude = location.getLongitude();
             latitude = location.getLatitude();
@@ -301,4 +320,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
     }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
 }
