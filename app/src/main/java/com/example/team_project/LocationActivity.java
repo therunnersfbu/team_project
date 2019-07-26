@@ -28,6 +28,7 @@ public class LocationActivity extends AppCompatActivity {
     private AutocompleteApi LApi;
     private LocationAdapter mLocationAdapter;
     private Button btnSearch;
+    private int category;
 
     RecyclerView.LayoutManager resultsManager;
     LinearLayoutManager linearLayoutManager;
@@ -39,6 +40,7 @@ public class LocationActivity extends AppCompatActivity {
         etSearch = findViewById(R.id.etSearch);
         rvLocResults = findViewById(R.id.rvLocResults);
         mLocations = new ArrayList<>();
+        category = getIntent().getIntExtra("category", -1);
         resultsManager = new LinearLayoutManager(this);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mLocIds = new ArrayList<>();
@@ -54,7 +56,7 @@ public class LocationActivity extends AppCompatActivity {
                 populateList();
             }
         });
-        mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds);
+        mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds, category);
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
         LApi = new AutocompleteApi(this);

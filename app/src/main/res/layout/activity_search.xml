@@ -32,28 +32,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <TextView
         android:id="@+id/etLocation"
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:drawableLeft="@drawable/location_icon"
         android:drawablePadding="10dp"
-        android:ems="10"
-        android:inputType="textPersonName"
+        android:paddingLeft="2dp"
+        android:paddingTop="20dp"
+        android:text="Current Location"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/hyperlinkBlue"
         app:layout_constraintEnd_toEndOf="@+id/btnSearch"
         app:layout_constraintStart_toStartOf="@+id/btnCancel"
-        app:layout_constraintTop_toBottomOf="@+id/btnCancel"
-        tools:text="Current Location" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
 
     <EditText
         android:id="@+id/etSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="10dp"
         android:drawableLeft="@drawable/search_icon"
-        android:drawablePadding="10dp"
+        android:drawablePadding="11dp"
         android:ems="10"
         android:hint="Search a spot"
         android:inputType="textPersonName"
