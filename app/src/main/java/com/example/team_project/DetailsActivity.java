@@ -30,6 +30,11 @@ public class DetailsActivity extends AppCompatActivity {
         rvEventsDetail = (RecyclerView)findViewById(R.id.rvEventsDetail);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         EventsDetailsAdapter adapter = new EventsDetailsAdapter(getData(), id, type, distance, this);
         rvEventsDetail.setAdapter(adapter);
     }

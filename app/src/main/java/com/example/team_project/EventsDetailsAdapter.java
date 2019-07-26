@@ -18,13 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.bumptech.glide.Glide;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
+import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -76,7 +82,6 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         private ImageView ivLike;
         private ViewFlipper vfGallery;
 
-        @SuppressLint("ClickableViewAccessibility")
         public HeaderViewHolder(@NonNull View view) {
             super(view);
             tvEventName = (TextView) view.findViewById(R.id.tvEventName);
@@ -117,61 +122,6 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                     intent.putExtra("location", location);
                     v.getContext().startActivity(intent);
-                }
-            });
-
-            for (int i = 0; i < 10; i++) {
-                TextView tv = new TextView(context);
-                tv.setText("number: " + i);
-                vfGallery.addView(tv);
-            }
-
-            vfGallery.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent touchevent) {
-                    switch (touchevent.getAction())
-                    {
-                        // when user first touches the screen to swap
-                        case MotionEvent.ACTION_DOWN:
-                        {
-                            lastX = touchevent.getX();
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP:
-                        {
-                            float currentX = touchevent.getX();
-
-                            // if left to right swipe on screen
-                            if (lastX < currentX)
-                            {
-                                // If no more View/Child to flip
-                                if (vfGallery.getDisplayedChild() == 0)
-                                    break;
-
-                                // set the required Animation type to ViewFlipper
-                                // The Next screen will come in form Left and current Screen will go OUT from Right
-                                vfGallery.setInAnimation(context, R.anim.in_from_left);
-                                vfGallery.setOutAnimation(context, R.anim.out_to_right);
-                                // Show the next Screen
-                                vfGallery.showNext();
-                            }
-
-                            // if right to left swipe on screen
-                            if (lastX > currentX)
-                            {
-                                if (vfGallery.getDisplayedChild() == 1)
-                                    break;
-                                // set the required Animation type to ViewFlipper
-                                // The Next screen will come in form Right and current Screen will go OUT from Left
-                                vfGallery.setInAnimation(context, R.anim.in_from_right);
-                                vfGallery.setOutAnimation(context, R.anim.out_to_left);
-                                // Show The Previous Screen
-                                vfGallery.showPrevious();
-                            }
-                            break;
-                        }
-                    }
-                    return true;
                 }
             });
         }
@@ -305,6 +255,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         });
+
+        setImages(event.getEventId());
     }
 
     public void finishedApiPlace(final Place place) {
@@ -389,5 +341,96 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         });
+
+        setImages(place.getPlaceId());
+    }
+
+    private void setImages(final String imgId) {
+        ParseQuery parseQuery = new ParseQuery("Post");
+        parseQuery.include(Post.KEY_USER);
+        parseQuery.setLimit(1000);
+
+        parseQuery.findInBackground(new FindCallback<Post>() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                int count = 0;
+                if (e == null) {
+                    for (Post i : objects) {
+                        if (imgId.equals(i.getEventPlace().getAppId())) {
+                            ParseFile file = i.getImage();
+                            if (file != null) {
+                                count++;
+                                test.vfGallery.addView(createGalleryItem(file));
+                            }
+                        }
+                    }
+
+                    if (count == 0) {
+                        test.vfGallery.addView(createPlaceholder());
+                    } else if (count > 1) {
+                        test.vfGallery.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent touchevent) {
+                                switch (touchevent.getAction()) {
+                                    // when user first touches the screen to swap
+                                    case MotionEvent.ACTION_DOWN: {
+                                        lastX = touchevent.getX();
+                                        break;
+                                    }
+                                    case MotionEvent.ACTION_UP: {
+                                        float currentX = touchevent.getX();
+
+                                        // if left to right swipe on screen
+                                        if (lastX < currentX) {
+                                            // If no more View/Child to flip
+                                            if (test.vfGallery.getDisplayedChild() == 0)
+                                                break;
+
+                                            // set the required Animation type to ViewFlipper
+                                            // The Next screen will come in form Left and current Screen will go OUT from Right
+                                            test.vfGallery.setInAnimation(context, R.anim.in_from_left);
+                                            test.vfGallery.setOutAnimation(context, R.anim.out_to_right);
+                                            // Show the next Screen
+                                            test.vfGallery.showNext();
+                                        }
+
+                                        // if right to left swipe on screen
+                                        if (lastX > currentX) {
+                                            if (test.vfGallery.getDisplayedChild() == 1)
+                                                break;
+                                            // set the required Animation type to ViewFlipper
+                                            // The Next screen will come in form Right and current Screen will go OUT from Left
+                                            test.vfGallery.setInAnimation(context, R.anim.in_from_right);
+                                            test.vfGallery.setOutAnimation(context, R.anim.out_to_left);
+                                            // Show The Previous Screen
+                                            test.vfGallery.showPrevious();
+                                        }
+                                        break;
+                                    }
+                                }
+                                return true;
+                            }
+                        });
+                    }
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private ImageView createGalleryItem(ParseFile file) {
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ImageView view = (ImageView) inflater.inflate(R.layout.item_gallery, null);
+        Glide.with(context)
+                .load(file.getUrl())
+                .into(view);
+        return view;
+    }
+
+    private  TextView createPlaceholder() {
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        return (TextView) inflater.inflate(R.layout.item_gallery_placeholder, null);
     }
 }

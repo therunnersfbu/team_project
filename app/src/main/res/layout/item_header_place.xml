@@ -23,18 +23,19 @@
     <ViewFlipper
         android:id="@+id/vfGallery"
         android:layout_width="0dp"
-        android:layout_height="250dp"
+        android:layout_height="400dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNumber">
 
         <!--<ImageView-->
-            <!--android:id="@+id/ivPhoto"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--app:srcCompat="@color/colorPrimary" />-->
+        <!--android:id="@+id/ivPhoto"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--app:srcCompat="@color/colorPrimary" />-->
 
     </ViewFlipper>
 
@@ -53,28 +54,6 @@
         app:layout_constraintEnd_toStartOf="@+id/ivLike"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!--<Button-->
-        <!--android:id="@+id/btnPrevious"-->
-        <!--style="@style/Widget.AppCompat.Button.Borderless"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:drawableLeft="@drawable/left_arrow"-->
-        <!--android:paddingLeft="3dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="@+id/vfGallery"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/vfGallery"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/vfGallery" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/btnNext"-->
-        <!--style="@style/Widget.AppCompat.Button.Borderless"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:drawableLeft="@drawable/right_arrow"-->
-        <!--android:paddingRight="3dp"-->
-        <!--app:layout_constraintBottom_toBottomOf="@+id/vfGallery"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/vfGallery"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/vfGallery" />-->
 
     <ImageView
         android:id="@+id/ivLike"

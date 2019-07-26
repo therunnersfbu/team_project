@@ -1,11 +1,14 @@
 package com.example.team_project.model;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 @ParseClassName("PlaceEvent")
@@ -16,7 +19,14 @@ public class PlaceEvent extends ParseObject {
     public static final String KEY_NAME = "name";
 
     public String getAppId() {
-        return getString(KEY_API);
+        String id = "";
+        try {
+            id = fetchIfNeeded().getString(KEY_API);
+
+        } catch (com.parse.ParseException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
     public void setAppId(String appId) {
         put(KEY_API, appId);
