@@ -208,13 +208,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 for(int i = 0; i < posts.size(); i++) {
                     Post post = posts.get(i);
-                    String[] reviewCoordinates = post.getCoordinates().split("\\s+");;
+                    String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                     String review = post.getReview();
                     String name = post.getEventPlace().getName();
                     double latitude = Double.parseDouble(reviewCoordinates[0]);
                     double longitude = Double.parseDouble(reviewCoordinates[1]);
                     Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(latitude, -longitude))
+                            .position(new LatLng(latitude, longitude))
                             .title(name)
                             .snippet(review));
                 }
