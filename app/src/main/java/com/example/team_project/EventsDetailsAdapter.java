@@ -101,17 +101,15 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), ComposeReviewActivity.class);
                     intent.putExtra("eventID", id);
-                    double[] loc;
+                    String location;
                     if(type) {
-                        loc = mPlace.getLocation();
-                        String locStr = loc[0] + " " + loc[1];
+                        location = mPlace.getLocation();
                         intent.putExtra("eventName", mPlace.getPlaceName());
                     } else {
-                        loc = mEvent.getLocation();
+                        location = mEvent.getLocation();
                         intent.putExtra("eventName", mEvent.getEventName());
                     }
-                    String locStr = loc[0] + " " + loc[1];
-                    intent.putExtra("location", locStr);
+                    intent.putExtra("location", location);
                     v.getContext().startActivity(intent);
                 }
             });

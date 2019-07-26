@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class LocationActivity extends AppCompatActivity {
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
-    private ArrayList<double[]> mLocations;
+    private ArrayList<String> mLocations;
     private PlacesApi pApi;
     private RecyclerView rvLocResults;
     private EditText etSearch;
@@ -60,16 +60,17 @@ public class LocationActivity extends AppCompatActivity {
         LApi = new AutocompleteApi(this);
     }
 
-    public void apiFinishedLocation(ArrayList<String> array) throws JSONException {
+    public void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names) throws JSONException {
         for (int i = 0; i < array.size(); i++) {
             pApi = new PlacesApi(this);
             pApi.getLocation(array.get(i));
+            mLocNames.add(names.get(i));
            // mLocIds.add(array.get(i));
         }
     }
 
-    public void apiFinishedGetLocation(double[] location, String name) throws JSONException {
-        mLocNames.add(name);
+    public void apiFinishedGetLocation(String location, String name) throws JSONException {
+      //  mLocNames.add(name);
         mLocations.add(location);
         mLocationAdapter.notifyDataSetChanged();
     }
