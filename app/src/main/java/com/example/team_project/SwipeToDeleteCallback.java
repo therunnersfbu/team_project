@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
@@ -29,6 +30,8 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     CalendarAdapter mAdapter;
     CompactCalendarView compactCalendar;
     Context context;
+    MyCalendarFragment dot;
+
 
 
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
@@ -47,20 +50,16 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         int position = viewHolder.getAdapterPosition();
 
         ParseUser user = ParseUser.getCurrentUser();
-        // get events grom parse
         ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
         Log.d("SwipeToDeleteCallBack", "parse events" + parseevents);
-        // get list of events in the adapter
         ArrayList<String> rvEvents = mAdapter.events;
         Log.d("SwipeToDeleteCallBack", "rv events" + rvEvents);
+        List<com.github.sundeepk.compactcalendarview.domain.Event> calendarEvents = dot.calendarEvents;
+        Log.d("SwipeToDeleteCallBack", "calendar events" + rvEvents);
 
-        // TODO why does event crash when you delete the last event
-
-        // declare event we want to delete that was swiped
         String eventToDelete = rvEvents.get(position);
         Log.d("SwipeToDeleteCallBack", "event to delete" + eventToDelete);
 
-        //if (parseevents.contains(eventToDelete)) {
         for (int x = 0; x < parseevents.size(); x++) {
             if (eventToDelete.equals(parseevents.get(x).substring(11))) {
                 Log.d("SwipeToDeleteCallBack", "in loop");
@@ -70,13 +69,13 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
             }
         }
 
-        // need to make an event at designated date
-
 
         user.saveInBackground();
         mAdapter.deleteItem(position);
         // TODO remove dot
+        //calendarEvents.remove(eventToDelete);
         //compactCalendar.removeEvent(circle_event);
         mAdapter.notifyDataSetChanged();
+        // access dots at position and delete "event" at position 1
     }
 }
