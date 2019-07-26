@@ -80,6 +80,8 @@ public class MyCalendarFragment extends Fragment {
 
 
 
+
+
         rvCal = view.findViewById(R.id.rvCal);
         theDaysEvents = new ArrayList<>();
         setRecyclerView(view);
