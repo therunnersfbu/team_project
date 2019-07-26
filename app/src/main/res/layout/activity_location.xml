@@ -18,6 +18,7 @@
         android:drawableLeft="@drawable/location_icon"
         android:drawablePadding="10dp"
         android:ems="10"
+        android:hint="Search your location"
         android:inputType="textPersonName"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/hyperlinkBlue"

@@ -35,6 +35,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -65,7 +67,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private EventsApi eApi;
     private PlacesApi pApi;
     private boolean canGetMore;
-    private EditText tvLocation;
+    private TextView etSearch;
+    private TextView tvLocation;
+    private boolean isCurLoc;
+    private String newLoc;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -95,11 +100,16 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(resultsAdapter);
         tvLocation = findViewById(R.id.etLocation);
+        etSearch = findViewById(R.id.etSearch);
+        isCurLoc = true;
+        newLoc = "";
+
 
         tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), LocationActivity.class);
+                intent.putExtra("category", category);
                 startActivity(intent);
             }
         });
@@ -117,14 +127,26 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 }
             }
         };
+
+        isCurLoc = getIntent().getBooleanExtra("isCurLoc", true);
+        newLoc = getIntent().getStringExtra("newLocation");
+
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(scrollListener);
 
-        if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }else{
-            Log.d("location", "first");
-            setMyLocation();
+        if(isCurLoc){
+            if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }else{
+                Log.d("location", "first");
+                setMyLocation();
+            }
+        } else {
+            String[] newCords = newLoc.split("\\s+");
+            latitude = Double.parseDouble(newCords[0]);
+            longitude = Double.parseDouble(newCords[1]);
+            tvLocation.setText("New Location");
+            populateList();
         }
     }
 
@@ -179,6 +201,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     private void populateList() {
+        String mCategory = "";
         if (!isPlace) {
             eApi.setDate("Future");
             eApi.setLocation(latitude, longitude, 60);
@@ -188,44 +211,57 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         }
         switch (category) {
             case 0:
-                pApi.setKeywords("breakfast");
+                mCategory = "breakfast";
+                pApi.setKeywords(mCategory);
                 break;
             case 1:
-                pApi.setKeywords("brunch");
+                mCategory = "brunch";
+                pApi.setKeywords(mCategory);
                 break;
             case 2:
-                pApi.setKeywords("lunch");
+                mCategory = "lunch";
+                pApi.setKeywords(mCategory);
                 break;
             case 3:
-                pApi.setKeywords("dinner");
+                mCategory = "dinner";
+                pApi.setKeywords(mCategory);
                 break;
             case 4:
+                mCategory = "sights";
                 pApi.setKeywords("museum");
                 break;
             case 5:
+                mCategory = "nightlife";
                 pApi.setKeywords("bar");
                 break;
             case 6:
-                pApi.setKeywords("shopping");
+                mCategory = "shopping";
+                pApi.setKeywords(mCategory);
                 break;
             case 7:
-                eApi.setKeywords("concert");
+                mCategory = "concerts";
+                eApi.setKeywords(mCategory);
                 break;
             case 8:
+                mCategory = "pop-up events";
                 eApi.setKeywords("fair");
                 break;
             case 9:
+                mCategory = "beauty";
                 pApi.setKeywords("salon");
                 break;
             case 10:
+                mCategory = "active";
                 pApi.setKeywords("gym");
                 break;
             case 11:
-                pApi.setKeywords("park");
+                mCategory = "parks";
+                pApi.setKeywords(mCategory);
                 break;
             default:
                 return;
         }
+        etSearch.setText(mCategory);
         if (!isPlace) {
             eApi.getTopEvents();
         } else {
