@@ -78,10 +78,6 @@ public class MyCalendarFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-
-
         rvCal = view.findViewById(R.id.rvCal);
         theDaysEvents = new ArrayList<>();
         setRecyclerView(view);
@@ -93,6 +89,22 @@ public class MyCalendarFragment extends Fragment {
 
         compactCalendar = view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
+
+        // method in order to list the days events when the fragment is clicked
+        Date c = Calendar.getInstance().getTime();
+        Log.d("mycalfrag", currentDate);
+        String numberDate = simpleDateFormat.format(c);
+        if (addedEvents != null) {
+            for (int x = 0; x < addedEvents.size(); x++) {
+                if (numberDate.equals(addedEvents.get(x).substring(0, 10))) {
+                    String eventName = addedEvents.get(x).substring(11);
+                    theDaysEvents.add(eventName);
+                }
+            }
+            if (theDaysEvents.size() == 0) {
+                theDaysEvents.add("NONE!");
+            }
+        }
 
 
         // add each individual event to calendar
@@ -110,7 +122,6 @@ public class MyCalendarFragment extends Fragment {
 
 
         // retrieve events on clicked on day and display in recycler view
-        // multiple Log outputs are present for testing purposes
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -144,9 +155,7 @@ public class MyCalendarFragment extends Fragment {
         if (theDaysEvents.size() != 0){
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
         itemTouchHelper.attachToRecyclerView(rvCal);}
-
     }
-
 
     @Override
     public void onDestroyView() {
