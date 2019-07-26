@@ -5,7 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -35,7 +38,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
 
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
-        super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        super(0, ItemTouchHelper.RIGHT);
         mAdapter = adapter;
     }
 
@@ -52,30 +55,20 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
         Log.d("SwipeToDeleteCallBack", "parse events" + parseevents);
+
         ArrayList<String> rvEvents = mAdapter.events;
-        Log.d("SwipeToDeleteCallBack", "rv events" + rvEvents);
-        List<com.github.sundeepk.compactcalendarview.domain.Event> calendarEvents = dot.calendarEvents;
-        Log.d("SwipeToDeleteCallBack", "calendar events" + rvEvents);
+            String eventToDelete = rvEvents.get(position);
 
-        String eventToDelete = rvEvents.get(position);
-        Log.d("SwipeToDeleteCallBack", "event to delete" + eventToDelete);
-
-        for (int x = 0; x < parseevents.size(); x++) {
-            if (eventToDelete.equals(parseevents.get(x).substring(11))) {
-                Log.d("SwipeToDeleteCallBack", "in loop");
-                parseevents.remove(x);
-                Log.d("SwipeToDeleteCallBack", "new parse events list" + parseevents);
-                user.put(User.KEY_ADDED_EVENTS, parseevents);
+            for (int x = 0; x < parseevents.size(); x++) {
+                if (eventToDelete.equals(parseevents.get(x).substring(11))) {
+                    parseevents.remove(x);
+                    user.put(User.KEY_ADDED_EVENTS, parseevents);
+                }
             }
+
+            user.saveInBackground();
+            mAdapter.deleteItem(position);
+            mAdapter.notifyDataSetChanged();
         }
-
-
-        user.saveInBackground();
-        mAdapter.deleteItem(position);
-        // TODO remove dot
-        //calendarEvents.remove(eventToDelete);
-        //compactCalendar.removeEvent(circle_event);
-        mAdapter.notifyDataSetChanged();
-        // access dots at position and delete "event" at position 1
     }
-}
+

@@ -9,18 +9,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.team_project.model.Event;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
+    ArrayList<Event> dotEvents;
     String mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
 
     public CalendarAdapter(ArrayList<String> theDaysEvents) {
         this.events = theDaysEvents;
     }
+
 
     @NonNull
     @Override
