@@ -70,9 +70,9 @@ public class ComposeReviewActivity extends AppCompatActivity{
     private final int YOUR_SELECT_PICTURE_REQUEST_CODE = 150;
     private TextView tvHeader;
     private EditText etBody;
-    private Button btnPhoto;
     private Button btnCancel;
     private Button btnPost;
+    private ImageView ivPreview;
     private FlowLayout flTags;
     private Switch sLocal;
     private String id;
@@ -91,9 +91,9 @@ public class ComposeReviewActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_review);
         photoFile = null;
+        ivPreview = findViewById(R.id.ivPreview);
         tvHeader = findViewById(R.id.tvHeader);
         etBody = findViewById(R.id.etBody);
-        btnPhoto = findViewById(R.id.btnPhoto);
         btnCancel = findViewById(R.id.btnCancel);
         btnPost = findViewById(R.id.btnPost);
         flTags = findViewById(R.id.flTags);
@@ -102,7 +102,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
         name = getIntent().getStringExtra(NAME);
         location = getIntent().getStringExtra("location");
         tvHeader.setText(name);
-        btnPhoto.setOnClickListener(new View.OnClickListener() {
+        ivPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 askFilePermission();
@@ -111,7 +111,11 @@ public class ComposeReviewActivity extends AppCompatActivity{
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etBody.getText().length()>0) {
+                if(etBody.getText().length()<1) {
+                    Toast.makeText(ComposeReviewActivity.this, "Can't post an empty review!", Toast.LENGTH_SHORT).show();
+                } else if (!tagsSelected.contains(true)) {
+                    Toast.makeText(ComposeReviewActivity.this, "Select at least one tag!", Toast.LENGTH_SHORT).show();
+                } else {
                     checkPlaceEventExists();
                 }
             }
@@ -123,7 +127,6 @@ public class ComposeReviewActivity extends AppCompatActivity{
             }
         });
         etBody.setOnTouchListener(new View.OnTouchListener() {
-
             public boolean onTouch(View v, MotionEvent event) {
                 if (etBody.hasFocus()) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
@@ -195,7 +198,6 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(resizedBitmap);
                 photoFile = new File(photoPath);
-                btnPhoto.setText("Replace Photo");
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -265,7 +267,9 @@ public class ComposeReviewActivity extends AppCompatActivity{
     private void savePost() {
         Post myPost = new Post();
         myPost.setUser(ParseUser.getCurrentUser());
-        myPost.setImage(new ParseFile(photoFile));
+        if (photoFile != null){
+            myPost.setImage(new ParseFile(photoFile));
+        }
         myPost.setReview(etBody.getText().toString());
         myPost.setEventPlace(placeEvent);
         myPost.setIsLocal(sLocal.isChecked());

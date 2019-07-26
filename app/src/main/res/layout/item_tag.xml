@@ -9,6 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:padding="100dp"
     card_view:cardBackgroundColor="@color/hyperlinkBlue"
     card_view:cardCornerRadius="18dp"
     card_view:cardElevation="7dp"
