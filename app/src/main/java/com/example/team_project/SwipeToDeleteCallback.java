@@ -66,9 +66,12 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                 }
             }
 
+            if (eventToDelete != "NONE!"){
+                mAdapter.deleteItem(position);
+            }
             user.saveInBackground();
-            mAdapter.deleteItem(position);
             mAdapter.notifyDataSetChanged();
         }
     }
+
 

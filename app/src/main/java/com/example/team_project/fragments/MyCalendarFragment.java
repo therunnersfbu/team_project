@@ -80,7 +80,7 @@ public class MyCalendarFragment extends Fragment {
 
         rvCal = view.findViewById(R.id.rvCal);
         theDaysEvents = new ArrayList<>();
-        setRecyclerView(view);
+
 
 
         CurrentDate = view.findViewById(R.id.current_Date);
@@ -145,6 +145,8 @@ public class MyCalendarFragment extends Fragment {
                 CurrentDate.setText(dateFormat.format(firstDayOfNewMonth));
             }
         });
+
+        setRecyclerView(view);
     }
 
     private void setRecyclerView(View view) {
@@ -152,9 +154,8 @@ public class MyCalendarFragment extends Fragment {
         mAdapter = new CalendarAdapter(theDaysEvents);
         rvCal.setLayoutManager(mLayoutManager);
         rvCal.setAdapter(mAdapter);
-        if (theDaysEvents.size() != 0){
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
-        itemTouchHelper.attachToRecyclerView(rvCal);}
+        itemTouchHelper.attachToRecyclerView(rvCal);
     }
 
     @Override

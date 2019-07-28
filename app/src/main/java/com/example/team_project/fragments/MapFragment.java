@@ -136,6 +136,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
                 for (int i = 0; i < posts.size(); i++) {
                     Post post = posts.get(i);
+
                     String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                     String review = post.getReview();
                     String name = post.getEventPlace().getName();
