@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
+import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
@@ -71,6 +72,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private TextView tvLocation;
     private boolean isCurLoc;
     private String newLoc;
+    private String newLocName;
+    private Button btnCancel;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -103,7 +106,15 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         etSearch = findViewById(R.id.etSearch);
         isCurLoc = true;
         newLoc = "";
+        newLocName = getIntent().getStringExtra("name");
+        btnCancel = findViewById(R.id.btnCancel);
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,12 +139,23 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             }
         };
 
-        isCurLoc = getIntent().getBooleanExtra("isCurLoc", true);
-        newLoc = getIntent().getStringExtra("newLocation");
-
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(scrollListener);
 
+        if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }else{
+            Log.d("location", "first");
+            setMyLocation();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        isCurLoc = LocationAdapter.isCurLoc;
+        newLoc = LocationAdapter.newLoc;
+        newLocName = LocationAdapter.locName;
+        super.onResume();
         if(isCurLoc){
             if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -145,9 +167,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             String[] newCords = newLoc.split("\\s+");
             latitude = Double.parseDouble(newCords[0]);
             longitude = Double.parseDouble(newCords[1]);
-            tvLocation.setText("New Location");
+            tvLocation.setText(newLocName);
             populateList();
         }
+
     }
 
     @Override
@@ -167,6 +190,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             }
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        LocationAdapter.isCurLoc = true;
+        setMyLocation();
+
     }
 
     private void setMyLocation() {
@@ -201,6 +232,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     private void populateList() {
+        mEventList.clear();
+        mPlaceList.clear();
+        results.clear();
+        ids.clear();
         String mCategory = "";
         if (!isPlace) {
             eApi.setDate("Future");

@@ -32,6 +32,8 @@ public class BottomNavActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        LocationAdapter.isCurLoc = true;
+
         BottomNavActivity.bottomNavAct = this;
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
