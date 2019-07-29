@@ -6,13 +6,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
-import com.example.team_project.calendar.CalendarAdapter;
-import com.example.team_project.calendar.MyCalendarFragment;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.parse.ParseUser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
@@ -20,7 +22,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     CalendarAdapter mAdapter;
     CompactCalendarView compactCalendar;
     Context context;
-    MyCalendarFragment dot;
+    Long epochTime;
 
 
 
@@ -46,16 +48,27 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         ArrayList<String> rvEvents = mAdapter.events;
             String eventToDelete = rvEvents.get(position);
 
-            for (int x = 0; x < parseevents.size(); x++) {
-                if (eventToDelete.equals(parseevents.get(x).substring(11))) {
-                    parseevents.remove(x);
-                    user.put(User.KEY_ADDED_EVENTS, parseevents);
-                }
+        // delete the event in the parse database
+        for (int x = 0; x < parseevents.size(); x++) {
+            if (eventToDelete.equals(parseevents.get(x).substring(11))) {
+                parseevents.remove(x);
+                user.put(User.KEY_ADDED_EVENTS, parseevents);
             }
-
-            user.saveInBackground();
-            mAdapter.deleteItem(position);
-            mAdapter.notifyDataSetChanged();
         }
+        Log.d("SwipeToDeleteCallBack", "new parse events" + parseevents);
+
+        if (eventToDelete != "NONE!"){
+            mAdapter.deleteItem(position);
+        }
+        user.saveInBackground();
+        mAdapter.notifyDataSetChanged();
     }
+
+    public long myMilliSecConvert(String date) throws ParseException {
+        Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        epochTime = milliDate.getTime();
+        return epochTime;
+    }
+}
+
 

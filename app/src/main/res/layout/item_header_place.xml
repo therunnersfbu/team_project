@@ -7,6 +7,17 @@
     tools:context=".details.DetailsActivity">
 
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="131dp"
+        android:layout_marginBottom="15dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/vfGallery"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/ivAdd"
         android:layout_width="35dp"
@@ -41,16 +52,17 @@
 
     <TextView
         android:id="@+id/tvEventName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="206dp"
+        android:layout_height="53dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
+        android:fontFamily="@font/sofia"
         android:text="Event Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="28sp"
+        android:textSize="35sp"
         app:layout_constraintEnd_toStartOf="@+id/ivLike"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -71,12 +83,11 @@
         android:id="@+id/rvTags"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vfGallery" />
+        app:layout_constraintTop_toBottomOf="@+id/vfGallery"
+        android:background="@android:color/white"/>
 
     <Button
         android:id="@+id/btnReview"
@@ -125,7 +136,11 @@
         android:layout_marginTop="10dp"
         android:text="Distance"
         app:layout_constraintStart_toStartOf="@+id/tvEventName"
-        app:layout_constraintTop_toBottomOf="@+id/tvEventName" />
+        app:layout_constraintTop_toBottomOf="@+id/tvEventName"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-thin"/>
 
     <TextView
         android:id="@+id/tvPrice"
