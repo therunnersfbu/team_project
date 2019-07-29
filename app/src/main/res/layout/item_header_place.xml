@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/holo_red_dark"
     tools:context=".details.DetailsActivity">
 
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="0dp"
-        android:layout_height="131dp"
+        android:layout_width="420dp"
+        android:layout_height="166dp"
         android:layout_marginBottom="15dp"
         android:background="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/vfGallery"
@@ -20,8 +21,8 @@
 
     <ImageButton
         android:id="@+id/ivAdd"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
@@ -35,7 +36,7 @@
         android:id="@+id/vfGallery"
         android:layout_width="0dp"
         android:layout_height="400dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNumber">
@@ -52,8 +53,8 @@
 
     <TextView
         android:id="@+id/tvEventName"
-        android:layout_width="206dp"
-        android:layout_height="53dp"
+        android:layout_width="227dp"
+        android:layout_height="44dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="3dp"
@@ -62,15 +63,15 @@
         android:fontFamily="@font/sofia"
         android:text="Event Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="35sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/ivLike"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivLike"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
@@ -84,10 +85,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vfGallery"
-        android:background="@android:color/white"/>
+        app:layout_constraintTop_toBottomOf="@+id/vfGallery" />
 
     <Button
         android:id="@+id/btnReview"
@@ -105,8 +106,8 @@
 
     <ImageView
         android:id="@+id/ivUpload"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
@@ -121,32 +122,46 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Address name"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tvHours"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDistance" />
 
     <TextView
         android:id="@+id/tvDistance"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Distance"
-        app:layout_constraintStart_toStartOf="@+id/tvEventName"
-        app:layout_constraintTop_toBottomOf="@+id/tvEventName"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:fontFamily="sans-serif-thin"/>
+        app:layout_constraintEnd_toStartOf="@+id/tvPrice"
+        app:layout_constraintStart_toStartOf="@+id/tvEventName"
+        app:layout_constraintTop_toBottomOf="@+id/tvEventName" />
 
     <TextView
         android:id="@+id/tvPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Price"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toTopOf="@+id/tvDistance" />
 
@@ -154,8 +169,12 @@
         android:id="@+id/tvNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Phone number"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/tvAddress"
         app:layout_constraintTop_toBottomOf="@+id/tvAddress" />
 
@@ -163,10 +182,14 @@
         android:id="@+id/tvHours"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Hours"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toBottomOf="@+id/tvPrice" />

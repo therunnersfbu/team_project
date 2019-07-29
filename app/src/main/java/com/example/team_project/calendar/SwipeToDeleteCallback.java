@@ -25,7 +25,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     Long epochTime;
 
 
-
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
         super(0, ItemTouchHelper.RIGHT);
         mAdapter = adapter;
@@ -60,15 +59,12 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         if (eventToDelete != "NONE!"){
             mAdapter.deleteItem(position);
         }
+        //mAdapter.updateDots(parseevents);
         user.saveInBackground();
         mAdapter.notifyDataSetChanged();
     }
 
-    public long myMilliSecConvert(String date) throws ParseException {
-        Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        epochTime = milliDate.getTime();
-        return epochTime;
-    }
+
 }
 
 
