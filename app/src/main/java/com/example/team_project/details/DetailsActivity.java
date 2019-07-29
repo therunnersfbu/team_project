@@ -1,21 +1,14 @@
-package com.example.team_project;
+package com.example.team_project.details;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.example.team_project.api.EventsApi;
-import com.example.team_project.api.PlacesApi;
+import com.example.team_project.R;
 import com.example.team_project.model.Post;
-import com.example.team_project.model.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseQuery;
-
 import java.util.ArrayList;
 import java.util.List;
 

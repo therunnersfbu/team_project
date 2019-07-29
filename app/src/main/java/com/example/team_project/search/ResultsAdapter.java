@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.search;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.example.team_project.R;
+import com.example.team_project.details.DetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,18 +1,16 @@
-package com.example.team_project;
+package com.example.team_project.calendar;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.team_project.R;
 import com.example.team_project.model.Event;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 

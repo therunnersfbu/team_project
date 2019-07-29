@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.details;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,12 +19,12 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.example.team_project.ComposeReviewActivity;
+import com.example.team_project.R;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
-import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
-import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
 import com.parse.FindCallback;

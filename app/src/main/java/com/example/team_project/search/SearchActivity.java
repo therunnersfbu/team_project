@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.search;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,28 +15,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.team_project.HorizontalScrollAdapter;
+import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
-import com.example.team_project.fragments.EventsFragment;
+import com.example.team_project.location.LocationActivity;
+import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,8 +41,6 @@ import java.util.Calendar;
 public class SearchActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private final int PLACE_PICKER_REQUEST = 160;
-    private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(new LatLng(-40,-168), new LatLng(71,136));
     private RecyclerView rvTags;
     private RecyclerView rvResults;
     private boolean isTags;
@@ -150,6 +144,11 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         }
     }
 
+    public static void setNewSearchText(ArrayList<String> addTagsToSearch) {
+
+
+    }
+
     @Override
     protected void onResume() {
         isCurLoc = LocationAdapter.isCurLoc;
@@ -212,7 +211,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+                // for ActivityCompat#requestPermissions for more .
                 Log.e("location", "no permission");
                 return;
             }
