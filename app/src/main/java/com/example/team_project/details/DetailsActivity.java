@@ -1,11 +1,11 @@
-package com.example.team_project;
+package com.example.team_project.details;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.team_project.R;
 import com.example.team_project.model.Post;
 
 import java.util.ArrayList;

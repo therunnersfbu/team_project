@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team_project.search.SearchActivity;
+
+import java.util.ArrayList;
 import java.util.List;
 
 // This adapter handles horizontal scrolling for the Tag and Suggestion CardViews. Used in Search Activity
@@ -15,20 +18,34 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
 
     private final List<String> list;
     private final boolean isTags;
+    public static ArrayList<String> addTagsToSearch;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
 
         public ViewHolder(@NonNull View view) {
             super(view);
             tvName = (TextView) view.findViewById(R.id.tvName);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            String guy = tvName.getText().toString();
+            addTagsToSearch.add(tvName.getText().toString());
+            list.remove(tvName.getText().toString());
+            notifyDataSetChanged();
+            SearchActivity.setNewSearchText(addTagsToSearch);
+
         }
     }
 
     public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags) {
         this.list = horizontalList;
         this.isTags = isTags;
+        addTagsToSearch = new ArrayList<>();
+
     }
 
     @NonNull

@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.location;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,12 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.team_project.R;
 import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.api.PlacesApi;
-import com.example.team_project.model.Place;
-import com.google.android.gms.common.api.Api;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
