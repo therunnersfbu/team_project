@@ -30,6 +30,7 @@ import com.example.team_project.model.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -60,12 +61,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean isLocal;
     private float lastX;
 
-    public EventsDetailsAdapter(List<Post> mPosts, String id, Boolean type, String distance, Context context) {
-        this.mPosts = mPosts;
+    public EventsDetailsAdapter(ArrayList<Post> mPosts, String id, Boolean type, String distance, Context context) {
         this.id = id;
         this.type = type;
         this.distance = distance;
         this.context = context;
+        this.mPosts = mPosts;
     }
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
@@ -129,11 +130,35 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvName;
+        private TextView tvName;
+        private ImageView ivProfilePic;
+        private TextView tvBody;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
             tvName = (TextView) view.findViewById(R.id.tvName);
+            ivProfilePic = (ImageView) view.findViewById(R.id.ivProfilePic);
+            tvBody = (TextView) view.findViewById(R.id.tvBody);
+        }
+
+        public void bind(Post post) {
+            ParseUser user = post.getUser();
+            tvName.setText(user.getString(User.KEY_NAME));
+            tvBody.setText(post.getReview());
+            ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
+            if (imageFile != null) {
+                Glide.with(context)
+                        .load(imageFile.getUrl())
+                        .placeholder(R.drawable.ic_person_black_24dp)
+                        .error(R.drawable.ic_person_black_24dp)
+                        .into(ivProfilePic);
+            } else {
+                Glide.with(context)
+                        .load(R.drawable.ic_person_black_24dp)
+                        .placeholder(R.drawable.ic_person_black_24dp)
+                        .error(R.drawable.ic_person_black_24dp)
+                        .into(ivProfilePic);
+            }
         }
     }
 
@@ -159,13 +184,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Post mPost = mPosts.get(position);
         if(holder instanceof HeaderViewHolder) {
             //TODO
             //((HeaderViewHolder) holder).tvEventName.setText(((Event) mPost.getEvent()).getEventName());
         } else if (holder instanceof ItemViewHolder) {
-            //TODO
-            //((ItemViewHolder) holder).tvName.setText(mPost.getUser().getUsername());
+            ((ItemViewHolder) holder).bind(mPosts.get(position));
         }
 
     }
@@ -256,7 +279,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        setImages(event.getEventId());
+        setImages();
     }
 
     public void finishedApiPlace(final Place place) {
@@ -342,82 +365,67 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        setImages(place.getPlaceId());
+        setImages();
     }
 
-    private void setImages(final String imgId) {
-        ParseQuery parseQuery = new ParseQuery("Post");
-        parseQuery.include(Post.KEY_USER);
-        parseQuery.setLimit(1000);
+    @SuppressLint("ClickableViewAccessibility")
+    private void setImages() {
+        int count = 0;
+        for (Post i : mPosts) {
+            ParseFile file = i.getImage();
+            if (file != null) {
+                count++;
+                test.vfGallery.addView(createGalleryItem(file));
+            }
+        }
 
-        parseQuery.findInBackground(new FindCallback<Post>() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                int count = 0;
-                if (e == null) {
-                    for (Post i : objects) {
-                        if (imgId.equals(i.getEventPlace().getAppId())) {
-                            ParseFile file = i.getImage();
-                            if (file != null) {
-                                count++;
-                                test.vfGallery.addView(createGalleryItem(file));
+        if (count == 0) {
+            test.vfGallery.addView(createPlaceholder());
+        } else if (count > 1) {
+            test.vfGallery.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent touchevent) {
+                    switch (touchevent.getAction()) {
+                        // when user first touches the screen to swap
+                        case MotionEvent.ACTION_DOWN: {
+                            lastX = touchevent.getX();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            float currentX = touchevent.getX();
+
+                            // if left to right swipe on screen
+                            if (lastX < currentX) {
+                                // If no more View/Child to flip
+                                if (test.vfGallery.getDisplayedChild() == 0)
+                                    break;
+
+                                // set the required Animation type to ViewFlipper
+                                // The Next screen will come in form Left and current Screen will go OUT from Right
+                                test.vfGallery.setInAnimation(context, R.anim.in_from_left);
+                                test.vfGallery.setOutAnimation(context, R.anim.out_to_right);
+                                // Show the next Screen
+                                test.vfGallery.showNext();
                             }
+
+                            // if right to left swipe on screen
+                            if (lastX > currentX) {
+                                if (test.vfGallery.getDisplayedChild() == 1)
+                                    break;
+                                // set the required Animation type to ViewFlipper
+                                // The Next screen will come in form Right and current Screen will go OUT from Left
+                                test.vfGallery.setInAnimation(context, R.anim.in_from_right);
+                                test.vfGallery.setOutAnimation(context, R.anim.out_to_left);
+                                // Show The Previous Screen
+                                test.vfGallery.showPrevious();
+                            }
+                            break;
                         }
                     }
-
-                    if (count == 0) {
-                        test.vfGallery.addView(createPlaceholder());
-                    } else if (count > 1) {
-                        test.vfGallery.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View v, MotionEvent touchevent) {
-                                switch (touchevent.getAction()) {
-                                    // when user first touches the screen to swap
-                                    case MotionEvent.ACTION_DOWN: {
-                                        lastX = touchevent.getX();
-                                        break;
-                                    }
-                                    case MotionEvent.ACTION_UP: {
-                                        float currentX = touchevent.getX();
-
-                                        // if left to right swipe on screen
-                                        if (lastX < currentX) {
-                                            // If no more View/Child to flip
-                                            if (test.vfGallery.getDisplayedChild() == 0)
-                                                break;
-
-                                            // set the required Animation type to ViewFlipper
-                                            // The Next screen will come in form Left and current Screen will go OUT from Right
-                                            test.vfGallery.setInAnimation(context, R.anim.in_from_left);
-                                            test.vfGallery.setOutAnimation(context, R.anim.out_to_right);
-                                            // Show the next Screen
-                                            test.vfGallery.showNext();
-                                        }
-
-                                        // if right to left swipe on screen
-                                        if (lastX > currentX) {
-                                            if (test.vfGallery.getDisplayedChild() == 1)
-                                                break;
-                                            // set the required Animation type to ViewFlipper
-                                            // The Next screen will come in form Right and current Screen will go OUT from Left
-                                            test.vfGallery.setInAnimation(context, R.anim.in_from_right);
-                                            test.vfGallery.setOutAnimation(context, R.anim.out_to_left);
-                                            // Show The Previous Screen
-                                            test.vfGallery.showPrevious();
-                                        }
-                                        break;
-                                    }
-                                }
-                                return true;
-                            }
-                        });
-                    }
-                } else {
-                    e.printStackTrace();
+                    return true;
                 }
-            }
-        });
+            });
+        }
     }
 
     private ImageView createGalleryItem(ParseFile file) {
