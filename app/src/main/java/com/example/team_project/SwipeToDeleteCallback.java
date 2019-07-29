@@ -38,7 +38,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     Long epochTime;
 
 
-
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
         super(0, ItemTouchHelper.RIGHT);
         mAdapter = adapter;
@@ -70,34 +69,16 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         }
         Log.d("SwipeToDeleteCallBack", "new parse events" + parseevents);
 
-        compactCalendar = viewHolder.itemView.findViewById(R.id.compactcalendar_view);
-        compactCalendar.setUseThreeLetterAbbreviation(true);
-        // add dot for each individual event to calendar
-        if (parseevents != null) {
-            for (int x = 0; x < parseevents.size(); x++) {
-                Event event = null;
-                try {
-                    event = new Event(Color.BLACK, myMilliSecConvert(parseevents.get(x).substring(0, 10)));
-                    Log.d("SwipeToDeleteCallBack", "event" + event);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                compactCalendar.addEvent(event);
-            }
-        }
 
         if (eventToDelete != "NONE!"){
             mAdapter.deleteItem(position);
         }
+        //mAdapter.updateDots(parseevents);
         user.saveInBackground();
         mAdapter.notifyDataSetChanged();
     }
 
-    public long myMilliSecConvert(String date) throws ParseException {
-        Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        epochTime = milliDate.getTime();
-        return epochTime;
-    }
+
 }
 
 

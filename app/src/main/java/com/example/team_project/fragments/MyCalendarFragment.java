@@ -50,7 +50,8 @@ import static com.parse.Parse.getApplicationContext;
 
 public class MyCalendarFragment extends Fragment {
     private Unbinder unbinder;
-    CompactCalendarView compactCalendar;
+    //Context context;
+    CompactCalendarView compactCalendar; //= new CompactCalendarView(context);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
