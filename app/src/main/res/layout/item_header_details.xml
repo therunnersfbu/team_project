@@ -4,14 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".DetailsActivity">
+    tools:context=".DetailsActivity"
+    android:background="@android:color/holo_red_dark">
 
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="131dp"
+        android:layout_marginBottom="15dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/vfGallery"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ViewFlipper
         android:id="@+id/vfGallery"
         android:layout_width="0dp"
         android:layout_height="400dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvAddress">
@@ -24,30 +36,31 @@
         <!--app:srcCompat="@color/colorPrimary" />-->
 
         <!--<TextView-->
-            <!--android:id="@+id/textView2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:fontFamily="casual"-->
-            <!--android:gravity="center"-->
-            <!--android:lines="2"-->
-            <!--android:text="No reviews yet./nBe the first one!"-->
-            <!--android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-            <!--android:textSize="36sp"-->
-            <!--android:typeface="normal" />-->
+        <!--android:id="@+id/textView2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fontFamily="casual"-->
+        <!--android:gravity="center"-->
+        <!--android:lines="2"-->
+        <!--android:text="No reviews yet./nBe the first one!"-->
+        <!--android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+        <!--android:textSize="36sp"-->
+        <!--android:typeface="normal" />-->
     </ViewFlipper>
 
     <TextView
         android:id="@+id/tvEventName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="206dp"
+        android:layout_height="53dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="3dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
+        android:fontFamily="@font/sofia"
         android:text="Event Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="28sp"
+        android:textSize="35sp"
         app:layout_constraintEnd_toStartOf="@+id/ivLike"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -70,7 +83,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vfGallery" />
@@ -110,7 +124,11 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Venue name"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tvDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvEventName" />
@@ -122,7 +140,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Address name"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/tvVenue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvVenue" />
@@ -131,7 +153,11 @@
         android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-thin"
         android:text="Event date"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toTopOf="@+id/tvVenue" />
 
@@ -140,7 +166,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:fontFamily="sans-serif-thin"
         android:text="Event distance"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toBottomOf="@+id/tvDate" />
 

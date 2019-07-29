@@ -82,7 +82,6 @@ public class MyCalendarFragment extends Fragment {
         theDaysEvents = new ArrayList<>();
 
 
-
         CurrentDate = view.findViewById(R.id.current_Date);
         String currentDate = dateFormat.format(calendar.getTime());
         CurrentDate.setText(currentDate);

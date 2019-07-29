@@ -107,7 +107,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         queryReviews();
 
         googleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
-        googleMap.setOnMyLocationClickListener(onMyLocationClickListener);
         enableMyLocationIfPermitted();
 
         googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -128,36 +127,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reviewQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-                if (e != null) {
-                    Log.e("MapFragment", "error with query");
-                    e.printStackTrace();
-                    return;
-                }
+            if (e != null) {
+                Log.e("MapFragment", "error with query");
+                e.printStackTrace();
+                return;
+            }
 
-                for (int i = 0; i < posts.size(); i++) {
-                    Post post = posts.get(i);
+            for (int i = 0; i < posts.size(); i++) {
+                Post post = posts.get(i);
 
-                    String[] reviewCoordinates = post.getCoordinates().split("\\s+");
-                    String review = post.getReview();
-                    String name = post.getEventPlace().getName();
-                    double latitude = Double.parseDouble(reviewCoordinates[0]);
-                    double longitude = Double.parseDouble(reviewCoordinates[1]);
-                    LatLng markerPosition = new LatLng(latitude, longitude);
-                    Boolean type;
-                    if (markerPosition.equals(windowPosition)) {
-                        String eventApiId = post.getEventPlace().getAppId();
-                        if ('E' != eventApiId.charAt(0)) {
-                            type = true;
-                        } else {
-                            type = false;
-                        }
-                        Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                        intent.putExtra("eventID", eventApiId);
-                        intent.putExtra("type", type);
-                        intent.putExtra("distance", "unknown");
-                        startActivity(intent);
+                String[] reviewCoordinates = post.getCoordinates().split("\\s+");
+                double latitude = Double.parseDouble(reviewCoordinates[0]);
+                double longitude = Double.parseDouble(reviewCoordinates[1]);
+                LatLng markerPosition = new LatLng(latitude, longitude);
+                Boolean type;
+                if (markerPosition.equals(windowPosition)) {
+                    String eventApiId = post.getEventPlace().getAppId();
+                    if ('E' != eventApiId.charAt(0)) {
+                        type = true;
+                    } else {
+                        type = false;
                     }
+                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                    intent.putExtra("eventID", eventApiId);
+                    intent.putExtra("type", type);
+                    intent.putExtra("distance", "unknown");
+                    startActivity(intent);
                 }
+            }
             }
         });
     }
@@ -172,7 +169,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else if (googleMap != null) {
             googleMap.setMyLocationEnabled(true);
-            googleMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0) );
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
         }
     }
 
@@ -181,8 +178,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Toast.makeText(getContext(), "Location permission not granted, " +
                         "showing default location",
                 Toast.LENGTH_SHORT).show();
-        LatLng redmond = new LatLng(39.8283, -98.5795);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(redmond));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
     }
 
     @Override
@@ -202,7 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
 
-    private GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
+    public GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
             new GoogleMap.OnMyLocationButtonClickListener() {
                 @Override
                 public boolean onMyLocationButtonClick() {
@@ -210,27 +206,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     return false;
                 }
             };
-
-    private GoogleMap.OnMyLocationClickListener onMyLocationClickListener =
-        new GoogleMap.OnMyLocationClickListener() {
-            @Override
-            public void onMyLocationClick(@NonNull Location location) {
-
-                googleMap.setMinZoomPreference(12);
-
-                CircleOptions circleOptions = new CircleOptions();
-
-                circleOptions.center(new LatLng(location.getLatitude(),
-                        location.getLongitude()));
-
-                circleOptions.radius(200);
-                circleOptions.fillColor(Color.RED);
-                circleOptions.strokeWidth(6);
-
-                googleMap.addCircle(circleOptions);
-
-            }
-        };
 
 
     protected void queryReviews(){
@@ -243,25 +218,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reviewQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-                if (e != null) {
-                    Log.e("MapFragment", "error with query");
-                    e.printStackTrace();
-                    return;
-                }
+            if (e != null) {
+                Log.e("MapFragment", "error with query");
+                e.printStackTrace();
+                return;
+            }
 
-                for(int i = 0; i < posts.size(); i++) {
-                    Post post = posts.get(i);
-                    String[] reviewCoordinates = post.getCoordinates().split("\\s+");
-                    String review = post.getReview();
-                    String name = post.getEventPlace().getName();
-                    double latitude = Double.parseDouble(reviewCoordinates[0]);
-                    double longitude = Double.parseDouble(reviewCoordinates[1]);
-                    Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(latitude, longitude))
-                            .title(name)
-                            .snippet(review));
-                    googleMap.setOnInfoWindowClickListener(MapFragment.this);
-                }
+            for(int i = 0; i < posts.size(); i++) {
+                Post post = posts.get(i);
+                String[] reviewCoordinates = post.getCoordinates().split("\\s+");
+                String review = post.getReview();
+                String name = post.getEventPlace().getName();
+                double latitude = Double.parseDouble(reviewCoordinates[0]);
+                double longitude = Double.parseDouble(reviewCoordinates[1]);
+                Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(latitude, longitude))
+                        .title(name)
+                        .snippet(review));
+                googleMap.setOnInfoWindowClickListener(MapFragment.this);
+            }
             }
         });
     }
