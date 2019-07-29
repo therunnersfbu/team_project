@@ -1,13 +1,14 @@
-package com.example.team_project;
+package com.example.team_project.details;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
+import com.example.team_project.R;
 import com.example.team_project.model.Post;
-
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,20 +36,29 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        EventsDetailsAdapter adapter = new EventsDetailsAdapter(getData(), id, type, distance, this);
-        rvEventsDetail.setAdapter(adapter);
-    }
 
-    private List<Post> getData() {
-        List<Post> testPosts = new ArrayList<Post>();
-        Post post1 = new Post();
-        Post post2 = new Post();
-        Post post3 = new Post();
-        Post post4 = new Post();
-        testPosts.add(post1);
-        testPosts.add(post2);
-        testPosts.add(post3);
-        testPosts.add(post4);
-        return testPosts;
+        ParseQuery parseQuery = new ParseQuery("Post");
+        parseQuery.include(Post.KEY_USER);
+        parseQuery.setLimit(1000);
+
+        parseQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                if (e == null) {
+                    ArrayList<Post> postsForThisEvent = new ArrayList<>();
+                    for (Post i : objects) {
+                        if (id.equals(i.getEventPlace().getAppId())) {
+                            postsForThisEvent.add(i);
+                        }
+                    }
+                    EventsDetailsAdapter adapter = new EventsDetailsAdapter(
+                            postsForThisEvent, id, type, distance, DetailsActivity.this);
+                    rvEventsDetail.setAdapter(adapter);
+
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

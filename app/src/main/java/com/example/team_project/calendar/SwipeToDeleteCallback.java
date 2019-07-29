@@ -1,33 +1,20 @@
-package com.example.team_project;
+package com.example.team_project.calendar;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import com.example.team_project.fragments.MyCalendarFragment;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
@@ -68,7 +55,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
             }
         }
         Log.d("SwipeToDeleteCallBack", "new parse events" + parseevents);
-
 
         if (eventToDelete != "NONE!"){
             mAdapter.deleteItem(position);

@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.account;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,13 +11,11 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.team_project.BottomNavActivity;
+import com.example.team_project.LoginActivity;
+import com.example.team_project.R;
+import com.example.team_project.SurveyActivity;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.BitmapScaler;
 import com.parse.ParseException;
@@ -34,14 +36,9 @@ import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 public class ProfileActivity extends AppCompatActivity {

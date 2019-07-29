@@ -1,10 +1,8 @@
 package com.example.team_project.api;
 
 import android.util.Log;
-import com.example.team_project.EventsDetailsAdapter;
-import com.example.team_project.LocationActivity;
-import com.example.team_project.SearchActivity;
-import com.example.team_project.model.Place;
+
+import com.example.team_project.location.LocationActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
@@ -20,8 +18,6 @@ public class AutocompleteApi {
     private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
 
     private AsyncHttpClient client;
-    private String location;
-    private String radius;
     private String key;
     private String input;
     private JSONArray array;
@@ -33,8 +29,6 @@ public class AutocompleteApi {
         this.source = source;
         this.key = "&key="+API_KEY;
         client = new AsyncHttpClient();
-        location = "";
-        radius = "";
         array = new JSONArray();
     }
 

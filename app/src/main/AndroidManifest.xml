@@ -20,12 +20,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".LocationActivity"></activity>
+        <activity android:name=".location.LocationActivity"></activity>
         <activity android:name=".ComposeReviewActivity" />
-        <activity android:name=".DetailsActivity" />
+        <activity android:name=".details.DetailsActivity" />
         <activity android:name=".SurveyActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".search.SearchActivity" />
+        <activity android:name=".account.ProfileActivity" />
         <activity android:name=".BottomNavActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

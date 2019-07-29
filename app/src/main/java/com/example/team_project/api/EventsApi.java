@@ -1,8 +1,8 @@
 package com.example.team_project.api;
 
 import android.util.Log;
-import com.example.team_project.EventsDetailsAdapter;
-import com.example.team_project.SearchActivity;
+import com.example.team_project.details.EventsDetailsAdapter;
+import com.example.team_project.search.SearchActivity;
 import com.example.team_project.model.Event;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;

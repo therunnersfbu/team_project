@@ -15,7 +15,7 @@ import android.widget.ImageButton;
 
 import com.example.team_project.HorizontalScrollAdapter;
 import com.example.team_project.R;
-import com.example.team_project.SearchActivity;
+import com.example.team_project.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
