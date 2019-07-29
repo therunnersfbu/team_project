@@ -409,17 +409,48 @@ public class ComposeReviewActivity extends AppCompatActivity{
             case 14:
         return "spa";
             case 15:
-        return "classes";
+        return "class";
             case 16:
-        return "trails";
+        return "trail";
             case 17:
-        return "gyms";
+        return "gym";
             case 18:
         return "family friendly";
             case 19:
-        return "museums";
+        return "museum";
         default:
             return "";
+        }
+    }
+
+    public static String getCategoryStr(int i) {
+        switch (i) {
+            case 0:
+                return "breakfast";
+            case 1:
+                return "brunch";
+            case 2:
+                return "lunch";
+            case 3:
+                return "dinner";
+            case 4:
+                return "sights";
+            case 5:
+                return "bar";
+            case 6:
+                return "shopping";
+            case 7:
+                return "concert";
+            case 8:
+                return "fair";
+            case 9:
+                return "spa";
+            case 10:
+                return "gym";
+            case 11:
+                return "park";
+            default:
+                return "";
         }
     }
 }

@@ -6,6 +6,9 @@
     android:layout_width="100dp"
     android:layout_height="130dp"
     android:layout_margin="1dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/cardview_dark_background"
     card_view:cardCornerRadius="7dp"
     card_view:cardElevation="7dp"
@@ -20,6 +23,9 @@
         android:textColor="#fff"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:inputType="textMultiLine"
         tools:text="Name" />
 
 </android.support.v7.widget.CardView>
