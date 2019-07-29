@@ -46,6 +46,7 @@ public class DetailsActivity extends AppCompatActivity {
             public void done(List<Post> objects, ParseException e) {
                 if (e == null) {
                     ArrayList<Post> postsForThisEvent = new ArrayList<>();
+                    postsForThisEvent.add(new Post());
                     for (Post i : objects) {
                         if (id.equals(i.getEventPlace().getAppId())) {
                             postsForThisEvent.add(i);

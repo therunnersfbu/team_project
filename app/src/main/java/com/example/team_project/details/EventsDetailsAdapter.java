@@ -184,10 +184,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof HeaderViewHolder) {
-            //TODO
-            //((HeaderViewHolder) holder).tvEventName.setText(((Event) mPost.getEvent()).getEventName());
-        } else if (holder instanceof ItemViewHolder) {
+        if (holder instanceof ItemViewHolder) {
             ((ItemViewHolder) holder).bind(mPosts.get(position));
         }
 
@@ -199,15 +196,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if (isHeader(position)) {
+        if (position == 0) {
             return TYPE_HEADER;
         } else {
             return TYPE_ITEM;
         }
-    }
-
-    private boolean isHeader(int position) {
-        return position == 0;
     }
 
     @Override
