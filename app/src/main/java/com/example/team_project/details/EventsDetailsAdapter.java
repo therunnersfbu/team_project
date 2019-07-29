@@ -226,7 +226,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             public void onClick(View v) {
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                String eventToAdd = event.getStartTime().substring(0, 10) + " " + event.getEventName();
+                String eventToAdd = event.getStartTime().substring(0, 10) + "{}" + event.getEventId()
+                        + "{}" + distance + "{}" + event.getEventName();
                 if (added.contains(eventToAdd)) {
                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
@@ -307,7 +308,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         ((monthOfYear + 1) < 10 ? "0" + (monthOfYear + 1) : (monthOfYear + 1))
                                         + "-" +
                                         (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth)
-                                        + " " + place.getPlaceName();
+                                        + "{}" + place.getPlaceId() + "{}" + distance + "{}" + place.getPlaceName();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
                                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
