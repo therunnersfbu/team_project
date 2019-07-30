@@ -2,6 +2,7 @@ package com.example.team_project.api;
 
 import android.util.Log;
 
+import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.search.SearchActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,13 +23,13 @@ public class DirectionsApi {
     private String origin;
     private String destinations;
     private ArrayList<String> distances;
-    private SearchActivity searchActivity;
+    private Object source;
 
-    public DirectionsApi(SearchActivity searchActivity) {
+    public DirectionsApi(Object source) {
         client = new AsyncHttpClient();
         destinations = "&destinations=";
         distances = new ArrayList<>();
-        this.searchActivity = searchActivity;
+        this.source = source;
     }
 
     public void setOrigin(double lat, double lng) {
@@ -52,7 +53,11 @@ public class DirectionsApi {
                         distances.add(array.getJSONObject(i).getJSONObject("distance").getString("text"));
                     }
 
-                    searchActivity.getDistances(distances);
+                    if (source instanceof SearchActivity) {
+                        ((SearchActivity) source).getDistances(distances);
+                    } else if (source instanceof EventsFragment) {
+                        ((EventsFragment) source).gotDistances(distances);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -71,7 +76,7 @@ public class DirectionsApi {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                throwable.printStackTrace();;
+                throwable.printStackTrace();
             }
         });
     }

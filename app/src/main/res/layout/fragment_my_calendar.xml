@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/viewCal">
 
 
    <LinearLayout
@@ -43,7 +44,7 @@
        app:compactCalendarBackgroundColor="#FFFFFF"
        app:compactCalendarTextColor="#000"
        app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
-       app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+       app:compactCalendarCurrentDayBackgroundColor="@color/calMaroon"
        app:compactCalendarMultiEventIndicatorColor="#fff"
        />
 

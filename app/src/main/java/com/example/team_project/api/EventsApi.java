@@ -2,6 +2,7 @@ package com.example.team_project.api;
 
 import android.util.Log;
 import com.example.team_project.details.EventsDetailsAdapter;
+import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.search.SearchActivity;
 import com.example.team_project.model.Event;
 import com.loopj.android.http.AsyncHttpClient;
@@ -73,8 +74,12 @@ public class EventsApi {
                 try {
                     array = response.getJSONObject("events").getJSONArray("event");
                     pageCount = Integer.parseInt(response.getString("page_count"));
-                    //TODO Memory leak
-                    ((SearchActivity) source).apiFinished(array);
+
+                    if (source instanceof SearchActivity) {
+                        ((SearchActivity) source).apiFinished(array);
+                    } else if (source instanceof EventsFragment) {
+                        ((EventsFragment) source).gotEvents(array);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

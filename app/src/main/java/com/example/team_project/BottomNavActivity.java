@@ -16,6 +16,7 @@ import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.fragments.MapFragment;
 import com.example.team_project.calendar.MyCalendarFragment;
 import com.example.team_project.location.LocationAdapter;
+import com.parse.ParseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +26,7 @@ public class BottomNavActivity extends AppCompatActivity {
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     public static BottomNavActivity bottomNavAct;
+    public static ParseUser targetUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,12 @@ public class BottomNavActivity extends AppCompatActivity {
                 });
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.action_events);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        targetUser = ParseUser.getCurrentUser();
     }
 
     @Override

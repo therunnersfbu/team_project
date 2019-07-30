@@ -10,4 +10,5 @@
     <color name="tagNotSelected">#adadad</color>
     <color name="tagSelected">#ff3030</color>
     <color name="reviewNot">#ACE0FF</color>
+    <color name="calMaroon">#B71C1C</color>
 </resources>

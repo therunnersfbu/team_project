@@ -46,10 +46,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Unbinder unbinder;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private GoogleMap googleMap;
-    ParseUser user = ParseUser.getCurrentUser();
     ArrayList<Post> reviewCoordinatesList;
     ImageButton mapicon;
-    Context context;
 
     @Nullable
     @Override
@@ -204,7 +202,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<Post> posts, ParseException e) {
             if (e != null) {
-                Log.e("MapFragment", "error with query");
+                Log.e("MapFragment", "error with query: " + e.getMessage());
                 e.printStackTrace();
                 return;
             }

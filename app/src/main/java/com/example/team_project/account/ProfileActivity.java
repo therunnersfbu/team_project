@@ -18,6 +18,8 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,7 +31,9 @@ import com.example.team_project.BottomNavActivity;
 import com.example.team_project.LoginActivity;
 import com.example.team_project.R;
 import com.example.team_project.SurveyActivity;
+import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.model.User;
+import com.example.team_project.search.ResultsAdapter;
 import com.example.team_project.utils.BitmapScaler;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -48,15 +52,31 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView ivProfilePic;
     private Button btnLogout;
     private Button btnSurvey;
+
     private TextView tvName;
+    private ParseUser user;
+    private RecyclerView rvLiked;
+    private LikedAdapter likedAdapter;
+    private ArrayList<String> liked;
+    private ArrayList<String> distances;
+    private ArrayList<String> ids;
+    RecyclerView.LayoutManager likedManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        ParseUser user = ParseUser.getCurrentUser();
+        rvLiked = findViewById(R.id.rvLiked);
+        liked = new ArrayList<>();
+        distances = new ArrayList<>();
+        ids = new ArrayList<>();
+        likedManager = new LinearLayoutManager(this);
+        likedAdapter = new LikedAdapter(liked, distances, ids);
+        rvLiked.setLayoutManager(likedManager);
+        rvLiked.setAdapter(likedAdapter);
 
+        user = BottomNavActivity.targetUser;
         tvName = findViewById(R.id.tvName);
         tvName.setText(user.getString(User.KEY_NAME));
 
@@ -103,6 +123,19 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        getLiked();
+    }
+
+    private void getLiked() {
+        ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+        for (String i : likedParse) {
+            String[] spot = i.split("\\(\\)");
+            ids.add(spot[0]);
+            distances.add(spot[1]);
+            liked.add(spot[2]);
+        }
+        likedAdapter.notifyDataSetChanged();
     }
 
     private void openImageIntent() {

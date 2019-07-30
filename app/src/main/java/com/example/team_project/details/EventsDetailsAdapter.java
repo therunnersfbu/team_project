@@ -1,11 +1,15 @@
 package com.example.team_project.details;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,8 +23,10 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.R;
+import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
@@ -30,6 +36,7 @@ import com.example.team_project.model.User;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -47,6 +54,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     //TODO private static string tags for eventsID etc
+    private final String separator = "()";
     private List<Post> mPosts;
     private String id;
     private boolean type;
@@ -59,14 +67,22 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context context;
     private boolean isLocal;
     private float lastX;
+    private RecyclerView mRecyclerView;
 
-    public EventsDetailsAdapter(List<Post> mPosts, String id, Boolean type, String distance, Context context) {
-        this.mPosts = mPosts;
+    public EventsDetailsAdapter(ArrayList<Post> mPosts, String id, Boolean type, String distance, Context context) {
         this.id = id;
         this.type = type;
         this.distance = distance;
         this.context = context;
+        this.mPosts = mPosts;
     }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
+
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvEventName;
@@ -127,13 +143,67 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView tvName;
+        private TextView tvName;
+        private ImageView ivProfilePic;
+        private TextView tvBody;
+        private boolean expanded;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
             tvName = (TextView) view.findViewById(R.id.tvName);
+            ivProfilePic = (ImageView) view.findViewById(R.id.ivProfilePic);
+            tvBody = (TextView) view.findViewById(R.id.tvBody);
+            expanded = false;
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                ((ViewGroup) view.findViewById(R.id.clReview)).getLayoutTransition()
+//                        .enableTransitionType(LayoutTransition.CHANGING);
+//            }
+
+            view.setOnClickListener(this);
+        }
+
+        public void bind(Post post) {
+            final ParseUser user = post.getUser();
+            tvName.setText(user.getString(User.KEY_NAME));
+            tvBody.setText(post.getReview());
+            ivProfilePic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BottomNavActivity.targetUser = user;
+                    final Intent intent = new Intent(DetailsActivity.detailsAct, OtherUserActivity.class);
+                    DetailsActivity.detailsAct.startActivity(intent);
+                }
+            });
+
+            ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
+            if (imageFile != null) {
+                Glide.with(context)
+                        .load(imageFile.getUrl())
+                        .placeholder(R.drawable.ic_person_black_24dp)
+                        .error(R.drawable.ic_person_black_24dp)
+                        .into(ivProfilePic);
+            } else {
+                Glide.with(context)
+                        .load(R.drawable.ic_person_black_24dp)
+                        .placeholder(R.drawable.ic_person_black_24dp)
+                        .error(R.drawable.ic_person_black_24dp)
+                        .into(ivProfilePic);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (expanded) {
+                tvBody.setSingleLine(true);
+                tvBody.setEllipsize(TextUtils.TruncateAt.END);
+            } else {
+                tvBody.setSingleLine(false);
+                tvBody.setEllipsize(null);
+            }
+            expanded = !expanded;
         }
     }
 
@@ -159,13 +229,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Post mPost = mPosts.get(position);
-        if(holder instanceof HeaderViewHolder) {
-            //TODO
-            //((HeaderViewHolder) holder).tvEventName.setText(((Event) mPost.getEvent()).getEventName());
-        } else if (holder instanceof ItemViewHolder) {
-            //TODO
-            //((ItemViewHolder) holder).tvName.setText(mPost.getUser().getUsername());
+        if (holder instanceof ItemViewHolder) {
+            ((ItemViewHolder) holder).bind(mPosts.get(position));
         }
 
     }
@@ -176,15 +241,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        if (isHeader(position)) {
+        if (position == 0) {
             return TYPE_HEADER;
         } else {
             return TYPE_ITEM;
         }
-    }
-
-    private boolean isHeader(int position) {
-        return position == 0;
     }
 
     @Override
@@ -201,7 +262,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mEvent = event;
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = event.getEventId() + "{}" + event.getEventName();
+        String toLike = event.getEventId() + separator + event.getEventName();
         if (liked.contains(toLike)) {
             test.ivLike.setActivated(true);
         }
@@ -210,7 +271,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             public void onClick(View v) {
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                String eventToAdd = event.getStartTime().substring(0, 10) + " " + event.getEventName();
+                String eventToAdd = event.getStartTime().substring(0, 10) + separator + event.getEventId()
+                        + separator + distance + separator + event.getEventName();
                 if (added.contains(eventToAdd)) {
                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
@@ -238,7 +300,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = event.getEventId() + "{}" + event.getEventName();
+                String toLike = event.getEventId() + separator + distance + separator + event.getEventName();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -256,7 +318,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        setImages(event.getEventId());
+        setImages();
     }
 
     public void finishedApiPlace(final Place place) {
@@ -269,7 +331,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mPlace = place;
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = place.getPlaceId() + "{}" + place.getPlaceName();
+        String toLike = place.getPlaceId() + separator + place.getPlaceName();
         if (liked.contains(toLike)) {
             test.ivLike.setActivated(true);
         }
@@ -291,7 +353,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         ((monthOfYear + 1) < 10 ? "0" + (monthOfYear + 1) : (monthOfYear + 1))
                                         + "-" +
                                         (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth)
-                                        + " " + place.getPlaceName();
+                                        + separator + place.getPlaceId() + separator + distance + separator + place.getPlaceName();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
                                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
@@ -324,7 +386,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = place.getPlaceId() + "{}" + place.getPlaceName();
+                String toLike = place.getPlaceId() + separator + distance + separator + place.getPlaceName();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -342,82 +404,67 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        setImages(place.getPlaceId());
+        setImages();
     }
 
-    private void setImages(final String imgId) {
-        ParseQuery parseQuery = new ParseQuery("Post");
-        parseQuery.include(Post.KEY_USER);
-        parseQuery.setLimit(1000);
+    @SuppressLint("ClickableViewAccessibility")
+    private void setImages() {
+        int count = 0;
+        for (Post i : mPosts) {
+            ParseFile file = i.getImage();
+            if (file != null) {
+                count++;
+                test.vfGallery.addView(createGalleryItem(file));
+            }
+        }
 
-        parseQuery.findInBackground(new FindCallback<Post>() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                int count = 0;
-                if (e == null) {
-                    for (Post i : objects) {
-                        if (imgId.equals(i.getEventPlace().getAppId())) {
-                            ParseFile file = i.getImage();
-                            if (file != null) {
-                                count++;
-                                test.vfGallery.addView(createGalleryItem(file));
+        if (count == 0) {
+            test.vfGallery.addView(createPlaceholder());
+        } else if (count > 1) {
+            test.vfGallery.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent touchevent) {
+                    switch (touchevent.getAction()) {
+                        // when user first touches the screen to swap
+                        case MotionEvent.ACTION_DOWN: {
+                            lastX = touchevent.getX();
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: {
+                            float currentX = touchevent.getX();
+
+                            // if left to right swipe on screen
+                            if (lastX < currentX) {
+                                // If no more View/Child to flip
+                                if (test.vfGallery.getDisplayedChild() == 0)
+                                    break;
+
+                                // set the required Animation type to ViewFlipper
+                                // The Next screen will come in form Left and current Screen will go OUT from Right
+                                test.vfGallery.setInAnimation(context, R.anim.in_from_left);
+                                test.vfGallery.setOutAnimation(context, R.anim.out_to_right);
+                                // Show the next Screen
+                                test.vfGallery.showNext();
                             }
+
+                            // if right to left swipe on screen
+                            if (lastX > currentX) {
+                                if (test.vfGallery.getDisplayedChild() == 1)
+                                    break;
+                                // set the required Animation type to ViewFlipper
+                                // The Next screen will come in form Right and current Screen will go OUT from Left
+                                test.vfGallery.setInAnimation(context, R.anim.in_from_right);
+                                test.vfGallery.setOutAnimation(context, R.anim.out_to_left);
+                                // Show The Previous Screen
+                                test.vfGallery.showPrevious();
+                            }
+                            break;
                         }
                     }
-
-                    if (count == 0) {
-                        test.vfGallery.addView(createPlaceholder());
-                    } else if (count > 1) {
-                        test.vfGallery.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View v, MotionEvent touchevent) {
-                                switch (touchevent.getAction()) {
-                                    // when user first touches the screen to swap
-                                    case MotionEvent.ACTION_DOWN: {
-                                        lastX = touchevent.getX();
-                                        break;
-                                    }
-                                    case MotionEvent.ACTION_UP: {
-                                        float currentX = touchevent.getX();
-
-                                        // if left to right swipe on screen
-                                        if (lastX < currentX) {
-                                            // If no more View/Child to flip
-                                            if (test.vfGallery.getDisplayedChild() == 0)
-                                                break;
-
-                                            // set the required Animation type to ViewFlipper
-                                            // The Next screen will come in form Left and current Screen will go OUT from Right
-                                            test.vfGallery.setInAnimation(context, R.anim.in_from_left);
-                                            test.vfGallery.setOutAnimation(context, R.anim.out_to_right);
-                                            // Show the next Screen
-                                            test.vfGallery.showNext();
-                                        }
-
-                                        // if right to left swipe on screen
-                                        if (lastX > currentX) {
-                                            if (test.vfGallery.getDisplayedChild() == 1)
-                                                break;
-                                            // set the required Animation type to ViewFlipper
-                                            // The Next screen will come in form Right and current Screen will go OUT from Left
-                                            test.vfGallery.setInAnimation(context, R.anim.in_from_right);
-                                            test.vfGallery.setOutAnimation(context, R.anim.out_to_left);
-                                            // Show The Previous Screen
-                                            test.vfGallery.showPrevious();
-                                        }
-                                        break;
-                                    }
-                                }
-                                return true;
-                            }
-                        });
-                    }
-                } else {
-                    e.printStackTrace();
+                    return true;
                 }
-            }
-        });
+            });
+        }
     }
 
     private ImageView createGalleryItem(ParseFile file) {

@@ -3,6 +3,7 @@ package com.example.team_project.api;
 import android.util.Log;
 
 import com.example.team_project.details.EventsDetailsAdapter;
+import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.location.LocationActivity;
 import com.example.team_project.search.SearchActivity;
 import com.example.team_project.model.Place;
@@ -66,7 +67,9 @@ public class PlacesApi {
                 try {
                     pageToken = "&pagetoken=" + response.getString("next_page_token");
                 } catch (JSONException e) {
-                    ((SearchActivity) source).setCanGetMore(false);
+                    if (source instanceof  SearchActivity) {
+                        ((SearchActivity) source).setCanGetMore(false);
+                    }
                     pageToken = "";
                 }
                 try {
@@ -84,7 +87,11 @@ public class PlacesApi {
                             array.put(results.getJSONObject(i));
                         }
                     }
-                    ((SearchActivity) source).apiFinished(array);
+                    if (source instanceof  SearchActivity) {
+                        ((SearchActivity) source).apiFinished(array);
+                    } else if (source instanceof EventsFragment) {
+                        ((EventsFragment) source).gotPlaces(array);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
