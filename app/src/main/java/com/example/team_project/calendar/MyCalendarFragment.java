@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.team_project.R;
 import com.example.team_project.model.User;
@@ -27,11 +28,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class MyCalendarFragment extends Fragment {
+public class MyCalendarFragment extends Fragment{
     private Unbinder unbinder;
     //Context context;
     CompactCalendarView compactCalendar; //= new CompactCalendarView(context);
@@ -47,6 +49,7 @@ public class MyCalendarFragment extends Fragment {
     public List<Event> calendarEvents;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
+    String splitindicator = "\\(\\)";
 
 
     @Nullable
@@ -75,12 +78,12 @@ public class MyCalendarFragment extends Fragment {
 
         // method in order to list the days events when the fragment is clicked
         Date c = Calendar.getInstance().getTime();
-        Log.d("mycalfrag", currentDate);
         String numberDate = simpleDateFormat.format(c);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
-                if (numberDate.equals(addedEvents.get(x).substring(0, 10))) {
-                    String eventName = addedEvents.get(x).substring(11);
+                String[] eventarray = addedEvents.get(x).split(splitindicator);
+                if (numberDate.equals(eventarray[0])) {
+                    String eventName = eventarray[3];
                     theDaysEvents.add(eventName);
                 }
             }
@@ -89,13 +92,13 @@ public class MyCalendarFragment extends Fragment {
             }
         }
 
-
         // add each individual event to calendar
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
                 Event event = null;
                 try {
-                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).substring(0, 10)));
+                    String[] split = addedEvents.get(x).split(Pattern.quote("()"));
+                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(splitindicator)[0]));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -112,8 +115,9 @@ public class MyCalendarFragment extends Fragment {
                 String numberDate = simpleDateFormat.format(dateClicked);
                 if (addedEvents != null) {
                     for (int x = 0; x < addedEvents.size(); x++) {
-                        if (numberDate.equals(addedEvents.get(x).substring(0, 10))) {
-                            String eventName = addedEvents.get(x).substring(11);
+                        String[] eventarray = addedEvents.get(x).split(splitindicator);
+                        if (numberDate.equals(eventarray[0])) {
+                            String eventName = eventarray[3];
                             theDaysEvents.add(eventName);
                         }
                     }
@@ -152,4 +156,5 @@ public class MyCalendarFragment extends Fragment {
         epochTime = milliDate.getTime();
         return epochTime;
     }
+
 }

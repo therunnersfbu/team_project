@@ -1,6 +1,7 @@
 package com.example.team_project.calendar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.team_project.R;
+import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.Event;
+import com.example.team_project.model.Post;
+import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.parse.ParseUser;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +33,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     String mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
     CompactCalendarView compactCalendar;
+    String splitindicator = "\\(\\)";
+    Context context;
+
 
 
     public CalendarAdapter(ArrayList<String> theDaysEvents) {
@@ -60,24 +70,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         events.remove(position);
         notifyItemRemoved(position);
     }
-    /*public void updateDots(ArrayList<String> parseevents) {
-        for (int x = 0; x < parseevents.size(); x++) {
-            com.github.sundeepk.compactcalendarview.domain.Event event = null;
-            try {
-                event = new com.github.sundeepk.compactcalendarview.domain.Event(Color.BLACK, myMilliSecConvert(parseevents.get(x).substring(0, 10)));
-                Log.d("SwipeToDeleteCallBack", "event" + event);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            compactCalendar.addEvent(event);
-        }
-    }
-    public long myMilliSecConvert(String date) throws ParseException {
-        Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        long epochTime = milliDate.getTime();
-        return epochTime;
-    }*/
 
+
+
+    ParseUser user = ParseUser.getCurrentUser();
+    ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -89,4 +86,5 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         }
 
     }
+
 }

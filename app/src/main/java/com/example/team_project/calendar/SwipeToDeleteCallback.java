@@ -23,6 +23,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     CompactCalendarView compactCalendar;
     Context context;
     Long epochTime;
+    String splitindicator = "()";
 
 
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
@@ -42,24 +43,21 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-        Log.d("SwipeToDeleteCallBack", "parse events" + parseevents);
 
         ArrayList<String> rvEvents = mAdapter.events;
-            String eventToDelete = rvEvents.get(position);
+        String eventToDelete = rvEvents.get(position);
 
         // delete the event in the parse database
         for (int x = 0; x < parseevents.size(); x++) {
-            if (eventToDelete.equals(parseevents.get(x).substring(11))) {
+            if (eventToDelete.equals(parseevents.get(x).split(splitindicator)[3])) {
                 parseevents.remove(x);
                 user.put(User.KEY_ADDED_EVENTS, parseevents);
             }
         }
-        Log.d("SwipeToDeleteCallBack", "new parse events" + parseevents);
 
         if (eventToDelete != "NONE!"){
             mAdapter.deleteItem(position);
         }
-        //mAdapter.updateDots(parseevents);
         user.saveInBackground();
         mAdapter.notifyDataSetChanged();
     }
