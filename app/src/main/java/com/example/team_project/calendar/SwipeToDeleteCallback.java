@@ -28,9 +28,6 @@ import java.util.Date;
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     CalendarAdapter mAdapter;
-    CompactCalendarView compactCalendar;
-    Context context;
-    Long epochTime;
     String splitindicator = "\\(\\)";
     private Drawable icon;
     private final ColorDrawable background;

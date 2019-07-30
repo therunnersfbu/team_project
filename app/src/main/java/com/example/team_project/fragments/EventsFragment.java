@@ -67,7 +67,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     RecyclerView.LayoutManager myManager;
     LinearLayoutManager horizontalLayout;
 
-
     public static int categoryToMark;
     public static ArrayList<String> distances;
     public static ArrayList<String> idList;

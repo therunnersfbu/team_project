@@ -69,7 +69,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         mRecentlyDeletedItemPosition = position;
         events.remove(position);
         notifyItemRemoved(position);
-        //showUndoSnackbar();
     }
 
 
