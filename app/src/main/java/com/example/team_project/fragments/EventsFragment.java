@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.team_project.HorizontalScrollAdapter;
+import com.example.team_project.search.HorizontalScrollAdapter;
 import com.example.team_project.R;
 import com.example.team_project.search.SearchActivity;
 
@@ -55,7 +55,7 @@ public class EventsFragment extends Fragment {
         myManager = new LinearLayoutManager(getContext());
         rvSuggested.setLayoutManager(myManager);
         addItems();
-        adapter = new HorizontalScrollAdapter(names, isTags);
+        adapter = new HorizontalScrollAdapter(names, isTags, new SearchActivity());
         horizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvSuggested.setLayoutManager(horizontalLayout);
         rvSuggested.setAdapter(adapter);

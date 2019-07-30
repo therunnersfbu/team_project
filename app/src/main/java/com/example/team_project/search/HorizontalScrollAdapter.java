@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.search;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.team_project.search.SearchActivity;
+import com.example.team_project.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
     private final List<String> list;
     private final boolean isTags;
     public static ArrayList<String> addTagsToSearch;
+    public SearchActivity mSearchActivity;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -32,16 +33,15 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
 
         @Override
         public void onClick(View v) {
-            String guy = tvName.getText().toString();
             addTagsToSearch.add(tvName.getText().toString());
             list.remove(tvName.getText().toString());
             notifyDataSetChanged();
-            SearchActivity.setNewSearchText(addTagsToSearch);
-
+            mSearchActivity.setNewSearchText(addTagsToSearch);
         }
     }
 
-    public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags) {
+    public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags, SearchActivity mSearchActivity) {
+        this.mSearchActivity = mSearchActivity;
         this.list = horizontalList;
         this.isTags = isTags;
         addTagsToSearch = new ArrayList<>();

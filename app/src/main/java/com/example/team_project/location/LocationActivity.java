@@ -16,6 +16,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+// used to change the current location to a location of the user's choosing.
 public class LocationActivity extends AppCompatActivity {
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
