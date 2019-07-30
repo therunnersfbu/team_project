@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -30,7 +31,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     CompactCalendarView compactCalendar;
     Context context;
     Long epochTime;
-    String splitindicator = "//(//)";
+    String splitindicator = "\\(\\)";
     private Drawable icon;
     private final ColorDrawable background;
 
@@ -74,6 +75,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         mAdapter.notifyDataSetChanged();
     }
 
+    // to enable the garbage image and color to be present when event is swiped
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX,
