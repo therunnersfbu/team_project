@@ -23,8 +23,10 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.R;
+import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
@@ -164,9 +166,17 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         public void bind(Post post) {
-            ParseUser user = post.getUser();
+            final ParseUser user = post.getUser();
             tvName.setText(user.getString(User.KEY_NAME));
             tvBody.setText(post.getReview());
+            ivProfilePic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BottomNavActivity.targetUser = user;
+                    final Intent intent = new Intent(DetailsActivity.detailsAct, OtherUserActivity.class);
+                    DetailsActivity.detailsAct.startActivity(intent);
+                }
+            });
 
             ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
             if (imageFile != null) {
