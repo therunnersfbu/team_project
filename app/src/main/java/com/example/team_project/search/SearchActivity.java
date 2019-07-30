@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.team_project.HorizontalScrollAdapter;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
@@ -44,10 +43,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private RecyclerView rvTags;
     private RecyclerView rvResults;
     private boolean isTags;
-    private ArrayList<String> names;
-    private ArrayList<String> results;
-    private HorizontalScrollAdapter adapter;
-    private ResultsAdapter resultsAdapter;
+    private ArrayList<String> mNames;
+    private ArrayList<String> mResults;
+    private HorizontalScrollAdapter mAdapter;
+    private ResultsAdapter mResultsAdapter;
     private int category;
     private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<Event> mEventList;
@@ -68,6 +67,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private String newLoc;
     private String newLocName;
     private Button btnCancel;
+    private ArrayList<String> mSubTags;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -89,13 +89,12 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         rvResults = findViewById(R.id.rvResults);
         rvTags.setLayoutManager(myManager);
         rvResults.setLayoutManager(resultsManager);
-        addTags();
-        adapter = new HorizontalScrollAdapter(names, isTags);
-        resultsAdapter = new ResultsAdapter(results, distances, ids, isPlace);
+        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
+        mResultsAdapter = new ResultsAdapter(mResults, distances, ids, isPlace);
         rvTags.setLayoutManager(horizontalLayout);
-        rvTags.setAdapter(adapter);
+        rvTags.setAdapter(mAdapter);
         rvResults.setLayoutManager(verticalLayout);
-        rvResults.setAdapter(resultsAdapter);
+        rvResults.setAdapter(mResultsAdapter);
         tvLocation = findViewById(R.id.etLocation);
         etSearch = findViewById(R.id.etSearch);
         isCurLoc = true;
@@ -109,7 +108,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 finish();
             }
         });
-
         tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,16 +142,16 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         }
     }
 
-    public static void setNewSearchText(ArrayList<String> addTagsToSearch) {
-
-
+    public void setNewSearchText(ArrayList<String> addTagsToSearch) {
+        String mSearch = etSearch.getText().toString();
+        etSearch.setText(mSearch + " " + addTagsToSearch.get(addTagsToSearch.size()-1));
     }
 
     @Override
     protected void onResume() {
         isCurLoc = LocationAdapter.isCurLoc;
-        newLoc = LocationAdapter.newLoc;
-        newLocName = LocationAdapter.locName;
+        newLoc = LocationAdapter.mNewLoc;
+        newLocName = LocationAdapter.mLocName;
         super.onResume();
         if(isCurLoc){
             if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -233,7 +231,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private void populateList() {
         mEventList.clear();
         mPlaceList.clear();
-        results.clear();
+        mResults.clear();
         ids.clear();
         String mCategory = "";
         if (!isPlace) {
@@ -247,54 +245,126 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             case 0:
                 mCategory = "breakfast";
                 pApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 1:
                 mCategory = "brunch";
                 pApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("bottomless");
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 2:
                 mCategory = "lunch";
                 pApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 3:
                 mCategory = "dinner";
                 pApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 4:
                 mCategory = "sights";
                 pApi.setKeywords("museum");
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("museum");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 5:
                 mCategory = "nightlife";
                 pApi.setKeywords("bar");
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("young");
+                mSubTags.add("clubby");
+                mSubTags.add("food available");
+                mSubTags.add("rooftop");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 6:
                 mCategory = "shopping";
                 pApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("mall");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 7:
                 mCategory = "concerts";
                 eApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("indoors");
+                mSubTags.add("outdoors");
+                mSubTags.add("upscale");
+                mSubTags.add("food available");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 8:
                 mCategory = "pop-up events";
                 eApi.setKeywords("fair");
+                mSubTags.clear();
+                mSubTags.add("food available");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 9:
                 mCategory = "beauty";
                 pApi.setKeywords("salon");
+                mSubTags.clear();
+                mSubTags.add("barber");
+                mSubTags.add("spa");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 10:
                 mCategory = "active";
                 pApi.setKeywords("gym");
+                mSubTags.clear();
+                mSubTags.add("classes");
+                mSubTags.add("trails");
+                mSubTags.add("gyms");
+                mSubTags.add("TrendyCity verified");
                 break;
             case 11:
                 mCategory = "parks";
                 pApi.setKeywords(mCategory);
+                mSubTags.clear();
+                mSubTags.add("food available");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
                 break;
             default:
                 return;
         }
+        mAdapter.notifyDataSetChanged();
         etSearch.setText(mCategory);
         if (!isPlace) {
             eApi.getTopEvents();
@@ -312,7 +382,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
                 mEventList.add(event);
                 dApi.addDestination(event.getLocation());
-                results.add(event.getEventName());
+                mResults.add(event.getEventName());
                 ids.add(event.getEventId());
             }
         } else {
@@ -320,7 +390,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 Place place = Place.placeFromJson(array.getJSONObject(i), false);
                 mPlaceList.add(place);
                 dApi.addDestination(place.getLocation());
-                results.add(place.getPlaceName());
+                mResults.add(place.getPlaceName());
                 ids.add(place.getPlaceId());
             }
         }
@@ -330,17 +400,17 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
     public void getDistances(ArrayList<String> result) {
         distances.addAll(result);
-        resultsAdapter.notifyDataSetChanged();
+        mResultsAdapter.notifyDataSetChanged();
     }
 
     private void addTags() {
-        names = new ArrayList<>();
-        names.add("TAG ONE");
-        names.add("TAG TWO");
-        names.add("TAG THREE");
-        names.add("TAG FOUR");
-        names.add("TAG FIVE");
-        names.add("TAG SIX");
+        mNames = new ArrayList<>();
+        mNames.add("TAG ONE");
+        mNames.add("TAG TWO");
+        mNames.add("TAG THREE");
+        mNames.add("TAG FOUR");
+        mNames.add("TAG FIVE");
+        mNames.add("TAG SIX");
 
     }
 
@@ -348,8 +418,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     {
         mEventList = new ArrayList<>();
         mPlaceList = new ArrayList<>();
-        results = new ArrayList<>();
+        mResults = new ArrayList<>();
         distances = new ArrayList<>();
+        mSubTags = new ArrayList<>();
         ids = new ArrayList<>();
         myManager = new LinearLayoutManager(this);
         resultsManager = new LinearLayoutManager(this);

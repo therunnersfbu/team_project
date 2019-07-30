@@ -21,11 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
+import com.example.team_project.search.HorizontalScrollAdapter;
 import com.example.team_project.ComposeReviewActivity;
-import com.example.team_project.HorizontalScrollAdapter;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
@@ -94,7 +91,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         idList = new ArrayList<>();
         distances = new ArrayList<>();
         names = new ArrayList<>();
-        adapter = new HorizontalScrollAdapter(names, isTags);
+        adapter = new HorizontalScrollAdapter(names, isTags, new SearchActivity());
         horizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvSuggested.setLayoutManager(horizontalLayout);
         rvSuggested.setAdapter(adapter);
@@ -111,6 +108,27 @@ public class EventsFragment extends Fragment implements LocationListener, Google
                 getContext().startActivity(intent);
             }
         });
+
+        for(int i = 0; i<12; i++) {
+            final int index = i;
+            mbtn = (ImageButton) btnCat.get(i);
+            mbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EventsFragment.categoryToMark = index;
+                    Intent intent = new Intent(getContext(), SearchActivity.class);
+                    intent.putExtra("category", index);
+                    getContext().startActivity(intent);
+                }
+            });
+        }
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }else{
+            Log.d("location", "first");
+            setMyLocation();
+        }
     }
 
     private void setMyLocation() {

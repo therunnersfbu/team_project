@@ -12,22 +12,23 @@ import com.example.team_project.R;
 import java.util.ArrayList;
 import java.util.List;
 
+//Updates the list of location options from the API JSON results after each search
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
-    private final List<String> locs;
-    private final List<String> names;
-    private final List<String> ids;
-    private final int category;
-    public static String locName;
-    public static String newLoc;
+    private final List<String> mLocs;
+    private final List<String> mNames;
+    private final List<String> mIds;
+    private final int mCategory;
+    public static String mLocName;
+    public static String mNewLoc;
     public static boolean isCurLoc;
 
 
-    public LocationAdapter(ArrayList<String> locs, ArrayList<String> names, ArrayList<String> ids, int category) {
-        this.locs = locs;
-        this.names = names;
-        this.ids = ids;
-        this.category = category;
+    public LocationAdapter(ArrayList<String> mLocs, ArrayList<String> mNames, ArrayList<String> ids, int category) {
+        this.mLocs = mLocs;
+        this.mNames = mNames;
+        this.mIds = ids;
+        this.mCategory = category;
         isCurLoc = true;
     }
 
@@ -45,12 +46,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         public void onClick(View v) {
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                locName = names.get(position);
-                newLoc = locs.get(position);
+                mLocName = mNames.get(position);
+                mNewLoc = mLocs.get(position);
                 isCurLoc = false;
                 LocationActivity.locationActivity.finish();
                 /*Intent intent = new Intent(v.getContext(), SearchActivity.class);
-                intent.putExtra("newLocation", locs.get(position));
+                intent.putExtra("newLocation", mLocs.get(position));
                 intent.putExtra("isCurLoc", false);
                 intent.putExtra("category", category);
                 intent.putExtra("name", names.get(position));
@@ -68,13 +69,13 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.tvName.setText(names.get(i));
+        viewHolder.tvName.setText(mNames.get(i));
 
     }
 
     @Override
     public int getItemCount() {
-        return names.size();
+        return mNames.size();
     }
 
 }

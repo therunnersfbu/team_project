@@ -1,4 +1,4 @@
-package com.example.team_project;
+package com.example.team_project.search;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,21 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team_project.BottomNavActivity;
+import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.fragments.EventsFragment;
-import com.example.team_project.model.Event;
-import com.example.team_project.search.SearchActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // This adapter handles horizontal scrolling for the Tag and Suggestion CardViews. Used in Search Activity
-
 public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScrollAdapter.ViewHolder> {
 
     private final List<String> list;
     private final boolean isTags;
     public static ArrayList<String> addTagsToSearch;
+    private SearchActivity mSearchActivity;
+
+    public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags, SearchActivity mSearchActivity) {
+        this.mSearchActivity = mSearchActivity;
+        this.list = horizontalList;
+        this.isTags = isTags;
+        addTagsToSearch = new ArrayList<>();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName;
@@ -42,7 +49,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                         addTagsToSearch.add(tvName.getText().toString());
                         list.remove(tvName.getText().toString());
                         notifyDataSetChanged();
-                        SearchActivity.setNewSearchText(addTagsToSearch);
+                        mSearchActivity.setNewSearchText(addTagsToSearch);
                     }
                 });
             } else {
@@ -60,16 +67,10 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         }
     }
 
-    public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags) {
-        this.list = horizontalList;
-        this.isTags = isTags;
-        addTagsToSearch = new ArrayList<>();
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(isTags? R.layout.item_tag : R.layout.item_suggestion, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(isTags ? R.layout.item_tag : R.layout.item_suggestion, parent, false);
         return new ViewHolder(itemView);
     }
 
