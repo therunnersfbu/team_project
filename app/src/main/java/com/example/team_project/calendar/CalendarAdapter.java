@@ -29,19 +29,18 @@ import java.util.List;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
-    ArrayList<Event> dotEvents;
     String mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
-    CompactCalendarView compactCalendar;
     String splitindicator = "\\(\\)";
-    Context context;
+    private Context context;
+    ParseUser user = ParseUser.getCurrentUser();
+    ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
 
-
-    public CalendarAdapter(ArrayList<String> theDaysEvents) {
+    public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
         this.events = theDaysEvents;
+        this.context = context;
     }
-
 
     @NonNull
     @Override
@@ -72,19 +71,50 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
 
-
-    ParseUser user = ParseUser.getCurrentUser();
-    ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tvEventName;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             tvEventName = itemView.findViewById(R.id.tvEventName);
+            itemView.setOnClickListener(this);
         }
 
-    }
+        // to click event and see detailview
+        @Override
+        public void onClick(View v) {
+            //gets item position
+            int position = getAdapterPosition();
+            //make sure the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                //get the event at the position
+                String eventname = events.get(position);
+                for (int x = 0; x < parseevents.size(); x++) {
 
+                    // match event
+                    if (eventname.equals(parseevents.get(x).split(splitindicator)[3])) {
+                        // get the apiId and distance
+                        String distance = parseevents.get(x).split(splitindicator)[2];
+                        Log.d("CalendarAdapter", "distance: " + distance);
+                        Boolean type;
+                        String eventApiId = parseevents.get(x).split(splitindicator)[1];
+                        Log.d("CalendarAdapter", "apiID: " + eventApiId);
+                        if ('E' != eventApiId.charAt(0)) {
+                            type = true;
+                        } else {
+                            type = false;
+                        }
+
+                        Intent intent = new Intent(context, DetailsActivity.class);
+                        intent.putExtra("eventID", eventApiId);
+                        intent.putExtra("type", type);
+                        intent.putExtra("distance", distance);
+                        context.startActivity(intent);
+
+                    }
+                }
+            }
+        }
+    }
 }

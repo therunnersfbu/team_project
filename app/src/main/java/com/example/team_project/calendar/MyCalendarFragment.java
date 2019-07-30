@@ -35,8 +35,7 @@ import butterknife.Unbinder;
 
 public class MyCalendarFragment extends Fragment{
     private Unbinder unbinder;
-    //Context context;
-    CompactCalendarView compactCalendar; //= new CompactCalendarView(context);
+    CompactCalendarView compactCalendar;
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
@@ -46,7 +45,6 @@ public class MyCalendarFragment extends Fragment{
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     ArrayList<String> theDaysEvents;
-    public List<Event> calendarEvents;
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     String splitindicator = "\\(\\)";
@@ -97,7 +95,6 @@ public class MyCalendarFragment extends Fragment{
             for (int x = 0; x < addedEvents.size(); x++) {
                 Event event = null;
                 try {
-                    String[] split = addedEvents.get(x).split(Pattern.quote("()"));
                     event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(splitindicator)[0]));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -138,7 +135,7 @@ public class MyCalendarFragment extends Fragment{
 
     private void setRecyclerView(View view) {
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new CalendarAdapter(theDaysEvents);
+        mAdapter = new CalendarAdapter(getContext(),theDaysEvents);
         rvCal.setLayoutManager(mLayoutManager);
         rvCal.setAdapter(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
