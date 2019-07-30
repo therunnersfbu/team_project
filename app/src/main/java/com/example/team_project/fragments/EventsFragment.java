@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.HorizontalScrollAdapter;
@@ -42,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -63,10 +67,17 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     RecyclerView.LayoutManager myManager;
     LinearLayoutManager horizontalLayout;
 
+
+    private ProgressBar progressBar;
+    private int progressStatus = 0;
+    private TextView textView;
+    private Handler handler = new Handler();
+
     public static int categoryToMark;
     public static ArrayList<String> distances;
     public static ArrayList<String> idList;
     public static boolean type;
+
 
     @Nullable
     @Override
@@ -78,7 +89,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         type = true;
         isTags =false;
@@ -106,27 +117,33 @@ public class EventsFragment extends Fragment implements LocationListener, Google
                 getContext().startActivity(intent);
             }
         });
-        for(int i = 0; i<12; i++)
-        {
-            final int index = i;
-            mbtn = (ImageButton) btnCat.get(i);
-            mbtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EventsFragment.categoryToMark = index;
-                    Intent intent = new Intent(getContext(), SearchActivity.class);
-                    intent.putExtra("category", index);
-                    getContext().startActivity(intent);
-                }
-            });
-        }
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }else{
-            Log.d("location", "first");
-            setMyLocation();
-        }
+
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        textView = (TextView) view.findViewById(R.id.textView);
+        // Start long running operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    progressStatus += 1;
+                    // Update the progress bar and display the
+                    //current value in the text view
+                    handler.post(new Runnable() {
+                        public void run() {
+                            progressBar.setProgress(progressStatus);
+                            textView.setText(progressStatus+"/"+progressBar.getMax());
+                        }
+                    });
+                    try {
+                        // Sleep for 200 milliseconds.
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
     }
 
     private void setMyLocation() {
