@@ -256,7 +256,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = event.getEventId() + separator + event.getEventName();
+                String toLike = event.getEventId() + separator + distance + separator + event.getEventName();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -342,7 +342,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = place.getPlaceId() + separator + place.getPlaceName();
+                String toLike = place.getPlaceId() + separator + distance + separator + place.getPlaceName();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
