@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clReview"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:padding="15dp"
-    android:layout_height="wrap_content">
+    android:animateLayoutChanges="true">
 
     <ImageView
         android:id="@+id/ivProfilePic"
@@ -35,6 +36,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="Body of the review"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivProfilePic"
