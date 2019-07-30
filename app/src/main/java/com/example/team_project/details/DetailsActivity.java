@@ -17,6 +17,7 @@ public class DetailsActivity extends AppCompatActivity {
     private String id;
     private boolean type;
     private String distance;
+    public static DetailsActivity detailsAct;
     public static final String EVENT_ID = "eventID";
     public static final String TYPE = "type";
     public static final String DISTANCE = "distance";
@@ -25,6 +26,8 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        detailsAct = this;
+
         id = getIntent().getStringExtra(EVENT_ID);
         type = getIntent().getBooleanExtra(TYPE, true);
         distance = getIntent().getStringExtra(DISTANCE);

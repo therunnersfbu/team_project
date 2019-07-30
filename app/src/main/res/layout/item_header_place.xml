@@ -9,7 +9,7 @@
 
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tvLikedSpots"
         android:layout_width="420dp"
         android:layout_height="166dp"
         android:layout_marginBottom="15dp"
@@ -161,7 +161,7 @@
         android:textColor="#000000"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintEnd_toEndOf="@+id/tvLikedSpots"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toTopOf="@+id/tvDistance" />
 

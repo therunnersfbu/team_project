@@ -1,11 +1,15 @@
 package com.example.team_project.details;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,8 +23,10 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.R;
+import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.model.Event;
@@ -61,6 +67,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context context;
     private boolean isLocal;
     private float lastX;
+    private RecyclerView mRecyclerView;
 
     public EventsDetailsAdapter(ArrayList<Post> mPosts, String id, Boolean type, String distance, Context context) {
         this.id = id;
@@ -69,6 +76,13 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.context = context;
         this.mPosts = mPosts;
     }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
+
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvEventName;
@@ -129,23 +143,41 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
+    public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
         private ImageView ivProfilePic;
         private TextView tvBody;
+        private boolean expanded;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
             tvName = (TextView) view.findViewById(R.id.tvName);
             ivProfilePic = (ImageView) view.findViewById(R.id.ivProfilePic);
             tvBody = (TextView) view.findViewById(R.id.tvBody);
+            expanded = false;
+
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                ((ViewGroup) view.findViewById(R.id.clReview)).getLayoutTransition()
+//                        .enableTransitionType(LayoutTransition.CHANGING);
+//            }
+
+            view.setOnClickListener(this);
         }
 
         public void bind(Post post) {
-            ParseUser user = post.getUser();
+            final ParseUser user = post.getUser();
             tvName.setText(user.getString(User.KEY_NAME));
             tvBody.setText(post.getReview());
+            ivProfilePic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BottomNavActivity.targetUser = user;
+                    final Intent intent = new Intent(DetailsActivity.detailsAct, OtherUserActivity.class);
+                    DetailsActivity.detailsAct.startActivity(intent);
+                }
+            });
+
             ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
             if (imageFile != null) {
                 Glide.with(context)
@@ -160,6 +192,18 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .error(R.drawable.ic_person_black_24dp)
                         .into(ivProfilePic);
             }
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (expanded) {
+                tvBody.setSingleLine(true);
+                tvBody.setEllipsize(TextUtils.TruncateAt.END);
+            } else {
+                tvBody.setSingleLine(false);
+                tvBody.setEllipsize(null);
+            }
+            expanded = !expanded;
         }
     }
 

@@ -52,9 +52,9 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView ivProfilePic;
     private Button btnLogout;
     private Button btnSurvey;
+
     private TextView tvName;
     private ParseUser user;
-
     private RecyclerView rvLiked;
     private LikedAdapter likedAdapter;
     private ArrayList<String> liked;
