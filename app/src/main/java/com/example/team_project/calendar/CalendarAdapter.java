@@ -32,7 +32,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     String mRecentlyDeletedItem;
     int mRecentlyDeletedItemPosition;
     String splitindicator = "\\(\\)";
-    private Context context;
+    Context context;
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
@@ -53,7 +53,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        //where we associate data with actual row
         viewHolder.tvEventName.setText(" - " + events.get(i));
 
     }
@@ -96,10 +95,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                     if (eventname.equals(parseevents.get(x).split(splitindicator)[3])) {
                         // get the apiId and distance
                         String distance = parseevents.get(x).split(splitindicator)[2];
-                        Log.d("CalendarAdapter", "distance: " + distance);
                         Boolean type;
                         String eventApiId = parseevents.get(x).split(splitindicator)[1];
-                        Log.d("CalendarAdapter", "apiID: " + eventApiId);
                         if ('E' != eventApiId.charAt(0)) {
                             type = true;
                         } else {

@@ -43,7 +43,7 @@
        app:compactCalendarBackgroundColor="#FFFFFF"
        app:compactCalendarTextColor="#000"
        app:compactCalendarCurrentSelectedDayBackgroundColor="#E57373"
-       app:compactCalendarCurrentDayBackgroundColor="#B71C1C"
+       app:compactCalendarCurrentDayBackgroundColor="@color/calMaroon"
        app:compactCalendarMultiEventIndicatorColor="#fff"
        />
 
