@@ -22,6 +22,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
     private final List<String> list;
     private final boolean isTags;
     public static ArrayList<String> addTagsToSearch;
+    public static String mTagToAdd;
     private SearchActivity mSearchActivity;
 
     public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags, SearchActivity mSearchActivity) {
@@ -29,6 +30,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         this.list = horizontalList;
         this.isTags = isTags;
         addTagsToSearch = new ArrayList<>();
+        mTagToAdd = "";
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -48,6 +50,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         @Override
         public void onClick(View v) {
             if (isTags) {
+                mTagToAdd = tvName.getText().toString();
                 addTagsToSearch.add(tvName.getText().toString());
                 list.remove(tvName.getText().toString());
                 notifyDataSetChanged();

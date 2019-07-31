@@ -26,15 +26,23 @@ import com.example.team_project.location.LocationActivity;
 import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 // Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
@@ -68,6 +76,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private String newLocName;
     private Button btnCancel;
     private ArrayList<String> mSubTags;
+    private ArrayList<String> mTaggedResults;
+    private String[] primTagRef;
+    private ArrayList<String> tagReference;
 
     RecyclerView.LayoutManager myManager;
     RecyclerView.LayoutManager resultsManager;
@@ -80,6 +91,11 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         setContentView(R.layout.activity_search);
         initializeVars();
 
+        primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
+                "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
+                "clubby", "mall", "food available", "barber", "spa", "classes", "trails",
+                "gyms", "family friendly", "museums"};
+        tagReference = new ArrayList<String>(Arrays.asList(primTagRef));
         category = getIntent().getIntExtra("category", -1);
         isTags = true;
         isPlace = true;
@@ -143,8 +159,19 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     }
 
     public void setNewSearchText(ArrayList<String> addTagsToSearch) {
+        mTaggedResults = addTagsToSearch;
         String mSearch = etSearch.getText().toString();
         etSearch.setText(mSearch + " " + addTagsToSearch.get(addTagsToSearch.size()-1));
+        mEventList.clear();
+        mPlaceList.clear();
+        mResults.clear();
+        ids.clear();
+        mResultsAdapter.notifyDataSetChanged();
+        if (!isPlace) {
+            eApi.getTopEvents();
+        } else {
+            pApi.getTopPlaces();
+        }
     }
 
     @Override
@@ -376,22 +403,60 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     public void apiFinished(JSONArray array) throws JSONException {
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
-
+        boolean isStored = true;
         if (!isPlace) {
             for (int i = 0; i < array.length(); i++) {
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
-                mEventList.add(event);
-                dApi.addDestination(event.getLocation());
-                mResults.add(event.getEventName());
-                ids.add(event.getEventId());
+                String mId = event.getEventId();
+                if(!mTaggedResults.isEmpty()) {
+                    PlaceEvent mPlaceEvent = query(mId);
+                    for(int j = 0; j<mTaggedResults.size(); j++)
+                    {
+                        int tagIndex = tagReference.indexOf(mTaggedResults.get(j));
+                        ArrayList<Integer> mTags = new ArrayList<>();
+                        if(mPlaceEvent== null) {isStored = false; break;}
+                        mTags.addAll(mPlaceEvent.getTags());
+                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0)
+                        {
+                            isStored = false;
+                        }
+
+                    }
+                }
+                if(isStored)
+                {
+                    ids.add(event.getEventId());
+                    mEventList.add(event);
+                    dApi.addDestination(event.getLocation());
+                    mResults.add(event.getEventName());
+                }
             }
         } else {
             for (int i = 0; i < array.length(); i++) {
                 Place place = Place.placeFromJson(array.getJSONObject(i), false);
-                mPlaceList.add(place);
-                dApi.addDestination(place.getLocation());
-                mResults.add(place.getPlaceName());
-                ids.add(place.getPlaceId());
+                String mId = place.getPlaceId();
+                if(!mTaggedResults.isEmpty()) {
+                    PlaceEvent mPlaceEvent = query(mId);
+                    for(int j = 0; j<mTaggedResults.size(); j++)
+                    {
+                        int tagIndex = tagReference.indexOf(mTaggedResults.get(j));
+                        ArrayList<Integer> mTags = new ArrayList<>();
+                        if(mPlaceEvent== null) {isStored = false; break;}
+                        mTags.addAll(mPlaceEvent.getTags());
+                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0)
+                        {
+                            isStored = false;
+                        }
+
+                    }
+                }
+                if(isStored)
+                {
+                    mPlaceList.add(place);
+                    dApi.addDestination(place.getLocation());
+                    mResults.add(place.getPlaceName());
+                    ids.add(place.getPlaceId());
+                }
             }
         }
 
@@ -421,6 +486,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         mResults = new ArrayList<>();
         distances = new ArrayList<>();
         mSubTags = new ArrayList<>();
+        mTaggedResults = new ArrayList<>();
         ids = new ArrayList<>();
         myManager = new LinearLayoutManager(this);
         resultsManager = new LinearLayoutManager(this);
@@ -428,6 +494,18 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         eApi = new EventsApi(this);
         pApi = new PlacesApi(this);
+    }
+
+    private PlaceEvent query(String id) {
+        ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
+        query.whereContains("apiId", id);
+        PlaceEvent mPlaceEvent = null;
+        try {
+            mPlaceEvent = (PlaceEvent) query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return mPlaceEvent;
     }
 
     @Override
