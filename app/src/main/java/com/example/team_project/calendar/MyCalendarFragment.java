@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import butterknife.internal.ListenerClass;
 
 public class MyCalendarFragment extends Fragment{
     private Unbinder unbinder;
@@ -52,9 +53,8 @@ public class MyCalendarFragment extends Fragment{
     RecyclerView.Adapter mAdapter;
     String splitindicator = "\\(\\)";
     ImageView ivEventImage;
+    TextView tvAddress;
 
-
-// TODO make if statement to hide extra stuff if "NONE"
 
     @Nullable
     @Override
@@ -70,6 +70,7 @@ public class MyCalendarFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         rvCal = view.findViewById(R.id.rvCal);
+        tvAddress = view.findViewById(R.id.tvAddress);
         theDaysEvents = new ArrayList<>();
 
 
@@ -87,8 +88,8 @@ public class MyCalendarFragment extends Fragment{
             for (int x = 0; x < addedEvents.size(); x++) {
                 String[] eventarray = addedEvents.get(x).split(splitindicator);
                 if (numberDate.equals(eventarray[0])) {
-                    String eventName = eventarray[3];
-                    Log.d("Swipetodelete", "all event names: " + eventName);
+                    String eventName = eventarray[2];
+                    Log.d("MyCalFrag", "event name: " + eventName);
                     theDaysEvents.add(eventName);
                 }
             }
@@ -121,7 +122,7 @@ public class MyCalendarFragment extends Fragment{
                     for (int x = 0; x < addedEvents.size(); x++) {
                         String[] eventarray = addedEvents.get(x).split(splitindicator);
                         if (numberDate.equals(eventarray[0])) {
-                            String eventName = eventarray[3];
+                            String eventName = eventarray[2];
                             theDaysEvents.add(eventName);
                         }
                     }
