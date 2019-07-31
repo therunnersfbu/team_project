@@ -27,6 +27,8 @@ public class BottomNavActivity extends AppCompatActivity {
 
     public static BottomNavActivity bottomNavAct;
     public static ParseUser targetUser;
+    public static double currentLat;
+    public static double currentLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

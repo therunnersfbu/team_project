@@ -21,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.search.HorizontalScrollAdapter;
 import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.R;
@@ -163,6 +165,9 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     }
 
     private void getSuggested() {
+        BottomNavActivity.currentLat = latitude;
+        BottomNavActivity.currentLng = longitude;
+
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<Boolean> tags = (ArrayList<Boolean>) user.get(User.KEY_TAGS);
         ArrayList<Boolean> categories = (ArrayList<Boolean>) user.get(User.KEY_CATEGORIES);

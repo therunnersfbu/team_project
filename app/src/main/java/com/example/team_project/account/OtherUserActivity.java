@@ -14,8 +14,12 @@ import com.example.team_project.BottomNavActivity;
 import com.example.team_project.LoginActivity;
 import com.example.team_project.R;
 import com.example.team_project.SurveyActivity;
+import com.example.team_project.api.DirectionsApi;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ public class OtherUserActivity extends AppCompatActivity {
     private ArrayList<String> liked;
     private ArrayList<String> distances;
     private ArrayList<String> ids;
+    private ArrayList<String> address;
     RecyclerView.LayoutManager likedManager;
 
     @Override
@@ -40,8 +45,9 @@ public class OtherUserActivity extends AppCompatActivity {
         liked = new ArrayList<>();
         distances = new ArrayList<>();
         ids = new ArrayList<>();
+        address = new ArrayList<>();
         likedManager = new LinearLayoutManager(this);
-        likedAdapter = new LikedAdapter(liked, distances, ids);
+        likedAdapter = new LikedAdapter(liked, distances, ids, address);
         rvLiked.setLayoutManager(likedManager);
         rvLiked.setAdapter(likedAdapter);
 
@@ -68,14 +74,40 @@ public class OtherUserActivity extends AppCompatActivity {
         getLiked();
     }
 
+//    private void getLiked() {
+//        ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+//        for (String i : likedParse) {
+//            String[] spot = i.split("\\(\\)");
+//            ids.add(spot[0]);
+//            distances.add(spot[1]);
+//            liked.add(spot[2]);
+//        }
+//        likedAdapter.notifyDataSetChanged();
+//    }
+
     private void getLiked() {
+        DirectionsApi api = new DirectionsApi(this);
+        api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
         ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
         for (String i : likedParse) {
-            String[] spot = i.split("\\(\\)");
-            ids.add(spot[0]);
-            distances.add(spot[1]);
-            liked.add(spot[2]);
+            try {
+                String[] spot = i.split("\\(\\)");
+                ids.add(spot[0]);
+                liked.add(spot[1]);
+                address.add(spot[2]);
+                ParseQuery query = new ParseQuery("PlaceEvent");
+                query.whereContains(PlaceEvent.KEY_API, spot[0]);
+                String coords = ((PlaceEvent) query.getFirst()).getCoordinates().replace(" ", ",");
+                api.addDestination(coords);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+        api.getDistance();
+    }
+
+    public void gotDistances(ArrayList<String> distancesFromApi) {
+        distances.addAll(distancesFromApi);
         likedAdapter.notifyDataSetChanged();
     }
 }

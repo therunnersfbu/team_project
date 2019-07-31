@@ -17,11 +17,13 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
     private final List<String> list;
     private final List<String> distances;
     private final List<String> ids;
+    private final List<String> address;
 
-    public LikedAdapter(ArrayList<String> list, ArrayList<String> distances, ArrayList<String> ids) {
+    public LikedAdapter(ArrayList<String> list, ArrayList<String> distances, ArrayList<String> ids, ArrayList<String> address) {
         this.list = list;
         this.distances = distances;
         this.ids = ids;
+        this.address = address;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -60,7 +62,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull LikedAdapter.ViewHolder holder, int position) {
         holder.tvName.setText(list.get(position));
-        holder.tvDistance.setText(distances.get(position));
+        holder.tvDistance.setText(address.get(position));
     }
 
     @Override

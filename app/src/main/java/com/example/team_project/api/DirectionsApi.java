@@ -2,6 +2,7 @@ package com.example.team_project.api;
 
 import android.util.Log;
 
+import com.example.team_project.account.ProfileActivity;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.search.SearchActivity;
 import com.loopj.android.http.AsyncHttpClient;
@@ -57,6 +58,8 @@ public class DirectionsApi {
                         ((SearchActivity) source).getDistances(distances);
                     } else if (source instanceof EventsFragment) {
                         ((EventsFragment) source).gotDistances(distances);
+                    } else if (source instanceof ProfileActivity) {
+                        ((ProfileActivity) source).gotDistances(distances);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
