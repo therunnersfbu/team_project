@@ -106,6 +106,54 @@ public class SurveyActivity extends AppCompatActivity {
             items.add(view);
             flSurvey.addView(view);
         }
+        if (retaking) {
+            setRetaking();
+        }
+    }
+
+    private void setRetaking() {
+        ParseUser user = ParseUser.getCurrentUser();
+        ArrayList<Boolean> tags = (ArrayList<Boolean>) user.get(User.KEY_TAGS);
+        ArrayList<Boolean> categories = (ArrayList<Boolean>) user.get(User.KEY_CATEGORIES);
+        if (categories.get(0)) {
+            clickOnItem(items.get(0));
+        }
+        if (categories.get(4)) {
+            clickOnItem(items.get(1));
+        }
+        if (categories.get(5)) {
+            clickOnItem(items.get(2));
+        }
+        if (categories.get(6)) {
+            clickOnItem(items.get(3));
+        }
+        if (categories.get(7)) {
+            clickOnItem(items.get(4));
+        }
+        if (categories.get(8)) {
+            clickOnItem(items.get(5));
+        }
+        if (categories.get(9)) {
+            clickOnItem(items.get(6));
+        }
+        if (categories.get(10)) {
+            clickOnItem(items.get(7));
+        }
+        if (categories.get(11)) {
+            clickOnItem(items.get(8));
+        }
+        if (tags.get(2)) {
+            clickOnItem(items.get(9));
+        }
+        if (tags.get(8)) {
+            clickOnItem(items.get(10));
+        }
+        if (tags.get(9)) {
+            clickOnItem(items.get(11));
+        }
+        if (tags.get(18)) {
+            clickOnItem(items.get(12));
+        }
     }
 
     private void clickOnItem(View view) {

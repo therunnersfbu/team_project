@@ -31,7 +31,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         addTagsToSearch = new ArrayList<>();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvName;
         private View view;
 
@@ -39,30 +39,25 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
             super(view);
             this.view = view;
             tvName = (TextView) view.findViewById(R.id.tvName);
+            view.setOnClickListener(this);
+            if (!isTags) {
+                tvName.setOnClickListener(this);
+            }
         }
 
-        public void setUpListener() {
+        @Override
+        public void onClick(View v) {
             if (isTags) {
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addTagsToSearch.add(tvName.getText().toString());
-                        list.remove(tvName.getText().toString());
-                        notifyDataSetChanged();
-                        mSearchActivity.setNewSearchText(addTagsToSearch);
-                    }
-                });
+                addTagsToSearch.add(tvName.getText().toString());
+                list.remove(tvName.getText().toString());
+                notifyDataSetChanged();
+                mSearchActivity.setNewSearchText(addTagsToSearch);
             } else {
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Intent intent = new Intent(BottomNavActivity.bottomNavAct, DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.EVENT_ID, EventsFragment.idList.get(getAdapterPosition()));
-                        intent.putExtra(DetailsActivity.DISTANCE, EventsFragment.distances.get(getAdapterPosition()));
-                        intent.putExtra(DetailsActivity.TYPE, EventsFragment.type);
-                        BottomNavActivity.bottomNavAct.startActivity(intent);
-                    }
-                });
+                final Intent intent = new Intent(BottomNavActivity.bottomNavAct, DetailsActivity.class);
+                intent.putExtra(DetailsActivity.EVENT_ID, EventsFragment.idList.get(getAdapterPosition()));
+                intent.putExtra(DetailsActivity.DISTANCE, EventsFragment.distances.get(getAdapterPosition()));
+                intent.putExtra(DetailsActivity.TYPE, EventsFragment.type);
+                BottomNavActivity.bottomNavAct.startActivity(intent);
             }
         }
     }
@@ -77,7 +72,6 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvName.setText(list.get(position));
-        holder.setUpListener();
     }
 
     @Override
