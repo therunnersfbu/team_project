@@ -56,7 +56,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.tvEventName.setText(" - " + events.get(i));
+        viewHolder.tvEventName.setText(events.get(i));
+
     }
 
     @Override
