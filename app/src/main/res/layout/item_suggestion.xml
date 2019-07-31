@@ -24,6 +24,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:ellipsize="end"
+        android:clickable="true"
+        android:focusable="true"
         android:maxLines="4"
         android:inputType="textMultiLine"
         tools:text="Name" />
