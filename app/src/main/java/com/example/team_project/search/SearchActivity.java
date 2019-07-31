@@ -293,8 +293,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 2:
-                mCategory = "lunch";
-                pApi.setKeywords(mCategory);
+                mCategory = "sweets";
+                pApi.setKeywords("dessert");
                 mSubTags.clear();
                 mSubTags.add("upscale");
                 mSubTags.add("dress cute");
@@ -468,16 +468,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         mResultsAdapter.notifyDataSetChanged();
     }
 
-    private void addTags() {
-        mNames = new ArrayList<>();
-        mNames.add("TAG ONE");
-        mNames.add("TAG TWO");
-        mNames.add("TAG THREE");
-        mNames.add("TAG FOUR");
-        mNames.add("TAG FIVE");
-        mNames.add("TAG SIX");
-
-    }
 
     public void initializeVars()
     {
