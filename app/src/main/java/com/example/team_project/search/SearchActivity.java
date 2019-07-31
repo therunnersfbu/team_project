@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.team_project.R;
+import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
@@ -68,6 +69,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private boolean isPlace;
     private EventsApi eApi;
     private PlacesApi pApi;
+    private AutocompleteApi lApi;
     private boolean canGetMore;
     private TextView etSearch;
     private TextView tvLocation;
@@ -75,6 +77,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
     private String newLoc;
     private String newLocName;
     private Button btnCancel;
+    private Button btnSearch;
     private ArrayList<String> mSubTags;
     private ArrayList<String> mTaggedResults;
     private String[] primTagRef;
@@ -117,6 +120,15 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         newLoc = "";
         newLocName = getIntent().getStringExtra("name");
         btnCancel = findViewById(R.id.btnCancel);
+        btnSearch = findViewById(R.id.btnSearch);
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                category = -2;
+                populateList();
+            }
+        });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -269,6 +281,9 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             pApi.setRadius(10000);
         }
         switch (category) {
+            case -2:
+                pApi.setKeywords(etSearch.getText().toString());
+                break;
             case 0:
                 mCategory = "breakfast";
                 pApi.setKeywords(mCategory);
@@ -293,8 +308,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 2:
-                mCategory = "lunch";
-                pApi.setKeywords(mCategory);
+                mCategory = "sweets";
+                pApi.setKeywords("dessert");
                 mSubTags.clear();
                 mSubTags.add("upscale");
                 mSubTags.add("dress cute");
@@ -392,7 +407,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 return;
         }
         mAdapter.notifyDataSetChanged();
-        etSearch.setText(mCategory);
+        if(category!=-2) {etSearch.setText(mCategory);}
         if (!isPlace) {
             eApi.getTopEvents();
         } else {
@@ -406,6 +421,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         boolean isStored = true;
         if (!isPlace) {
             for (int i = 0; i < array.length(); i++) {
+                isStored=true;
                 Event event = Event.eventFromJson(array.getJSONObject(i), false);
                 String mId = event.getEventId();
                 if(!mTaggedResults.isEmpty()) {
@@ -468,16 +484,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         mResultsAdapter.notifyDataSetChanged();
     }
 
-    private void addTags() {
-        mNames = new ArrayList<>();
-        mNames.add("TAG ONE");
-        mNames.add("TAG TWO");
-        mNames.add("TAG THREE");
-        mNames.add("TAG FOUR");
-        mNames.add("TAG FIVE");
-        mNames.add("TAG SIX");
-
-    }
 
     public void initializeVars()
     {
@@ -494,6 +500,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         eApi = new EventsApi(this);
         pApi = new PlacesApi(this);
+        lApi = new AutocompleteApi(this);
     }
 
     private PlaceEvent query(String id) {

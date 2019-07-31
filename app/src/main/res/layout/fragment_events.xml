@@ -12,9 +12,14 @@
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
         android:layout_marginTop="8dp"
+        android:background="#00FFFFFF"
+        android:backgroundTint="@color/white"
+        android:scaleType="fitCenter"
+        android:scaleX=".8"
+        android:scaleY=".8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
-        tools:srcCompat="@tools:sample/avatars[0]" />
+        app:srcCompat="@drawable/fried_egg_outline_24_4x" />
 
     <ImageButton
         android:id="@+id/ibtnBrunch"
@@ -23,9 +28,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="8dp"
+        android:background="#00FFFFFF"
+        android:scaleType="centerInside"
+        android:scaleX=".75"
+        android:scaleY=".75"
         app:layout_constraintStart_toEndOf="@+id/ibtnBreakfast"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
-        tools:srcCompat="@tools:sample/avatars[1]" />
+        app:srcCompat="@drawable/fork_knife_outline_24_4x" />
 
     <ImageButton
         android:id="@+id/ibtnLunch"
@@ -34,9 +43,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="8dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
         app:layout_constraintStart_toEndOf="@+id/ibtnBrunch"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/ice_cream_outline_24_4x" />
 
     <ImageButton
         android:id="@+id/ibtnDinner"
@@ -47,10 +60,14 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/steak_outline_24_4x"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnLunch"
-        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
-        tools:srcCompat="@tools:sample/avatars[3]" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSearchBar" />
 
     <TextView
         android:id="@+id/tvBreakfast"
@@ -77,7 +94,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
-        android:text="lunch"
+        android:text="sweets"
         app:layout_constraintEnd_toEndOf="@+id/ibtnLunch"
         app:layout_constraintStart_toStartOf="@+id/ibtnLunch"
         app:layout_constraintTop_toBottomOf="@+id/ibtnLunch" />
@@ -99,9 +116,13 @@
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/politics_outline_24_4x"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvBreakfast"
-        tools:srcCompat="@tools:sample/avatars[5]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvBreakfast" />
 
     <ImageButton
         android:id="@+id/ibtnNight"
@@ -110,9 +131,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/cocktail_outline_24_4x"
         app:layout_constraintStart_toEndOf="@+id/ibtnSights"
-        app:layout_constraintTop_toBottomOf="@+id/tvBrunch"
-        tools:srcCompat="@tools:sample/avatars[4]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvBrunch" />
 
     <ImageButton
         android:id="@+id/ibtnShopping"
@@ -121,9 +146,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/shopping_bag_outline_24_4x"
         app:layout_constraintStart_toEndOf="@+id/ibtnNight"
-        app:layout_constraintTop_toBottomOf="@+id/tvLunch"
-        tools:srcCompat="@tools:sample/avatars[6]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLunch" />
 
     <ImageButton
         android:id="@+id/ibtnConcerts"
@@ -132,9 +161,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/microphone_karaoke_outline_24_4x"
         app:layout_constraintStart_toEndOf="@+id/ibtnShopping"
-        app:layout_constraintTop_toBottomOf="@+id/tvDinner"
-        tools:srcCompat="@tools:sample/avatars[7]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDinner" />
 
     <TextView
         android:id="@+id/tvSights"
@@ -183,9 +216,13 @@
         android:layout_marginStart="31dp"
         android:layout_marginLeft="31dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/arts_outline_24_4x"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSights"
-        tools:srcCompat="@tools:sample/avatars[8]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvSights" />
 
     <TextView
         android:id="@+id/tvPop"
@@ -205,9 +242,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/blow_dryer_outline_24_4x"
         app:layout_constraintStart_toEndOf="@+id/ibtnPop"
-        app:layout_constraintTop_toBottomOf="@+id/tvDrinks"
-        tools:srcCompat="@tools:sample/avatars[9]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDrinks" />
 
     <TextView
         android:id="@+id/tvBeauty"
@@ -226,9 +267,13 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/dumbbell_outline_24_4x"
         app:layout_constraintStart_toEndOf="@+id/ibtnBeauty"
-        app:layout_constraintTop_toBottomOf="@+id/tvShopping"
-        tools:srcCompat="@tools:sample/avatars[10]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvShopping" />
 
     <TextView
         android:id="@+id/tvActive"
@@ -249,10 +294,14 @@
         android:layout_marginTop="6dp"
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
+        android:background="#00FFFFFF"
+        android:scaleType="fitCenter"
+        android:scaleX=".75"
+        android:scaleY=".75"
+        android:src="@drawable/tree_outline_24_4x"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnActive"
-        app:layout_constraintTop_toBottomOf="@+id/tvConcerts"
-        tools:srcCompat="@tools:sample/avatars[11]" />
+        app:layout_constraintTop_toBottomOf="@+id/tvConcerts" />
 
     <TextView
         android:id="@+id/tvParks"
