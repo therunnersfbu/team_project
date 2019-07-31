@@ -18,10 +18,14 @@ public class Event {
         event.location = object.getString("latitude") + " " + object.getString("longitude");
         event.name = object.getString("title");
         event.venueName = object.getString("venue_name");
-//        String postalCode =  object.getString("postal_code").equals("null") ? "" : " " + object.getString("postal_code");
+        String addressNoCity = singleEvent ?
+                (object.getString("address").equals("null") ?
+                "" : object.getString("address") + ", ") :
+                (object.getString("venue_address").equals("null") ?
+                "" : object.getString("venue_address") + ", ");
         event.address = singleEvent ?
-                object.getString("address") + ", " + object.getString("city") :
-                object.getString("venue_address") + ", " + object.getString("city_name");
+                addressNoCity + object.getString("city") :
+                addressNoCity + object.getString("city_name");
         event.startTime = object.getString("start_time");
         return event;
     }

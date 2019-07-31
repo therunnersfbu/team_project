@@ -13,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -49,9 +51,10 @@ public class MyCalendarFragment extends Fragment{
     RecyclerView.LayoutManager mLayoutManager;
     RecyclerView.Adapter mAdapter;
     String splitindicator = "\\(\\)";
+    ImageView ivEventImage;
 
 
-
+// TODO make if statement to hide extra stuff if "NONE"
 
     @Nullable
     @Override

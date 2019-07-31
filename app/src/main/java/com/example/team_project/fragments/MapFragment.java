@@ -49,6 +49,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     ArrayList<Post> reviewCoordinatesList;
     ImageButton mapicon;
 
+    // TODO make initial view closer
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -118,7 +120,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             for (int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-
                 String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                 double latitude = Double.parseDouble(reviewCoordinates[0]);
                 double longitude = Double.parseDouble(reviewCoordinates[1]);
@@ -136,6 +137,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     intent.putExtra("type", type);
                     intent.putExtra("distance", "unknown");
                     startActivity(intent);
+                    break;
                 }
             }
             }
@@ -152,7 +154,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else if (googleMap != null) {
             googleMap.setMyLocationEnabled(true);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.9577, -121.2908) , 6));
         }
     }
 
@@ -207,6 +209,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 return;
             }
 
+            // TODO add loop for liked events
+                // TODO vustomize width of info window
+                // TODO added markers for added events?
+                //TODO in Marker start with Review:
             for(int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
                 String[] reviewCoordinates = post.getCoordinates().split("\\s+");

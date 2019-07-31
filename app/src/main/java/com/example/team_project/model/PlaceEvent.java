@@ -17,6 +17,7 @@ public class PlaceEvent extends ParseObject {
     public static final String KEY_CATEGORIES = "categories";
     public static final String KEY_TAGS = "tags";
     public static final String KEY_NAME = "name";
+    public static final String KEY_COORDS = "coordinates";
 
     public String getAppId() {
         String id = "";
@@ -48,5 +49,11 @@ public class PlaceEvent extends ParseObject {
     }
     public void setName(String name) {
         put(KEY_NAME, name);
+    }
+    public String getCoordinates() {
+        return getString(KEY_COORDS);
+    }
+    public void setCoordinates(String coordinates) {
+        put(KEY_COORDS, coordinates);
     }
 }

@@ -247,6 +247,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
                     placeEvent.put(PlaceEvent.KEY_CATEGORIES, categories);
                     placeEvent.put(PlaceEvent.KEY_TAGS, tags);
                     placeEvent.setName(name);
+                    placeEvent.setCoordinates(location);
                     placeEvent.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -273,7 +274,6 @@ public class ComposeReviewActivity extends AppCompatActivity{
         myPost.setReview(etBody.getText().toString());
         myPost.setEventPlace(placeEvent);
         myPost.setIsLocal(sLocal.isChecked());
-        myPost.setCoordinates(location);
         myPost.setTags(tagsSelected);
 
         ArrayList<Integer> placeEventTags = placeEvent.getTags();

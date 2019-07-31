@@ -56,7 +56,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.tvEventName.setText(" - " + events.get(i));
+        viewHolder.tvEventName.setText(events.get(i));
+
     }
 
     @Override
@@ -69,7 +70,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         mRecentlyDeletedItemPosition = position;
         events.remove(position);
         notifyItemRemoved(position);
-        //showUndoSnackbar();
     }
 
 

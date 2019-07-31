@@ -29,8 +29,10 @@ import com.example.team_project.R;
 import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
+import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
 import com.parse.FindCallback;
@@ -59,6 +61,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private String id;
     private boolean type;
     private String distance;
+    private String coords;
     private Event mEvent;
     private Place mPlace;
     private DatePickerDialog picker;
@@ -259,20 +262,21 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvAddress.setText(event.getAddress());
         test.tvDate.setText(event.getStartTime());
         test.tvVenue.setText(event.getVenueName());
+        coords = event.getLocation();
         mEvent = event;
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = event.getEventId() + separator + event.getEventName();
+        String toLike = event.getEventId() + separator + event.getEventName() + separator + event.getAddress();
         if (liked.contains(toLike)) {
             test.ivLike.setActivated(true);
         }
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkPlaceEventExists(event.getEventName());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                String eventToAdd = event.getStartTime().substring(0, 10) + separator + event.getEventId()
-                        + separator + distance + separator + event.getEventName();
+                String eventToAdd = event.getStartTime().substring(0, 10) + separator + event.getEventId() + separator + event.getEventName() + separator + event.getAddress();
                 if (added.contains(eventToAdd)) {
                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
@@ -297,10 +301,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkPlaceEventExists(event.getEventName());
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = event.getEventId() + separator + distance + separator + event.getEventName();
+                String toLike = event.getEventId() + separator + event.getEventName() + separator + event.getAddress();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -328,16 +333,18 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.tvHours.setText(place.getOpenHours().get(0));
         test.tvNumber.setText(place.getPhoneNumber());
         test.tvPrice.setText(place.getPrice());
+        coords = place.getLocation();
         mPlace = place;
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = place.getPlaceId() + separator + place.getPlaceName();
+        String toLike = place.getPlaceId() + separator + place.getPlaceName() + separator + place.getAddress();
         if (liked.contains(toLike)) {
             test.ivLike.setActivated(true);
         }
         test.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkPlaceEventExists(place.getPlaceName());
                 final Calendar cldr = Calendar.getInstance();
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
@@ -353,7 +360,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         ((monthOfYear + 1) < 10 ? "0" + (monthOfYear + 1) : (monthOfYear + 1))
                                         + "-" +
                                         (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth)
-                                        + separator + place.getPlaceId() + separator + distance + separator + place.getPlaceName();
+                                        + separator + place.getPlaceId() + separator + place.getPlaceName() + separator + place.getAddress();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
                                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
@@ -383,10 +390,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         test.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkPlaceEventExists(place.getPlaceName());
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = place.getPlaceId() + separator + distance + separator + place.getPlaceName();
+                String toLike = place.getPlaceId() + separator + place.getPlaceName() + separator + place.getAddress();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -405,6 +413,49 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
 
         setImages();
+    }
+
+    private void checkPlaceEventExists(final String name) {
+        final ArrayList<PlaceEvent> placeEventList = new ArrayList<>();
+        final PlaceEvent[] placeEvent = {new PlaceEvent()};
+        ParseQuery parseQuery = new ParseQuery("PlaceEvent");
+        parseQuery.setLimit(1000);
+
+        parseQuery.findInBackground(new FindCallback<PlaceEvent>() {
+            @Override
+            public void done(List<PlaceEvent> objects, ParseException e) {
+                if (e == null) {
+                    placeEventList.addAll(objects);
+                    for (int i = 0; i < placeEventList.size(); i++) {
+                        if (id.equals(placeEventList.get(i).getAppId())) {
+                            return;
+                        }
+                    }
+
+                    placeEvent[0] = new PlaceEvent();
+                    ArrayList<Boolean> categories = new ArrayList<>();
+                    ArrayList<Integer> tags = new ArrayList<>();
+                    for (int i = 0; i < 12; i++) {
+                        categories.add(false);
+                    }
+                    for (int i = 0; i < 20; i++) {
+                        tags.add(0);
+                    }
+                    if (EventsFragment.categoryToMark > -1) {
+                        categories.set(EventsFragment.categoryToMark, true);
+                    }
+
+                    placeEvent[0].put(PlaceEvent.KEY_API, id);
+                    placeEvent[0].put(PlaceEvent.KEY_CATEGORIES, categories);
+                    placeEvent[0].put(PlaceEvent.KEY_TAGS, tags);
+                    placeEvent[0].setName(name);
+                    placeEvent[0].setCoordinates(coords);
+                    placeEvent[0].saveInBackground();
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
