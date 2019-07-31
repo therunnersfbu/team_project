@@ -118,7 +118,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             for (int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-
                 String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                 double latitude = Double.parseDouble(reviewCoordinates[0]);
                 double longitude = Double.parseDouble(reviewCoordinates[1]);
@@ -136,6 +135,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     intent.putExtra("type", type);
                     intent.putExtra("distance", "unknown");
                     startActivity(intent);
+                    break;
                 }
             }
             }
