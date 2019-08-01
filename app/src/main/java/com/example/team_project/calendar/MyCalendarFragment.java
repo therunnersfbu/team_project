@@ -4,20 +4,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -29,13 +24,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import butterknife.internal.ListenerClass;
 
 public class MyCalendarFragment extends Fragment{
     private Unbinder unbinder;
@@ -52,7 +44,6 @@ public class MyCalendarFragment extends Fragment{
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
     private String splitindicator = "\\(\\)";
-    private TextView tvAddress;
 
     @Nullable
     @Override
@@ -68,7 +59,6 @@ public class MyCalendarFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         rvCal = view.findViewById(R.id.rvCal);
-        tvAddress = view.findViewById(R.id.tvAddress);
         theDaysEvents = new ArrayList<>();
 
 

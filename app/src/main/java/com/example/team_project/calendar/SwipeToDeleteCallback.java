@@ -1,28 +1,22 @@
 package com.example.team_project.calendar;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
 
 import com.example.team_project.R;
 import com.example.team_project.model.User;
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.parse.ParseUser;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
@@ -48,28 +42,37 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        final int position = viewHolder.getAdapterPosition();
 
-        int position = viewHolder.getAdapterPosition();
+        new AlertDialog.Builder(mAdapter.context)
+            .setTitle("Unlike spot")
+            .setMessage("Are you sure you want to delete this spot?")
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    ParseUser user = ParseUser.getCurrentUser();
+                    ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
-        ParseUser user = ParseUser.getCurrentUser();
-        ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                    ArrayList<String> rvEvents = mAdapter.events;
+                    String eventToDelete = rvEvents.get(position);
 
-        ArrayList<String> rvEvents = mAdapter.events;
-        String eventToDelete = rvEvents.get(position);
+                    for (int x = 0; x < parseevents.size(); x++) {
+                        if (eventToDelete.equals(parseevents.get(x).split(splitindicator)[2])) {
+                            parseevents.remove(x);
+                            user.put(User.KEY_ADDED_EVENTS, parseevents);
+                        }
+                    }
 
-        // delete the event in the parse database
-        for (int x = 0; x < parseevents.size(); x++) {
-            if (eventToDelete.equals(parseevents.get(x).split(splitindicator)[3])) {
-                parseevents.remove(x);
-                user.put(User.KEY_ADDED_EVENTS, parseevents);
-            }
-        }
+                    if (eventToDelete != "NONE!"){
+                        mAdapter.deleteItem(position);
+                    }
+                    user.saveInBackground();
+                    mAdapter.notifyDataSetChanged();
+                }
+            })
 
-        if (eventToDelete != "NONE!"){
-            mAdapter.deleteItem(position);
-        }
-        user.saveInBackground();
-        mAdapter.notifyDataSetChanged();
+            // A null listener allows the button to dismiss the dialog and take no further action.
+            .setNegativeButton(android.R.string.no, null)
+            .show();
     }
 
     // to enable the garbage image and color to be present when event is swiped

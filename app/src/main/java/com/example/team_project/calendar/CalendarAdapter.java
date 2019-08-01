@@ -2,49 +2,29 @@ package com.example.team_project.calendar;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.team_project.BottomNavActivity;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.details.DetailsActivity;
-import com.example.team_project.fragments.MapFragment;
-import com.example.team_project.model.Event;
 import com.example.team_project.model.PlaceEvent;
-import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
-import com.example.team_project.search.SearchActivity;
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.SocketHandler;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
-    private String mRecentlyDeletedItem;
-    private int mRecentlyDeletedItemPosition;
     private String splitindicator = "\\(\\)";
     Context context;
     private ParseUser user = ParseUser.getCurrentUser();
@@ -101,8 +81,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public void deleteItem(int position) {
-        mRecentlyDeletedItem = events.get(position);
-        mRecentlyDeletedItemPosition = position;
         events.remove(position);
         notifyItemRemoved(position);
     }
@@ -133,14 +111,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 //get the event at the position
                 String eventname = events.get(position);
                 for (int x = 0; x < parseevents.size(); x++) {
-
                     // match event
                     if (eventname.equals(parseevents.get(x).split(splitindicator)[2])) {
                         // get the apiId and distance
                         String eventapi = parseevents.get(x).split(splitindicator)[1];
                         // create a new directions api object
                         DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
-                        api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
 
                         PlaceEvent mParseEvent = query(eventapi);
 
@@ -170,7 +146,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         context.startActivity(intent);
     }
 
-    private PlaceEvent query(String id) {
+    public PlaceEvent query(String id) {
         ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
         query.whereContains("apiId", id);
         PlaceEvent mPlaceEvent = null;

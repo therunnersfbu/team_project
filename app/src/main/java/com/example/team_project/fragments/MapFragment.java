@@ -21,6 +21,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.team_project.BottomNavActivity;
+import com.example.team_project.api.DirectionsApi;
+import com.example.team_project.calendar.CalendarAdapter;
+import com.example.team_project.calendar.MyCalendarFragment;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.R;
 import com.example.team_project.model.Place;
@@ -60,6 +63,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private String splitindicator = "\\(\\)";
     private int maxLimit = 1000;
     private int minZoom = 3;
+    private int count;
 
     @Nullable
     @Override
@@ -113,6 +117,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onInfoWindowClick(final Marker marker) {
 
         String apiId = marker.getTag().toString();
+
+       // TODO distance, can we put functin in publix folder
+        /*DirectionsApi api = new DirectionsApi(MapFragment.this);
+        api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
+        PlaceEvent mParseEvent = CalendarAdapter.query(apiId);
+        api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
+        api.getDistance();*/
 
         Boolean type;
         if ('E' != apiId.charAt(0)) {
