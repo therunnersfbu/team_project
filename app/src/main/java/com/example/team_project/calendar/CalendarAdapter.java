@@ -10,20 +10,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.R;
+import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.details.DetailsActivity;
+import com.example.team_project.fragments.MapFragment;
 import com.example.team_project.model.Event;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
 import com.example.team_project.search.SearchActivity;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +49,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     Context context;
     ParseUser user = ParseUser.getCurrentUser();
     ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+    int count;
 
 
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
@@ -50,14 +61,38 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public CalendarAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_calevent, viewGroup, false);
-
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.tvEventName.setText(events.get(i));
-
+        if (events.contains("NONE!")) {
+            viewHolder.tvEventName.setText("NONE!");
+            viewHolder.tvAddress.setVisibility(View.GONE);
+            viewHolder.tvType.setVisibility(View.GONE);
+            viewHolder.ivEventImage.setVisibility(View.GONE);
+        }else {
+            for (int x = 0; x < parseevents.size(); x++) {
+                viewHolder.tvAddress.setVisibility(View.VISIBLE);
+                viewHolder.tvType.setVisibility(View.VISIBLE);
+                viewHolder.ivEventImage.setVisibility(View.VISIBLE);
+                // match event
+                if (events.get(i).equals(parseevents.get(x).split(splitindicator)[2])) {
+                    viewHolder.tvEventName.setText(parseevents.get(x).split(splitindicator)[2]);
+                    viewHolder.tvAddress.setText(parseevents.get(x).split(splitindicator)[3]);
+                    String eventApiId = parseevents.get(x).split(splitindicator)[1];
+                    if ('E' != eventApiId.charAt(0)) {
+                        viewHolder.tvType.setText("Place");
+                        viewHolder.ivEventImage.setImageResource(R.drawable.sky);
+                        break;
+                    } else {
+                        viewHolder.tvType.setText("Event");
+                        viewHolder.ivEventImage.setImageResource(R.drawable.event);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -72,15 +107,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         notifyItemRemoved(position);
     }
 
-
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tvEventName;
+        public TextView tvAddress;
+        public TextView tvType;
+        public ImageView ivEventImage;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             tvEventName = itemView.findViewById(R.id.tvEventName);
+            tvAddress = itemView.findViewById(R.id.tvAddress);
+            tvType = itemView.findViewById(R.id.tvType);
+            ivEventImage = itemView.findViewById(R.id.ivEventImage);
             itemView.setOnClickListener(this);
         }
 
@@ -96,26 +135,50 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 for (int x = 0; x < parseevents.size(); x++) {
 
                     // match event
-                    if (eventname.equals(parseevents.get(x).split(splitindicator)[3])) {
+                    if (eventname.equals(parseevents.get(x).split(splitindicator)[2])) {
                         // get the apiId and distance
-                        String distance = parseevents.get(x).split(splitindicator)[2];
-                        Boolean type;
-                        String eventApiId = parseevents.get(x).split(splitindicator)[1];
-                        if ('E' != eventApiId.charAt(0)) {
-                            type = true;
-                        } else {
-                            type = false;
-                        }
+                        String eventapi = parseevents.get(x).split(splitindicator)[1];
+                        // create a new directions api object
+                        DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
+                        api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
 
-                        Intent intent = new Intent(context, DetailsActivity.class);
-                        intent.putExtra("eventID", eventApiId);
-                        intent.putExtra("type", type);
-                        intent.putExtra("distance", distance);
-                        context.startActivity(intent);
+                        PlaceEvent mParseEvent = query(eventapi);
 
+                        count = x;
+                        api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
+                        api.getDistance();
                     }
                 }
             }
         }
+    }
+
+    public void gotDistance(String distanceApi) {
+        Boolean type;
+        String eventApiId = parseevents.get(count).split(splitindicator)[1];
+        Log.d("CalAda", "id: " + eventApiId);
+        if ('E' != eventApiId.charAt(0)) {
+            type = true;
+        } else {
+            type = false;
+        }
+
+        Intent intent = new Intent(context, DetailsActivity.class);
+        intent.putExtra("eventID", eventApiId);
+        intent.putExtra("type", type);
+        intent.putExtra("distance", distanceApi);
+        context.startActivity(intent);
+    }
+
+    private PlaceEvent query(String id) {
+        ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
+        query.whereContains("apiId", id);
+        PlaceEvent mPlaceEvent = null;
+        try {
+            mPlaceEvent = (PlaceEvent) query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return mPlaceEvent;
     }
 }

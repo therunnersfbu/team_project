@@ -20,13 +20,18 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.R;
+import com.example.team_project.model.Place;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
+import com.example.team_project.model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -48,8 +53,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private GoogleMap googleMap;
     ArrayList<Post> reviewCoordinatesList;
     ImageButton mapicon;
-
-    // TODO make initial view closer
+    ParseUser user = ParseUser.getCurrentUser();
+    ArrayList<String> likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+    String splitindicator = "\\(\\)";
 
     @Nullable
     @Override
@@ -90,6 +96,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         googleMap = map;
         reviewCoordinatesList = new ArrayList<>();
         queryReviews();
+        queryLikedEvents();
 
         googleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
         enableMyLocationIfPermitted();
@@ -118,8 +125,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 return;
             }
 
+            // for reviews
             for (int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
+                if (post.getCoordinates() != null){
+
                 String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                 double latitude = Double.parseDouble(reviewCoordinates[0]);
                 double longitude = Double.parseDouble(reviewCoordinates[1]);
@@ -139,7 +149,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     startActivity(intent);
                     break;
                 }
-            }
+            }}
             }
         });
     }
@@ -154,7 +164,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else if (googleMap != null) {
             googleMap.setMyLocationEnabled(true);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.9577, -121.2908) , 6));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 8));
+
         }
     }
 
@@ -209,25 +220,59 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 return;
             }
 
-            // TODO add loop for liked events
-                // TODO vustomize width of info window
-                // TODO added markers for added events?
-                //TODO in Marker start with Review:
             for(int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-                String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                 String review = post.getReview();
                 String name = post.getEventPlace().getName();
+                if (post.getCoordinates() != null){
+                String[] reviewCoordinates = post.getCoordinates().split("\\s+");
                 double latitude = Double.parseDouble(reviewCoordinates[0]);
                 double longitude = Double.parseDouble(reviewCoordinates[1]);
                 Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(latitude, longitude))
-                        .title(name)
-                        .snippet(review));
+                        .title(name));
                 googleMap.setOnInfoWindowClickListener(MapFragment.this);
-            }
+            }}
             }
         });
     }
 
+    protected void queryLikedEvents(){
+        //gets everything in place event
+        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");
+        //when we get post back we'll also get the full details of the user
+        placeEventQuery.setLimit(1000);
+        ArrayList<String> likedEventApis = new ArrayList<>();
+        //make a list of the api's of all the liked events
+        for (int i= 0; i < likedEvents.size();i++){
+            String api = likedEvents.get(i).split(splitindicator)[0];
+            likedEventApis.add(api);
+        }
+
+        placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, likedEventApis);
+
+        placeEventQuery.findInBackground(new FindCallback<PlaceEvent>() {
+            @Override
+            public void done(List<PlaceEvent> placeEvents, ParseException e) {
+                if (e != null) {
+                    Log.e("MapFragment", "error with query: " + e.getMessage());
+                    e.printStackTrace();
+                    return;
+                }
+                for (int i = 0; i < placeEvents.size(); i++) {
+                    String placeEventCoord = placeEvents.get(i).getCoordinates();
+                    String placeEventName = placeEvents.get(i).getName();
+                    String[] reviewCoordinates = placeEventCoord.split("\\s+");
+                    double latitude = Double.parseDouble(reviewCoordinates[0]);
+                    double longitude = Double.parseDouble(reviewCoordinates[1]);
+                    Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(latitude, longitude))
+                                .title(placeEventName)
+                                .snippet("Liked Spot!")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
+                    googleMap.setOnInfoWindowClickListener(MapFragment.this);
+                }
+            }
+        });
+    }
 }
