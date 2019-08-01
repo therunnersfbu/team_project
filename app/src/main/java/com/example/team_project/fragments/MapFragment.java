@@ -46,7 +46,7 @@ import butterknife.Unbinder;
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, DirectionsApi.GetSingleDistance {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Unbinder unbinder;
-    private GoogleMap mgoogleMap;
+    private GoogleMap mGoogleMap;
     private ImageButton mMapIcon;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
@@ -93,7 +93,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
            @Override
            public void onClick(View v) {
                enableMyLocationIfPermitted();
-               mgoogleMap.setMinZoomPreference(minZoom);
+               mGoogleMap.setMinZoomPreference(minZoom);
            }
         });
     }
@@ -106,11 +106,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     @Override
     public void onMapReady(GoogleMap map) {
-        mgoogleMap = map;
-        mgoogleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
-        mgoogleMap.getUiSettings().setZoomControlsEnabled(true);
-        mgoogleMap.getUiSettings().setCompassEnabled(true);
-        mgoogleMap.setMinZoomPreference(minZoom);
+        mGoogleMap = map;
+        mGoogleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        mGoogleMap.getUiSettings().setCompassEnabled(true);
+        mGoogleMap.setMinZoomPreference(minZoom);
         enableMyLocationIfPermitted();
         queryReviews();
         queryLikedEvents();
@@ -120,9 +120,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onInfoWindowClick(final Marker marker) {
         mCurrentSpotId = marker.getTag().toString();
+        Log.d("mapfrag", "apiid: " + mCurrentSpotId);
         DirectionsApi api = new DirectionsApi(MapFragment.this);
         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
         PlaceEvent parseEvent = query(mCurrentSpotId);
+        Log.d("mapfrag", "parseevent: " + parseEvent);
         api.addDestination(parseEvent.getCoordinates().replace(" ", ","));
         api.getDistance();
     }
@@ -131,15 +133,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void gotDistance(String distanceApi) {
         Boolean spotType = getSpotType(mCurrentSpotId);
         Intent intent = new Intent(getActivity(), DetailsActivity.class);
-        intent.putExtra("eventID", mCurrentSpotId);//TODO constant
-        intent.putExtra("type", spotType);
-        intent.putExtra("distance", distanceApi);
+        intent.putExtra(getResources().getString(R.string.event_id), mCurrentSpotId);
+        intent.putExtra(getResources().getString(R.string.type), spotType);
+        intent.putExtra(getResources().getString(R.string.distance), distanceApi);
         startActivity(intent);
     }
 
-    public PlaceEvent query(String id) {
+    public PlaceEvent query(String currentSpotId) {
         ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
-        query.whereContains("mCurrentSpotId", id);
+        query.whereContains(PlaceEvent.KEY_API, currentSpotId);
         PlaceEvent mPlaceEvent = null;
         try {
             mPlaceEvent = (PlaceEvent) query.getFirst();
@@ -157,9 +159,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
-        } else if (mgoogleMap != null) {
-            mgoogleMap.setMyLocationEnabled(true);
-            mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 11));
+        } else if (mGoogleMap != null) {
+            mGoogleMap.setMyLocationEnabled(true);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 11));
 
         }
     }
@@ -167,7 +169,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private void showDefaultLocation() {
         Toast.makeText(getContext(),R.string.location_permission_denied,
                 Toast.LENGTH_SHORT).show();
-        mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
     }
 
     @Override
@@ -190,7 +192,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                mgoogleMap.setMinZoomPreference(minZoom);
+                mGoogleMap.setMinZoomPreference(minZoom);
                 return false;
             }
         };
@@ -205,14 +207,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<Post> posts, ParseException e) {
             if (e != null) {
-                Log.e(TAG, "error with query: " + e.getMessage());
+                Log.e(TAG, getResources().getString(R.string.query_error_message) + e.getMessage());
                 e.printStackTrace();
                 return;
             }
 
             for(int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-                String review = "Review: " + post.getReview();
+                String review = getResources().getString(R.string.review) + post.getReview();
                 String name = post.getEventPlace().getName();
                 String apiId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
@@ -225,7 +227,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     protected void queryLikedEvents(){
-        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");//TODO make it constant.
+        ParseQuery placeEventQuery = new ParseQuery(getResources().getString(R.string.place_event_class_name));//TODO make it constant.
         placeEventQuery.setLimit(maxLimit);
         ArrayList<String> likedEventIds = new ArrayList<>();
         for (int i= 0; i < likedEvents.size();i++){
@@ -238,7 +240,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "error with query: " + e.getMessage());
+                    Log.e(TAG, getResources().getString(R.string.query_error_message) + e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -255,7 +257,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     protected void queryAddedEvents(){
-        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");
+        ParseQuery placeEventQuery = new ParseQuery(getResources().getString(R.string.place_event_class_name));
         placeEventQuery.setLimit(maxLimit);
         ArrayList<String> addedEventApis = new ArrayList<>();
         for (int i= 0; i < addedEvents.size();i++){
@@ -268,7 +270,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
                 if (e != null) {
-                    Log.e(TAG, "error with query: " + e.getMessage());
+                    Log.e(TAG, getResources().getString(R.string.query_error_message) + e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -288,13 +290,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         String[] coordinates = coordinateString.split("\\s+");
         double latitude = Double.parseDouble(coordinates[0]);
         double longitude = Double.parseDouble(coordinates[1]);
-        Marker marker = mgoogleMap.addMarker(new MarkerOptions()
+        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .title(placeEventName)
                 .snippet(snippet)
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
         marker.setTag(apiId);
-        mgoogleMap.setOnInfoWindowClickListener(MapFragment.this);
+        mGoogleMap.setOnInfoWindowClickListener(MapFragment.this);
     }
 
     public Boolean getSpotType(String apiId){

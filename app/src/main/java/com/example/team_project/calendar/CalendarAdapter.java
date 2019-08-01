@@ -3,13 +3,13 @@ package com.example.team_project.calendar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -19,13 +19,14 @@ import com.example.team_project.model.User;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 
 // the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
 // and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
-    private ArrayList<String> events;
-    private Context context;
+    private ArrayList<String> mEvents;
+    private Context mContext;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int count;
@@ -33,21 +34,19 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private TextView tvAddress;
     private TextView tvEventPlace;
     private ImageView ivEventImage;
-    Fragment mMapFragment;
 
 
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
-        this.events = theDaysEvents;
-        this.context = context;
-        //mMapFragment = mFragment;
+        this.mEvents = theDaysEvents;
+        this.mContext = context;
     }
 
-    public Context getContext() {
-        return this.context;
+    public Context getmContext() {
+        return this.mContext;
     }
 
-    public ArrayList<String> getEvents() {
-        return this.events;
+    public ArrayList<String> getmEvents() {
+        return this.mEvents;
     }
 
     @NonNull
@@ -59,7 +58,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        if (events.contains("NONE!")) {
+        if (mEvents.contains("NONE!")) {
             tvEventName.setText("NONE!");
             tvAddress.setVisibility(View.GONE);
             tvEventPlace.setVisibility(View.GONE);
@@ -70,11 +69,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 tvEventPlace.setVisibility(View.VISIBLE);
                 ivEventImage.setVisibility(View.VISIBLE);
                 String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
-                if (events.get(i).equals(mParseEvent[2])) {
+                if (mEvents.get(i).equals(mParseEvent[2])) {
                     tvEventName.setText(mParseEvent[2]);
                     tvAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];
-                    //mMapFragment.getSpotType
                     if ('E' != eventApiId.charAt(0)) {
                         tvEventPlace.setText("Place");
                         ivEventImage.setImageResource(R.drawable.sky);
@@ -91,11 +89,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return mEvents.size();
     }
 
     public void deleteItem(int position) {
-        events.remove(position);
+        mEvents.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -113,19 +111,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         // to click event and be taken to DetailsActivity
         @Override
         public void onClick(View v) {
-            //gets item position
             int position = getAdapterPosition();
-            //make sure the position is valid
             if (position != RecyclerView.NO_POSITION) {
-                //get the event at the position
-                String eventname = events.get(position);
+                String eventname = mEvents.get(position);
                 for (int x = 0; x < parseevents.size(); x++) {
-                    // match event
                     if (eventname.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
                         String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
                         DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
                         PlaceEvent mParseEvent = query(eventapi);
-
                         count = x;
                         api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
                         api.getDistance();
@@ -144,11 +137,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             isEvent = false;
         }
 
-        Intent intent = new Intent(context, DetailsActivity.class);
+        // string must be hardcoded because you cannot store strings in String.xml and retrieve
+        Intent intent = new Intent(mContext, DetailsActivity.class);
         intent.putExtra("eventID", eventApiId);
         intent.putExtra("type", isEvent);
         intent.putExtra("distance", distanceApi);
-        context.startActivity(intent);
+        mContext.startActivity(intent);
     }
 
     public PlaceEvent query(String id) {
