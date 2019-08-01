@@ -17,8 +17,8 @@ public class AutocompleteApi {
     private final String PREDICTIONS_KEY = "predictions";
     private final String PLACE_ID = "place_id";
     private final String DESCRIPTION_KEY = "description";
-    private final String KEY_ENDPOINT = "&mKey=";
-    private final String INPUT_ENDPOINT = "&mInput=";
+    private final String KEY_ENDPOINT = "&key=";
+    private final String INPUT_ENDPOINT = "&input=";
     private final String CLASS_TAG = "AutocompleteApi";
     private final int RESULT_LIMIT = 5;
     private AsyncHttpClient mClient;

@@ -43,7 +43,6 @@ public class SearchActivity extends AppCompatActivity {
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
     private static double DEFAULT_COORD = 0.0;
-    private static int DEFAULT_CAT_VALUE = -1;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
     private static int PLACES_RADIUS = 10000;
@@ -122,7 +121,7 @@ public class SearchActivity extends AppCompatActivity {
         // tag items
         mTagReference = new ArrayList<>(Arrays.asList(PublicVariables.primTagRef));
         //result items
-        category = getIntent().getIntExtra(CATEGORY_TAG, DEFAULT_CAT_VALUE);
+        category = getIntent().getIntExtra(CATEGORY_TAG, USER_SEARCH);
         isPlace = isPlace(category);
         //location services
         newLocName = getIntent().getStringExtra(NAME_TAG);
@@ -239,7 +238,9 @@ public class SearchActivity extends AppCompatActivity {
     // sets the appropriate tags and keyword depending on category
     private void initializeCategory(int category) {
         if(category==USER_SEARCH) {
-            pApi.setKeywords(etSearch.getText().toString());
+            if(!etSearch.getText().toString().isEmpty()) {
+                pApi.setKeywords(etSearch.getText().toString());
+            }
         }
         else {
             mSubTags.clear();
