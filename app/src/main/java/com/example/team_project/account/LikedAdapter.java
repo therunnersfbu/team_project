@@ -16,6 +16,11 @@ import android.widget.Toast;
 
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
+import com.example.team_project.model.User;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +64,24 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
                                 // The dialog is automatically dismissed when a dialog button is clicked.
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // TODO: delete when heart is clicked
+                                        ParseUser user = ParseUser.getCurrentUser();
+                                        ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+                                        String likeId = ids.get(getAdapterPosition());
+                                        String likeName = list.get(getAdapterPosition());
+                                        for (int i = 0; i < liked.size(); i++) {
+                                            String[] temp = liked.get(i).split("\\(\\)");
+                                            if (temp[0].equals(likeId) && temp[1].equals(likeName)) {
+                                                liked.remove(i);
+                                                list.remove(getAdapterPosition());
+                                                distances.remove(getAdapterPosition());
+                                                ids.remove(getAdapterPosition());
+                                                address.remove(getAdapterPosition());
+                                                notifyItemRemoved(getAdapterPosition());
+
+                                            }
+                                        }
+                                        user.put(User.KEY_LIKED_EVENTS, liked);
+                                        user.saveInBackground();
                                     }
                                 })
 

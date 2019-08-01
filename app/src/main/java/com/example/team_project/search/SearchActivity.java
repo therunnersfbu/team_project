@@ -1,135 +1,131 @@
 package com.example.team_project.search;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.team_project.R;
-import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
+import com.example.team_project.location.CurrentLocation;
 import com.example.team_project.location.LocationActivity;
 import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
+public class SearchActivity extends AppCompatActivity {
 
+    // permission codes and constant strings
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int USER_SEARCH = -2;
+    private static String CATEGORY_TAG = "category";
+    private static String NAME_TAG = "name";
+    private static String LOCATION_TAG = "location";
+    private static String FUTURE_TAG = "Future";
+    private static int DEFAULT_CAT_VALUE = -1;
+    // tag recycler view
+    private boolean isTags = true;
     private RecyclerView rvTags;
-    private RecyclerView rvResults;
-    private boolean isTags;
-    private ArrayList<String> mNames;
-    private ArrayList<String> mResults;
     private HorizontalScrollAdapter mAdapter;
-    private ResultsAdapter mResultsAdapter;
-    private int category;
-    private EndlessRecyclerViewScrollListener scrollListener;
-    private ArrayList<Event> mEventList;
-    private ArrayList<Place> mPlaceList;
-    private double longitude;
-    private double latitude;
-    private Location location;
-    private LocationManager locManager;
-    private ArrayList<String> distances;
-    private ArrayList<String> ids;
-    private boolean isPlace;
-    private EventsApi eApi;
-    private PlacesApi pApi;
-    private AutocompleteApi lApi;
-    private boolean canGetMore;
-    private TextView etSearch;
-    private TextView tvLocation;
-    private boolean isCurLoc;
-    private String newLoc;
-    private String newLocName;
-    private Button btnCancel;
-    private Button btnSearch;
+    private RecyclerView.LayoutManager resultsManager;
+    private LinearLayoutManager horizontalLayout;
+    // tag items
     private ArrayList<String> mSubTags;
     private ArrayList<String> mTaggedResults;
     private String[] primTagRef;
-    private ArrayList<String> tagReference;
+    private ArrayList<String> mTagReference;
+    //results recycler view
+    private RecyclerView rvResults;
+    private ResultsAdapter mResultsAdapter;
+    private RecyclerView.LayoutManager myManager;
+    private LinearLayoutManager verticalLayout;
+    //result items
+    private int category;
+    private boolean isPlace = true;
+    private boolean canGetMore = true;
+    private String mUserInput = "";
+    private ArrayList<String> mResults;
+    private ArrayList<Event> mEventList;
+    private ArrayList<Place> mPlaceList;
+    private ArrayList<String> mDistances;
+    private ArrayList<String> mIds;
+    //api clients
+    private EventsApi eApi;
+    private PlacesApi pApi;
+    //location services
+    private double longitude;
+    private double latitude;
+    private boolean isCurLoc = true;
+    private String newLoc = "";
+    private String newLocName;
+    //layout items
+    private TextView etSearch;
+    private TextView tvLocation;
+    private Button btnCancel;
+    private Button btnSearch;
 
-    RecyclerView.LayoutManager myManager;
-    RecyclerView.LayoutManager resultsManager;
-    LinearLayoutManager horizontalLayout;
-    LinearLayoutManager verticalLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         initializeVars();
-
+        //tag recycler view
+        rvTags = findViewById(R.id.rvTags);
+        rvTags.setLayoutManager(myManager);
+        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
+        rvTags.setLayoutManager(horizontalLayout);
+        rvTags.setAdapter(mAdapter);
+        // tag items
         primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
                 "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
                 "clubby", "mall", "food available", "barber", "spa", "classes", "trails",
                 "gyms", "family friendly", "museums"};
-        tagReference = new ArrayList<String>(Arrays.asList(primTagRef));
-        category = getIntent().getIntExtra("category", -1);
-        isTags = true;
-        isPlace = true;
-        canGetMore = true;
-        if(category == 7 || category == 8) isPlace = false;
-        rvTags = findViewById(R.id.rvTags);
+        mTagReference = new ArrayList<String>(Arrays.asList(primTagRef));
+        //results recycler view
         rvResults = findViewById(R.id.rvResults);
-        rvTags.setLayoutManager(myManager);
         rvResults.setLayoutManager(resultsManager);
-        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
-        mResultsAdapter = new ResultsAdapter(mResults, distances, ids, isPlace);
-        rvTags.setLayoutManager(horizontalLayout);
-        rvTags.setAdapter(mAdapter);
+        mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
+        //result items
+        category = getIntent().getIntExtra(CATEGORY_TAG, DEFAULT_CAT_VALUE);
+        isPlace = isPlace(category);
+        //location services
+        newLocName = getIntent().getStringExtra(NAME_TAG);
+        //layout items
         tvLocation = findViewById(R.id.etLocation);
         etSearch = findViewById(R.id.etSearch);
-        isCurLoc = true;
-        newLoc = "";
-        newLocName = getIntent().getStringExtra("name");
         btnCancel = findViewById(R.id.btnCancel);
         btnSearch = findViewById(R.id.btnSearch);
-
+        //on click listeners
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                category = -2;
+                category = USER_SEARCH;
+                initializeCategory(category);
                 populateList();
             }
         });
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,16 +136,15 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), LocationActivity.class);
-                intent.putExtra("category", category);
+                intent.putExtra(CATEGORY_TAG, category);
                 startActivity(intent);
             }
         });
-
-        scrollListener = new EndlessRecyclerViewScrollListener(verticalLayout) {
+        // Adds the scroll listener to RecyclerView
+        rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 if (canGetMore) {
-                    Log.d("searchActivity", "endless scroll");
                     if (!isPlace) {
                         eApi.getMoreEvents();
                     } else {
@@ -157,27 +152,30 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                     }
                 }
             }
-        };
-
-        // Adds the scroll listener to RecyclerView
-        rvResults.addOnScrollListener(scrollListener);
-
+        });
+        //set location
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }else{
-            Log.d("location", "first");
             setMyLocation();
         }
     }
 
+    // returns true if the spot is a Place type
+    private boolean isPlace(int category) {
+        if(category == 7 || category == 8) {
+            return false;
+        }
+        return true;
+    }
+
+    // new results query after input filtered by tag
     public void setNewSearchText(ArrayList<String> addTagsToSearch) {
         mTaggedResults = addTagsToSearch;
-        String mSearch = etSearch.getText().toString();
-        etSearch.setText(mSearch + " " + addTagsToSearch.get(addTagsToSearch.size()-1));
         mEventList.clear();
         mPlaceList.clear();
         mResults.clear();
-        ids.clear();
+        mIds.clear();
         mResultsAdapter.notifyDataSetChanged();
         if (!isPlace) {
             eApi.getTopEvents();
@@ -196,7 +194,6 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }else{
-                Log.d("location", "first");
                 setMyLocation();
             }
         } else {
@@ -204,28 +201,10 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             latitude = Double.parseDouble(newCords[0]);
             longitude = Double.parseDouble(newCords[1]);
             tvLocation.setText(newLocName);
+            initializeCategory(category);
             populateList();
         }
 
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("location", "granted");
-                    Log.d("location", "second");
-                    setMyLocation();
-                } else {
-                    Log.d("location", "not granted");
-                }
-                return;
-            }
-
-        }
     }
 
     @Override
@@ -233,60 +212,24 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         super.onBackPressed();
         LocationAdapter.isCurLoc = true;
         setMyLocation();
-
     }
 
     private void setMyLocation() {
-        locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        boolean network_enabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        if (network_enabled) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more .
-                Log.e("location", "no permission");
-                return;
-            }
-            location = locManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            if(location != null && location.getTime() > Calendar.getInstance().getTimeInMillis() - 2 * 60 * 1000) {
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-                populateList();
-            }
-            else {
-                locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            }
-        }
-
-        Log.d("location", longitude + ", " + latitude);
+        longitude = (double) getIntent().getDoubleExtra("longitude", 0.0);
+        latitude = (double) getIntent().getDoubleExtra("latitude", 0.0);
+        initializeCategory(category);
+        populateList();
     }
 
-    private void populateList() {
-        mEventList.clear();
-        mPlaceList.clear();
-        mResults.clear();
-        ids.clear();
-        String mCategory = "";
-        if (!isPlace) {
-            eApi.setDate("Future");
-            eApi.setLocation(latitude, longitude, 60);
-        } else {
-            pApi.setLocation(latitude, longitude);
-            pApi.setRadius(10000);
-        }
+    // sets the appropriate tags and keyword depending on category
+    private void initializeCategory(int category) {
         switch (category) {
             case -2:
                 pApi.setKeywords(etSearch.getText().toString());
                 break;
             case 0:
-                mCategory = "breakfast";
-                pApi.setKeywords(mCategory);
+                mUserInput = "breakfast";
+                pApi.setKeywords(mUserInput);
                 mSubTags.clear();
                 mSubTags.add("upscale");
                 mSubTags.add("dress cute");
@@ -296,8 +239,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 1:
-                mCategory = "brunch";
-                pApi.setKeywords(mCategory);
+                mUserInput = "brunch";
+                pApi.setKeywords(mUserInput);
                 mSubTags.clear();
                 mSubTags.add("bottomless");
                 mSubTags.add("upscale");
@@ -308,7 +251,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 2:
-                mCategory = "sweets";
+                mUserInput = "sweets";
                 pApi.setKeywords("dessert");
                 mSubTags.clear();
                 mSubTags.add("upscale");
@@ -319,8 +262,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 3:
-                mCategory = "dinner";
-                pApi.setKeywords(mCategory);
+                mUserInput = "dinner";
+                pApi.setKeywords(mUserInput);
                 mSubTags.clear();
                 mSubTags.add("upscale");
                 mSubTags.add("dress cute");
@@ -330,7 +273,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 4:
-                mCategory = "sights";
+                mUserInput = "sights";
                 pApi.setKeywords("museum");
                 mSubTags.clear();
                 mSubTags.add("upscale");
@@ -340,7 +283,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 5:
-                mCategory = "nightlife";
+                mUserInput = "nightlife";
                 pApi.setKeywords("bar");
                 mSubTags.clear();
                 mSubTags.add("upscale");
@@ -351,16 +294,16 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 6:
-                mCategory = "shopping";
-                pApi.setKeywords(mCategory);
+                mUserInput = "shopping";
+                pApi.setKeywords(mUserInput);
                 mSubTags.clear();
                 mSubTags.add("upscale");
                 mSubTags.add("mall");
                 mSubTags.add("TrendyCity verified");
                 break;
             case 7:
-                mCategory = "concerts";
-                eApi.setKeywords(mCategory);
+                mUserInput = "concerts";
+                eApi.setKeywords(mUserInput);
                 mSubTags.clear();
                 mSubTags.add("indoors");
                 mSubTags.add("outdoors");
@@ -370,7 +313,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 8:
-                mCategory = "pop-up events";
+                mUserInput = "pop-up events";
                 eApi.setKeywords("fair");
                 mSubTags.clear();
                 mSubTags.add("food available");
@@ -378,7 +321,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 9:
-                mCategory = "beauty";
+                mUserInput = "beauty";
                 pApi.setKeywords("salon");
                 mSubTags.clear();
                 mSubTags.add("barber");
@@ -387,7 +330,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 10:
-                mCategory = "active";
+                mUserInput = "active";
                 pApi.setKeywords("gym");
                 mSubTags.clear();
                 mSubTags.add("classes");
@@ -396,8 +339,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 mSubTags.add("TrendyCity verified");
                 break;
             case 11:
-                mCategory = "parks";
-                pApi.setKeywords(mCategory);
+                mUserInput = "parks";
+                pApi.setKeywords(mUserInput);
                 mSubTags.clear();
                 mSubTags.add("food available");
                 mSubTags.add("family friendly");
@@ -406,8 +349,26 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             default:
                 return;
         }
+
+    }
+
+    // query results according to user input
+    private void populateList() {
+        mEventList.clear();
+        mPlaceList.clear();
+        mResults.clear();
+        mIds.clear();
+        if (!isPlace) {
+            eApi.setDate(FUTURE_TAG);
+            eApi.setLocation(latitude, longitude, 60);
+        } else {
+            pApi.setLocation(latitude, longitude);
+            pApi.setRadius(10000);
+        }
         mAdapter.notifyDataSetChanged();
-        if(category!=-2) {etSearch.setText(mCategory);}
+        if(category!=-2) {
+            etSearch.setText(mUserInput);
+        }
         if (!isPlace) {
             eApi.getTopEvents();
         } else {
@@ -415,6 +376,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         }
     }
 
+    // API call finished, data available
     public void apiFinished(JSONArray array) throws JSONException {
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
@@ -426,9 +388,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                 String mId = event.getEventId();
                 if(!mTaggedResults.isEmpty()) {
                     PlaceEvent mPlaceEvent = query(mId);
-                    for(int j = 0; j<mTaggedResults.size(); j++)
-                    {
-                        int tagIndex = tagReference.indexOf(mTaggedResults.get(j));
+                    for(int j = 0; j<mTaggedResults.size(); j++) {
+                        int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
                         ArrayList<Integer> mTags = new ArrayList<>();
                         if(mPlaceEvent== null) {isStored = false; break;}
                         mTags.addAll(mPlaceEvent.getTags());
@@ -439,9 +400,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
 
                     }
                 }
-                if(isStored)
-                {
-                    ids.add(event.getEventId());
+                if(isStored) {
+                    mIds.add(event.getEventId());
                     mEventList.add(event);
                     dApi.addDestination(event.getLocation());
                     mResults.add(event.getEventName());
@@ -449,13 +409,14 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
             }
         } else {
             for (int i = 0; i < array.length(); i++) {
+                isStored=true;
                 Place place = Place.placeFromJson(array.getJSONObject(i), false);
                 String mId = place.getPlaceId();
                 if(!mTaggedResults.isEmpty()) {
                     PlaceEvent mPlaceEvent = query(mId);
                     for(int j = 0; j<mTaggedResults.size(); j++)
                     {
-                        int tagIndex = tagReference.indexOf(mTaggedResults.get(j));
+                        int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
                         ArrayList<Integer> mTags = new ArrayList<>();
                         if(mPlaceEvent== null) {isStored = false; break;}
                         mTags.addAll(mPlaceEvent.getTags());
@@ -471,7 +432,7 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
                     mPlaceList.add(place);
                     dApi.addDestination(place.getLocation());
                     mResults.add(place.getPlaceName());
-                    ids.add(place.getPlaceId());
+                    mIds.add(place.getPlaceId());
                 }
             }
         }
@@ -479,30 +440,30 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         dApi.getDistance();
     }
 
+    // get the distance from search results to current location
     public void getDistances(ArrayList<String> result) {
-        distances.addAll(result);
+        mDistances.addAll(result);
         mResultsAdapter.notifyDataSetChanged();
     }
 
-
-    public void initializeVars()
-    {
+    // initialize vairables used in this class
+    public void initializeVars() {
         mEventList = new ArrayList<>();
         mPlaceList = new ArrayList<>();
         mResults = new ArrayList<>();
-        distances = new ArrayList<>();
+        mDistances = new ArrayList<>();
         mSubTags = new ArrayList<>();
         mTaggedResults = new ArrayList<>();
-        ids = new ArrayList<>();
+        mIds = new ArrayList<>();
         myManager = new LinearLayoutManager(this);
         resultsManager = new LinearLayoutManager(this);
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         eApi = new EventsApi(this);
         pApi = new PlacesApi(this);
-        lApi = new AutocompleteApi(this);
     }
 
+    // find PlaceEvent parse object with same ID as api object
     private PlaceEvent query(String id) {
         ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
         query.whereContains("apiId", id);
@@ -515,41 +476,8 @@ public class SearchActivity extends AppCompatActivity implements LocationListene
         return mPlaceEvent;
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        if (location != null) {
-            Log.v("Location  Changed", location.getLatitude() + " and " + location.getLongitude());
-            this.location = location;
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-            Log.d("location", longitude + ", " + latitude);
-            locManager.removeUpdates(this);
-            populateList();
-        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
 }
