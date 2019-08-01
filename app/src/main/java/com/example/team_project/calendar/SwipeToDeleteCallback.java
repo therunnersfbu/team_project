@@ -44,35 +44,41 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         final int position = viewHolder.getAdapterPosition();
 
-        new AlertDialog.Builder(mAdapter.context)
-            .setTitle("Unlike spot")
-            .setMessage("Are you sure you want to delete this spot?")
-            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    ParseUser user = ParseUser.getCurrentUser();
-                    ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+        final ParseUser user = ParseUser.getCurrentUser();
+        final ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
-                    ArrayList<String> rvEvents = mAdapter.events;
-                    String eventToDelete = rvEvents.get(position);
+        ArrayList<String> rvEvents = mAdapter.events;
+        final String eventToDelete = rvEvents.get(position);
+        if (eventToDelete != "NONE!") {
+            new AlertDialog.Builder(mAdapter.context)
+                .setTitle("Unlike spot")
+                .setMessage("Are you sure you want to delete this spot?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
 
-                    for (int x = 0; x < parseevents.size(); x++) {
-                        if (eventToDelete.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
-                            parseevents.remove(x);
-                            user.put(User.KEY_ADDED_EVENTS, parseevents);
+                        for (int x = 0; x < parseevents.size(); x++) {
+                            if (eventToDelete.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
+                                parseevents.remove(x);
+                                user.put(User.KEY_ADDED_EVENTS, parseevents);
+                            }
                         }
+                            mAdapter.deleteItem(position);
+                        user.saveInBackground();
+                        mAdapter.notifyDataSetChanged();
                     }
+                })
 
-                    if (eventToDelete != "NONE!"){
-                        mAdapter.deleteItem(position);
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAdapter.notifyDataSetChanged();
                     }
-                    user.saveInBackground();
-                    mAdapter.notifyDataSetChanged();
-                }
-            })
+                })
+                .show();
+        }else{
+            mAdapter.notifyDataSetChanged();
+        }
 
-            // A null listener allows the button to dismiss the dialog and take no further action.
-            .setNegativeButton(android.R.string.no, null)
-            .show();
     }
 
     // to enable the garbage image and color to be present when event is swiped

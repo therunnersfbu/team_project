@@ -248,8 +248,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = event.getEventId() + com.example.team_project.PublicVariables.splitindicator
-                + event.getEventName() + PublicVariables.splitindicator + event.getAddress();
+        String toLike = event.getEventId() + PublicVariables.separator
+                + event.getEventName() + PublicVariables.separator + event.getAddress();
         if (liked.contains(toLike)) {
             viewHolder.ivLike.setActivated(true);
         }
@@ -260,9 +260,9 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 checkPlaceEventExists(event.getEventName());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                String eventToAdd = event.getStartTime().substring(0, 10) + PublicVariables.splitindicator +
-                        event.getEventId() + PublicVariables.splitindicator + event.getEventName() +
-                        PublicVariables.splitindicator + event.getAddress();
+                String eventToAdd = event.getStartTime().substring(0, 10) + PublicVariables.separator +
+                        event.getEventId() + PublicVariables.separator + event.getEventName() +
+                        PublicVariables.separator + event.getAddress();
                 if (added.contains(eventToAdd)) {
                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
@@ -291,8 +291,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = event.getEventId() + PublicVariables.splitindicator + event.getEventName() +
-                        PublicVariables.splitindicator + event.getAddress();
+                String toLike = event.getEventId() + PublicVariables.separator + event.getEventName() +
+                        PublicVariables.separator + event.getAddress();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -325,8 +325,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = place.getPlaceId() + PublicVariables.splitindicator + place.getPlaceName() +
-                PublicVariables.splitindicator + place.getAddress();
+        String toLike = place.getPlaceId() + PublicVariables.separator + place.getPlaceName() +
+                PublicVariables.separator + place.getAddress();
         if (liked.contains(toLike)) {
             viewHolder.ivLike.setActivated(true);
         }
@@ -350,8 +350,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         ((monthOfYear + 1) < 10 ? "0" + (monthOfYear + 1) : (monthOfYear + 1))
                                         + "-" +
                                         (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth)
-                                        + PublicVariables.splitindicator + place.getPlaceId() + PublicVariables.splitindicator +
-                                        place.getPlaceName() + PublicVariables.splitindicator + place.getAddress();
+                                        + PublicVariables.separator + place.getPlaceId() + PublicVariables.separator +
+                                        place.getPlaceName() + PublicVariables.separator + place.getAddress();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
                                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
@@ -385,8 +385,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = place.getPlaceId() + PublicVariables.splitindicator + place.getPlaceName() +
-                        PublicVariables.splitindicator + place.getAddress();
+                String toLike = place.getPlaceId() + PublicVariables.separator + place.getPlaceName() +
+                        PublicVariables.separator + place.getAddress();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }

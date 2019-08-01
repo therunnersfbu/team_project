@@ -65,6 +65,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                     tvEventName.setText(mParseEvent[2]);
                     tvAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];
+                    // change type to distance
                     if ('E' != eventApiId.charAt(0)) {
                         tvType.setText("Place");
                         ivEventImage.setImageResource(R.drawable.sky);
@@ -113,7 +114,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 String eventname = events.get(position);
                 for (int x = 0; x < parseevents.size(); x++) {
                     // match event
-
                     if (eventname.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
                         String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
                         DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
