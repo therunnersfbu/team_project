@@ -17,7 +17,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.
-public class LocationActivity extends AppCompatActivity implements LocationAdapter.AdapterCallback{
+public class LocationActivity extends AppCompatActivity implements LocationAdapter.AdapterCallback, AutocompleteApi.GetAutocomplete  {
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
     private ArrayList<String> mLocations;
@@ -64,7 +64,8 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         });
     }
 
-    public void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names) throws JSONException {
+    @Override
+    public void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names) {
         for (int i = 0; i < array.size(); i++) {
             mLocNames.add(names.get(i));
             mLocIds.add(array.get(i));

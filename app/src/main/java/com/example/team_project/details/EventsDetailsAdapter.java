@@ -40,6 +40,9 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -51,7 +54,7 @@ import butterknife.OnClick;
 // adapter for the item layouts used on the events details page. Includes header and item views that inflate in a RecyclerView
 //TODO: mXXX
 //TODO: folder for events, maps, etc (each main feature should have own folder)
-public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements EventsApi.GetEvents, PlacesApi.GetPlaces {
 
     private static final String TAG = EventsDetailsAdapter.class.getSimpleName();
     private static final int TYPE_HEADER = 0;
@@ -237,19 +240,25 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mPosts.size();
     }
 
-    public void finishedApi(final Event event) {
-        viewHolder.tvEventName.setText(event.getEventName());
+    @Override
+    public void gotEvents(JSONArray eventsApi) {
+
+    }
+
+    @Override
+    public void gotEvent(final Event eventApi) {
+        viewHolder.tvEventName.setText(eventApi.getEventName());
         viewHolder.tvDistance.setText(distance);
-        viewHolder.tvAddress.setText(event.getAddress());
-        viewHolder.tvDate.setText(event.getStartTime());
-        viewHolder.tvVenue.setText(event.getVenueName());
-        coords = event.getLocation();
-        mEvent = event;
+        viewHolder.tvAddress.setText(eventApi.getAddress());
+        viewHolder.tvDate.setText(eventApi.getStartTime());
+        viewHolder.tvVenue.setText(eventApi.getVenueName());
+        coords = eventApi.getLocation();
+        mEvent = eventApi;
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = event.getEventId() + PublicVariables.separator
-                + event.getEventName() + PublicVariables.separator + event.getAddress();
+        String toLike = eventApi.getEventId() + PublicVariables.separator
+                + eventApi.getEventName() + PublicVariables.separator + eventApi.getAddress();
         if (liked.contains(toLike)) {
             viewHolder.ivLike.setActivated(true);
         }
@@ -257,12 +266,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         viewHolder.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPlaceEventExists(event.getEventName());
+                checkPlaceEventExists(eventApi.getEventName());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> added = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                String eventToAdd = event.getStartTime().substring(0, 10) + PublicVariables.separator +
-                        event.getEventId() + PublicVariables.separator + event.getEventName() +
-                        PublicVariables.separator + event.getAddress();
+                String eventToAdd = eventApi.getStartTime().substring(0, 10) + PublicVariables.separator +
+                        eventApi.getEventId() + PublicVariables.separator + eventApi.getEventName() +
+                        PublicVariables.separator + eventApi.getAddress();
                 if (added.contains(eventToAdd)) {
                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
@@ -287,12 +296,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         viewHolder.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPlaceEventExists(event.getEventName());
+                checkPlaceEventExists(eventApi.getEventName());
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = event.getEventId() + PublicVariables.separator + event.getEventName() +
-                        PublicVariables.separator + event.getAddress();
+                String toLike = eventApi.getEventId() + PublicVariables.separator + eventApi.getEventName() +
+                        PublicVariables.separator + eventApi.getAddress();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }
@@ -313,20 +322,26 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         setImages();
     }
 
-    public void finishedApiPlace(final Place place) {
-        viewHolder.tvEventName.setText(place.getPlaceName());
+    @Override
+    public void gotPlaces(JSONArray placesApi) {
+
+    }
+
+    @Override
+    public void gotPlace(final Place placeApi) {
+        viewHolder.tvEventName.setText(placeApi.getPlaceName());
         viewHolder.tvDistance.setText(distance);
-        viewHolder.tvAddress.setText(place.getAddress());
-        viewHolder.tvHours.setText(place.getOpenHours().get(0));
-        viewHolder.tvNumber.setText(place.getPhoneNumber());
-        viewHolder.tvPrice.setText(place.getPrice());
-        coords = place.getLocation();
-        mPlace = place;
+        viewHolder.tvAddress.setText(placeApi.getAddress());
+        viewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
+        viewHolder.tvNumber.setText(placeApi.getPhoneNumber());
+        viewHolder.tvPrice.setText(placeApi.getPrice());
+        coords = placeApi.getLocation();
+        mPlace = placeApi;
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-        String toLike = place.getPlaceId() + PublicVariables.separator + place.getPlaceName() +
-                PublicVariables.separator + place.getAddress();
+        String toLike = placeApi.getPlaceId() + PublicVariables.separator + placeApi.getPlaceName() +
+                PublicVariables.separator + placeApi.getAddress();
         if (liked.contains(toLike)) {
             viewHolder.ivLike.setActivated(true);
         }
@@ -334,7 +349,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         viewHolder.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPlaceEventExists(place.getPlaceName());
+                checkPlaceEventExists(placeApi.getPlaceName());
                 final Calendar cldr = Calendar.getInstance();
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
@@ -350,8 +365,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         ((monthOfYear + 1) < 10 ? "0" + (monthOfYear + 1) : (monthOfYear + 1))
                                         + "-" +
                                         (dayOfMonth < 10 ? "0" + dayOfMonth : dayOfMonth)
-                                        + PublicVariables.separator + place.getPlaceId() + PublicVariables.separator +
-                                        place.getPlaceName() + PublicVariables.separator + place.getAddress();
+                                        + PublicVariables.separator + placeApi.getPlaceId() + PublicVariables.separator +
+                                        placeApi.getPlaceName() + PublicVariables.separator + placeApi.getAddress();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
                                     Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
@@ -381,12 +396,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         viewHolder.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkPlaceEventExists(place.getPlaceName());
+                checkPlaceEventExists(placeApi.getPlaceName());
                 v.setActivated(!v.isActivated());
                 ParseUser user = ParseUser.getCurrentUser();
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                String toLike = place.getPlaceId() + PublicVariables.separator + place.getPlaceName() +
-                        PublicVariables.separator + place.getAddress();
+                String toLike = placeApi.getPlaceId() + PublicVariables.separator + placeApi.getPlaceName() +
+                        PublicVariables.separator + placeApi.getAddress();
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
                 }

@@ -53,16 +53,10 @@ public class DirectionsApi {
                         distances.add(array.getJSONObject(i).getJSONObject("distance").getString("text"));
                     }
 
-                    if (source instanceof SearchActivity) {
-                        ((SearchActivity) source).getDistances(distances);
-                    } else if (source instanceof EventsFragment) {
-                        ((EventsFragment) source).gotDistances(distances);
-                    } else if (source instanceof ProfileActivity) {
-                        ((ProfileActivity) source).gotDistances(distances);
-                    } else if (source instanceof CalendarAdapter) {
-                        ((CalendarAdapter) source).gotDistance(distances.get(0));
-                    } else if (source instanceof MapFragment) {
-                        ((MapFragment) source).gotDistance(distances.get(0));
+                    if (source instanceof GetDistances) {
+                        ((GetDistances) source).gotDistances(distances);
+                    } else if (source instanceof GetSingleDistance) {
+                        ((GetSingleDistance) source).gotDistance(distances.get(0));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -86,4 +80,12 @@ public class DirectionsApi {
             }
         });
     }
+
+    public interface GetDistances {
+        void gotDistances(ArrayList<String> distancesApi);
+    }
+    public interface GetSingleDistance {
+        void gotDistance(String distanceApi);
+    }
+
 }

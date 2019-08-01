@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class EventsFragment extends Fragment implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
+public class EventsFragment extends Fragment implements LocationListener, GoogleApiClient.OnConnectionFailedListener, EventsApi.GetEvents, PlacesApi.GetPlaces, DirectionsApi.GetDistances {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -205,30 +205,19 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         }
     }
 
-    public void gotPlaces(JSONArray array) throws JSONException {
+    @Override
+    public void gotEvents(JSONArray eventsApi) {
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
         int i = 0;
 
-        //TODO make constant suggested place limit
-        while (i < array.length() && i < 6) {
-            Place place = Place.placeFromJson(array.getJSONObject(i), false);
-            dApi.addDestination(place.getLocation());
-            idList.add(place.getPlaceId());
-            names.add(place.getPlaceName());
-            i++;
-        }
-
-        dApi.getDistance();
-    }
-
-    public void gotEvents(JSONArray array) throws  JSONException {
-        DirectionsApi dApi = new DirectionsApi(this);
-        dApi.setOrigin(latitude, longitude);
-        int i = 0;
-
-        while (i < array.length() && i < 6) {
-            Event event = Event.eventFromJson(array.getJSONObject(i), false);
+        while (i < eventsApi.length() && i < 6) {
+            Event event = null;
+            try {
+                event = Event.eventFromJson(eventsApi.getJSONObject(i), false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             dApi.addDestination(event.getLocation());
             idList.add(event.getEventId());
             names.add(event.getEventName());
@@ -238,8 +227,42 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         dApi.getDistance();
     }
 
-    public void gotDistances(ArrayList<String> array) {
-        distances = array;
+    @Override
+    public void gotEvent(Event eventApi) {
+
+    }
+
+    @Override
+    public void gotPlaces(JSONArray placesApi) {
+        DirectionsApi dApi = new DirectionsApi(this);
+        dApi.setOrigin(latitude, longitude);
+        int i = 0;
+
+        //TODO make constant suggested place limit
+        while (i < placesApi.length() && i < 6) {
+            Place place = null;
+            try {
+                place = Place.placeFromJson(placesApi.getJSONObject(i), false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            dApi.addDestination(place.getLocation());
+            idList.add(place.getPlaceId());
+            names.add(place.getPlaceName());
+            i++;
+        }
+
+        dApi.getDistance();
+    }
+
+    @Override
+    public void gotPlace(Place placeApi) {
+
+    }
+
+    @Override
+    public void gotDistances(ArrayList<String> distancesApi) {
+        distances = distancesApi;
         adapter.notifyDataSetChanged();
     }
 

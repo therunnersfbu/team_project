@@ -18,8 +18,8 @@ public class AutocompleteApi {
     private final String PREDICTIONS_KEY = "predictions";
     private final String PLACE_ID = "place_id";
     private final String DESCRIPTION_KEY = "description";
-    private final String KEY_ENDPOINT = "&mKey=";
-    private final String INPUT_ENDPOINT = "&mInput=";
+    private final String KEY_ENDPOINT = "&key=";
+    private final String INPUT_ENDPOINT = "&input=";
     private final String CLASS_TAG = "AutocompleteApi";
     private AsyncHttpClient mClient;
     private String mKey;
@@ -51,7 +51,7 @@ public class AutocompleteApi {
                         mIds.add(results.getJSONObject(i).getString(PLACE_ID));
                         mNames.add(results.getJSONObject(i).getString(DESCRIPTION_KEY));
                     }
-                    ((LocationActivity) mSource).apiFinishedLocation(mIds, mNames);
+                    ((GetAutocomplete) mSource).apiFinishedLocation(mIds, mNames);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -73,5 +73,9 @@ public class AutocompleteApi {
                 throwable.printStackTrace();;
             }
         });
+    }
+
+    public interface GetAutocomplete {
+        void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names);
     }
 }

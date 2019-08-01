@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Updates the list of location options from the API JSON results after each search
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
+public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> implements PlacesApi.GetLocation  {
     private final List<String> mNames;
     private final List<String> mIds;
     private AdapterCallback callback;
@@ -74,9 +74,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         return mNames.size();
     }
 
-    public void apiFinishedGetLocation(String location) throws JSONException {
-        PublicVariables.newLoc = location;
+    @Override
+    public void gotLocation(String locationApi) {
+        PublicVariables.newLoc = locationApi;
         callback.onItemClicked();
     }
-
 }

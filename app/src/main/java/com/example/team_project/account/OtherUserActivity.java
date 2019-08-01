@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OtherUserActivity extends AppCompatActivity {
+public class OtherUserActivity extends AppCompatActivity implements DirectionsApi.GetDistances {
 
     private ArrayList<String> liked;
     private ArrayList<String> distances;
@@ -92,8 +92,9 @@ public class OtherUserActivity extends AppCompatActivity {
         api.getDistance();
     }
 
-    public void gotDistances(ArrayList<String> distancesFromApi) {
-        distances.addAll(distancesFromApi);
+    @Override
+    public void gotDistances(ArrayList<String> distancesApi) {
+        distances.addAll(distancesApi);
         likedAdapter.notifyDataSetChanged();
     }
 }

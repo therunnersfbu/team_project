@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -20,13 +19,12 @@ import com.example.team_project.model.User;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 
-public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
+public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
 
-    ArrayList<String> events;
-    Context context;
+    private ArrayList<String> events;
+    private Context context;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int count;
@@ -39,6 +37,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
         this.events = theDaysEvents;
         this.context = context;
+    }
+
+    public Context getContext() {
+        return this.context;
+    }
+
+    public ArrayList<String> getEvents() {
+        return this.events;
     }
 
     @NonNull
@@ -90,9 +96,25 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         notifyItemRemoved(position);
     }
 
+    @Override
+    public void gotDistance(String distanceApi) {
+        Boolean type;
+        String eventApiId = parseevents.get(count).split(PublicVariables.splitindicator)[1];
+        Log.d("CalAda", "id: " + eventApiId);
+        if ('E' != eventApiId.charAt(0)) {
+            type = true;
+        } else {
+            type = false;
+        }
+
+        Intent intent = new Intent(context, DetailsActivity.class);
+        intent.putExtra("eventID", eventApiId);
+        intent.putExtra("type", type);
+        intent.putExtra("distance", distanceApi);
+        context.startActivity(intent);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -126,23 +148,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 }
             }
         }
-    }
-
-    public void gotDistance(String distanceApi) {
-        Boolean type;
-        String eventApiId = parseevents.get(count).split(PublicVariables.splitindicator)[1];
-        Log.d("CalAda", "id: " + eventApiId);
-        if ('E' != eventApiId.charAt(0)) {
-            type = true;
-        } else {
-            type = false;
-        }
-
-        Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra("eventID", eventApiId);
-        intent.putExtra("type", type);
-        intent.putExtra("distance", distanceApi);
-        context.startActivity(intent);
     }
 
     public PlaceEvent query(String id) {

@@ -76,11 +76,7 @@ public class EventsApi {
                     array = response.getJSONObject("events").getJSONArray("event");
                     pageCount = Integer.parseInt(response.getString("page_count"));
 
-                    if (source instanceof SearchActivity) {
-                        ((SearchActivity) source).apiFinished(array);
-                    } else if (source instanceof EventsFragment) {
-                        ((EventsFragment) source).gotEvents(array);
-                    }
+                    ((GetEvents) source).gotEvents(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -112,7 +108,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Event event  = Event.eventFromJson(response, true);
-                    ((EventsDetailsAdapter) source).finishedApi(event);
+                    ((GetEvents) source).gotEvent(event);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -134,5 +130,10 @@ public class EventsApi {
                 throwable.printStackTrace();
             }
         });
+    }
+
+    public interface GetEvents {
+        void gotEvents(JSONArray eventsApi);
+        void gotEvent(Event eventApi);
     }
 }
