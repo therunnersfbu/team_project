@@ -198,9 +198,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 String review = post.getReview();
                 String name = post.getEventPlace().getName();
                 String apiId = post.getEventPlace().getAppId();
-                String coordinates = post.getCoordinates();
+                String coordinates = post.getEventPlace().getCoordinates();
                 Float color = BitmapDescriptorFactory.HUE_RED;
-                if (post.getCoordinates() != null){
+                if (coordinates != null){
                     makeMapMarker(coordinates, apiId, name, review, color);
             }}
             }
@@ -241,6 +241,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         String[] coordinates = coordinateString.split("\\s+");
         double latitude = Double.parseDouble(coordinates[0]);
         double longitude = Double.parseDouble(coordinates[1]);
+        Log.d("mapfrag", "marker coordinates " + longitude + ", " + latitude);
         Marker marker = mgoogleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .title(placeEventName)
