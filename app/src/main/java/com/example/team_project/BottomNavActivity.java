@@ -38,7 +38,7 @@ public class BottomNavActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        LocationAdapter.isCurLoc = true;
+        PublicVariables.isCurLoc = true;
 
         //TODO do not save as public static var
         BottomNavActivity.bottomNavAct = this;
