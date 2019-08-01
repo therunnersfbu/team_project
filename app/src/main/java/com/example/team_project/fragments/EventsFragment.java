@@ -53,7 +53,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Unbinder unbinder;
     private RecyclerView rvSuggested;
-    private boolean isTags;
     private ArrayList<String> names;
     private HorizontalScrollAdapter adapter;
     private ArrayList<View> btnCat;
@@ -66,6 +65,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     RecyclerView.LayoutManager myManager;
     LinearLayoutManager horizontalLayout;
 
+    //TODO singleton
     public static int categoryToMark;
     public static ArrayList<String> distances;
     public static ArrayList<String> idList;
@@ -81,11 +81,12 @@ public class EventsFragment extends Fragment implements LocationListener, Google
 
     }
 
+    // initi method
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //initialize with declaration
         type = true;
-        isTags =false;
         rvSuggested = view.findViewById(R.id.rvSuggestions);
         btnSearchBar = view.findViewById(R.id.btnSearchBar);
         myManager = new LinearLayoutManager(getContext());
@@ -93,7 +94,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         idList = new ArrayList<>();
         distances = new ArrayList<>();
         names = new ArrayList<>();
-        adapter = new HorizontalScrollAdapter(names, isTags, new SearchActivity());
+        adapter = new HorizontalScrollAdapter(names, false, new SearchActivity());
         horizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvSuggested.setLayoutManager(horizontalLayout);
         rvSuggested.setAdapter(adapter);
@@ -107,11 +108,13 @@ public class EventsFragment extends Fragment implements LocationListener, Google
             public void onClick(View v) {
                 EventsFragment.categoryToMark = -1;
                 Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
                 getContext().startActivity(intent);
             }
         });
 
-        for(int i = 0; i<12; i++) {
+        for(int i = 0; i<btnCat.size(); i++) {
             final int index = i;
             mbtn = (ImageButton) btnCat.get(i);
             mbtn.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +123,8 @@ public class EventsFragment extends Fragment implements LocationListener, Google
                     EventsFragment.categoryToMark = index;
                     Intent intent = new Intent(getContext(), SearchActivity.class);
                     intent.putExtra("category", index);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
                     getContext().startActivity(intent);
                 }
             });
@@ -128,7 +133,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }else{
-            Log.d("location", "first");
             setMyLocation();
         }
     }
@@ -188,6 +192,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         String keyword = suggestedStr.get(rand.nextInt(suggestedStr.size()));
         keyword = keyword.replace(" ", "+");
 
+        //TODO make constant tags and radius
         if (keyword.equals("concert") || keyword.equals("fair")) {
             type = false;
             EventsApi api = new EventsApi(this);
@@ -209,6 +214,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         dApi.setOrigin(latitude, longitude);
         int i = 0;
 
+        //TODO make constant suggested place limit
         while (i < array.length() && i < 6) {
             Place place = Place.placeFromJson(array.getJSONObject(i), false);
             dApi.addDestination(place.getLocation());

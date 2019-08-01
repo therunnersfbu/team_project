@@ -15,19 +15,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" >
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
-    <ImageButton
-        app:srcCompat="@android:drawable/ic_menu_mapmode"
-        android:layout_width="47dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:padding="10dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginRight="7dp"
-        android:tint="@android:color/black"
-        android:id="@+id/mapicon"
-        android:backgroundTint="@color/white"/>
+        <ImageButton
+            android:id="@+id/mapicon"
+            android:layout_width="47dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="7dp"
+            android:backgroundTint="@color/white"
+            android:padding="10dp"
+            android:tint="@android:color/black"
+            app:srcCompat="@android:drawable/ic_menu_mapmode" />
 
     </fragment>
 

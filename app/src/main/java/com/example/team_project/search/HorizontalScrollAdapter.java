@@ -1,6 +1,8 @@
 package com.example.team_project.search;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -51,8 +53,15 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         public void onClick(View v) {
             if (isTags) {
                 mTagToAdd = tvName.getText().toString();
-                addTagsToSearch.add(tvName.getText().toString());
-                list.remove(tvName.getText().toString());
+                if(!addTagsToSearch.contains(mTagToAdd))
+                {
+                    addTagsToSearch.add(mTagToAdd);
+                    v.getBackground().setColorFilter(Color.parseColor("#6238c9"), PorterDuff.Mode.DARKEN);
+                }
+                else {
+                    addTagsToSearch.remove(mTagToAdd);
+                    v.getBackground().setColorFilter(Color.parseColor("#3e91f7"), PorterDuff.Mode.LIGHTEN);
+                }
                 notifyDataSetChanged();
                 mSearchActivity.setNewSearchText(addTagsToSearch);
             } else {

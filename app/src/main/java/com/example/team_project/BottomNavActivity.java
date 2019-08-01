@@ -25,6 +25,7 @@ public class BottomNavActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_main) Toolbar toolbar;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
+    //TODO save as private
     public static BottomNavActivity bottomNavAct;
     public static ParseUser targetUser;
     public static double currentLat;
@@ -39,6 +40,7 @@ public class BottomNavActivity extends AppCompatActivity {
 
         LocationAdapter.isCurLoc = true;
 
+        //TODO do not save as public static var
         BottomNavActivity.bottomNavAct = this;
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
