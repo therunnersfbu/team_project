@@ -37,14 +37,17 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         private TextView tvName;
         private View view;
 
-        public ViewHolder(@NonNull View view) {
+        public ViewHolder(@NonNull final View view) {
             super(view);
             this.view = view;
             tvName = (TextView) view.findViewById(R.id.tvName);
             view.setOnClickListener(this);
-            if (!isTags) {
-                tvName.setOnClickListener(this);
-            }
+            tvName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    view.callOnClick();
+                }
+            });
         }
 
         @Override

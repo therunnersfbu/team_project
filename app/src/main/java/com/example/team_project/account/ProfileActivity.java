@@ -20,9 +20,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
 import com.example.team_project.search.ResultsAdapter;
 import com.example.team_project.utils.BitmapScaler;
+import com.nex3z.flowlayout.FlowLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -55,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String photoPath;
     private ImageView ivProfilePic;
     private Button btnLogout;
-    private Button btnSurvey;
+    private FlowLayout flSurvey;
 
     private TextView tvName;
     private ParseUser user;
@@ -78,9 +81,10 @@ public class ProfileActivity extends AppCompatActivity {
         ids = new ArrayList<>();
         address = new ArrayList<>();
         likedManager = new LinearLayoutManager(this);
-        likedAdapter = new LikedAdapter(liked, distances, ids, address);
+        likedAdapter = new LikedAdapter(liked, distances, ids, address, this);
         rvLiked.setLayoutManager(likedManager);
         rvLiked.setAdapter(likedAdapter);
+        flSurvey = ((FlowLayout) findViewById(R.id.flSurvey));
 
         user = BottomNavActivity.targetUser;
         tvName = findViewById(R.id.tvName);
@@ -120,8 +124,67 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        btnSurvey = findViewById((R.id.btnSurvey));
-        btnSurvey.setOnClickListener(new View.OnClickListener() {
+        getLiked();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        flSurvey.removeAllViews();
+        addCurrentInterests();
+        addSurveyButton();
+    }
+
+    private void addCurrentInterests() {
+        ParseUser user = ParseUser.getCurrentUser();
+        ArrayList<Boolean> tags = (ArrayList<Boolean>) user.get(User.KEY_TAGS);
+        ArrayList<Boolean> categories = (ArrayList<Boolean>) user.get(User.KEY_CATEGORIES);
+        if (categories.get(0)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[0]));
+        }
+        if (categories.get(4)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[1]));
+        }
+        if (categories.get(5)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[2]));
+        }
+        if (categories.get(6)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[3]));
+        }
+        if (categories.get(7)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[4]));
+        }
+        if (categories.get(8)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[5]));
+        }
+        if (categories.get(9)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[6]));
+        }
+        if (categories.get(10)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[7]));
+        }
+        if (categories.get(11)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[8]));
+        }
+        if (tags.get(2)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[9]));
+        }
+        if (tags.get(8)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[10]));
+        }
+        if (tags.get(9)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[11]));
+        }
+        if (tags.get(18)) {
+            flSurvey.addView(createSurveyItem(SurveyActivity.SURVEY_ITEMS[12]));
+        }
+    }
+
+    private void addSurveyButton() {
+        LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.item_interest_add, null);
+        ((ImageView) view.findViewById(R.id.ivAdd)).setImageDrawable(getResources().getDrawable(R.drawable.ic_add_black_24dp));
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(ProfileActivity.this, SurveyActivity.class);
@@ -129,8 +192,15 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        flSurvey.addView(view);
+    }
 
-        getLiked();
+    private View createSurveyItem(String name) {
+        LayoutInflater inflater = (LayoutInflater)getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.item_survey_profile_page, null);
+        TextView tvName = view.findViewById(R.id.tvName);
+        tvName.setText(name);
+        return view;
     }
 
     private void getLiked() {

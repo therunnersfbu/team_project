@@ -1,12 +1,19 @@
 package com.example.team_project.account;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import java.util.ArrayList;
@@ -18,24 +25,50 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
     private final List<String> distances;
     private final List<String> ids;
     private final List<String> address;
+    private Context context;
 
-    public LikedAdapter(ArrayList<String> list, ArrayList<String> distances, ArrayList<String> ids, ArrayList<String> address) {
+    public LikedAdapter(ArrayList<String> list, ArrayList<String> distances, ArrayList<String> ids, ArrayList<String> address, Context context) {
         this.list = list;
         this.distances = distances;
         this.ids = ids;
         this.address = address;
+        this.context = context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvName;
         private TextView tvDistance;
+        private ImageView ivLike;
 
         public ViewHolder(@NonNull View view) {
             super(view);
 
             tvName = (TextView) view.findViewById(R.id.tvName);
             tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+            if (context != null) {
+                ivLike = (ImageView) view.findViewById(R.id.ivLike);
+                ivLike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(context)
+                                .setTitle("Unlike spot")
+                                .setMessage("Are you sure you want to unlike this spot?")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // TODO: delete when heart is clicked
+                                    }
+                                })
+
+                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                .setNegativeButton(android.R.string.no, null)
+                                .show();
+                    }
+                });
+            }
             view.setOnClickListener(this);
         }
 
@@ -55,7 +88,12 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
     @NonNull
     @Override
     public LikedAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_result, parent, false);
+        View itemView;
+        if (context != null) {
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_liked, parent, false);
+        } else {
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_result, parent, false);
+        }
         return new LikedAdapter.ViewHolder(itemView);
     }
 
