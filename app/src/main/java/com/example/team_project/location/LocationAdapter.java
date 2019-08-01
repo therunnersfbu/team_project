@@ -1,5 +1,6 @@
 package com.example.team_project.location;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 
 import java.util.ArrayList;
@@ -17,20 +19,23 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     private final List<String> mLocs;
     private final List<String> mNames;
-    private final List<String> mIds;
-    private final int mCategory;
-    public static String mLocName;
-    public static String mNewLoc;
-    public static boolean isCurLoc;
+    private AdapterCallback callback;
 
 
     public LocationAdapter(ArrayList<String> mLocs, ArrayList<String> mNames, ArrayList<String> ids, int category) {
         this.mLocs = mLocs;
         this.mNames = mNames;
-        this.mIds = ids;
-        this.mCategory = category;
-        isCurLoc = true;
+      //  isCurLoc = true;
     }
+
+    public void setOnItemClickedListener(AdapterCallback mCallback) {
+        this.callback = mCallback;
+    }
+
+    public interface AdapterCallback {
+        void onItemClicked(int position);
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -46,16 +51,10 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         public void onClick(View v) {
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                mLocName = mNames.get(position);
-                mNewLoc = mLocs.get(position);
-                isCurLoc = false;
-                LocationActivity.locationActivity.finish();
-                /*Intent intent = new Intent(v.getContext(), SearchActivity.class);
-                intent.putExtra("newLocation", mLocs.get(position));
-                intent.putExtra("isCurLoc", false);
-                intent.putExtra("category", category);
-                intent.putExtra("name", names.get(position));
-                v.getContext().startActivity(intent);*/
+                PublicVariables.newLoc = mLocs.get(position);
+                PublicVariables.newLocName = mNames.get(position);
+                PublicVariables.isCurLoc = false;
+                callback.onItemClicked(position);
             }
         }
     }

@@ -207,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         for (String i : likedParse) {
             try {
-                String[] spot = i.split(PublicVariables.separator);
+                String[] spot = i.split(PublicVariables.splitindicator);
                 ids.add(spot[0]);
                 liked.add(spot[1]);
                 address.add(spot[2]);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.details.DetailsActivity;
@@ -25,11 +26,14 @@ import java.util.ArrayList;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
-    private String splitindicator = "\\(\\)";
     Context context;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int count;
+    private TextView tvEventName;
+    private TextView tvAddress;
+    private TextView tvType;
+    private ImageView ivEventImage;
 
 
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
@@ -47,27 +51,27 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
         if (events.contains("NONE!")) {
-            viewHolder.tvEventName.setText("NONE!");
-            viewHolder.tvAddress.setVisibility(View.GONE);
-            viewHolder.tvType.setVisibility(View.GONE);
-            viewHolder.ivEventImage.setVisibility(View.GONE);
+            tvEventName.setText("NONE!");
+            tvAddress.setVisibility(View.GONE);
+            tvType.setVisibility(View.GONE);
+            ivEventImage.setVisibility(View.GONE);
         }else {
             for (int x = 0; x < parseevents.size(); x++) {
-                viewHolder.tvAddress.setVisibility(View.VISIBLE);
-                viewHolder.tvType.setVisibility(View.VISIBLE);
-                viewHolder.ivEventImage.setVisibility(View.VISIBLE);
-                // match event
-                if (events.get(i).equals(parseevents.get(x).split(splitindicator)[2])) {
-                    viewHolder.tvEventName.setText(parseevents.get(x).split(splitindicator)[2]);
-                    viewHolder.tvAddress.setText(parseevents.get(x).split(splitindicator)[3]);
-                    String eventApiId = parseevents.get(x).split(splitindicator)[1];
+                tvAddress.setVisibility(View.VISIBLE);
+                tvType.setVisibility(View.VISIBLE);
+                ivEventImage.setVisibility(View.VISIBLE);
+                String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
+                if (events.get(i).equals(mParseEvent[2])) {
+                    tvEventName.setText(mParseEvent[2]);
+                    tvAddress.setText(mParseEvent[3]);
+                    String eventApiId = mParseEvent[1];
                     if ('E' != eventApiId.charAt(0)) {
-                        viewHolder.tvType.setText("Place");
-                        viewHolder.ivEventImage.setImageResource(R.drawable.sky);
+                        tvType.setText("Place");
+                        ivEventImage.setImageResource(R.drawable.sky);
                         break;
                     } else {
-                        viewHolder.tvType.setText("Event");
-                        viewHolder.ivEventImage.setImageResource(R.drawable.event);
+                        tvType.setText("Event");
+                        ivEventImage.setImageResource(R.drawable.event);
                         break;
                     }
                 }
@@ -87,10 +91,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public TextView tvEventName;
-        public TextView tvAddress;
-        public TextView tvType;
-        public ImageView ivEventImage;
+
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -112,12 +113,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 String eventname = events.get(position);
                 for (int x = 0; x < parseevents.size(); x++) {
                     // match event
-                    if (eventname.equals(parseevents.get(x).split(splitindicator)[2])) {
-                        // get the apiId and distance
-                        String eventapi = parseevents.get(x).split(splitindicator)[1];
-                        // create a new directions api object
-                        DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
 
+                    if (eventname.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
+                        String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
+                        DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
                         PlaceEvent mParseEvent = query(eventapi);
 
                         count = x;
@@ -131,7 +130,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     public void gotDistance(String distanceApi) {
         Boolean type;
-        String eventApiId = parseevents.get(count).split(splitindicator)[1];
+        String eventApiId = parseevents.get(count).split(PublicVariables.splitindicator)[1];
         Log.d("CalAda", "id: " + eventApiId);
         if ('E' != eventApiId.charAt(0)) {
             type = true;

@@ -62,7 +62,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
                             String likeId = ids.get(getAdapterPosition());
                             String likeName = names.get(getAdapterPosition());
                             for (int i = 0; i < liked.size(); i++) {
-                                String[] temp = liked.get(i).split(PublicVariables.separator);
+                                String[] temp = liked.get(i).split(PublicVariables.splitindicator);
                                 if (temp[0].equals(likeId) && temp[1].equals(likeName)) {
                                     liked.remove(i);
                                     names.remove(getAdapterPosition());

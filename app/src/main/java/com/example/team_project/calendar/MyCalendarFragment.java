@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -43,7 +44,6 @@ public class MyCalendarFragment extends Fragment{
     private ArrayList<String> theDaysEvents;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-    private String splitindicator = "\\(\\)";
 
     @Nullable
     @Override
@@ -78,7 +78,7 @@ public class MyCalendarFragment extends Fragment{
             for (int x = 0; x < addedEvents.size(); x++) {
                 Event event = null;
                 try {
-                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(splitindicator)[0]));
+                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(PublicVariables.splitindicator)[0]));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -129,7 +129,7 @@ public class MyCalendarFragment extends Fragment{
         String numberDate = simpleDateFormat.format(date);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
-                String[] eventarray = addedEvents.get(x).split(splitindicator);
+                String[] eventarray = addedEvents.get(x).split(PublicVariables.splitindicator);
                 if (numberDate.equals(eventarray[0])) {
                     String eventName = eventarray[2];
                     theDaysEvents.add(eventName);
