@@ -4,5 +4,6 @@
     <string name="snack_bar_undo">Undo</string>
     <string name="location_permission_denied">Location permission not granted, showing default location</string>
     <string name="liked_event_snippet">Liked Spot!</string>
+    <string name="query_error_message">error with query: </string>
 
 </resources>
