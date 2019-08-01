@@ -27,6 +27,7 @@ public class SurveyActivity extends AppCompatActivity {
     @BindView(R.id.flSurvey) FlowLayout flSurvey;
     @BindView(R.id.tvGreeting) TextView tvGreeting;
     @BindView(R.id.btnSignUp) Button btnSignUp;
+
     @OnClick(R.id.btnSignUp)
     public void signupBK(Button button) {
         boolean selectedOne = false;

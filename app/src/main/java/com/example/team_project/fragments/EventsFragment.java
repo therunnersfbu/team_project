@@ -21,8 +21,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import com.example.team_project.BottomNavActivity;
+import com.example.team_project.PublicVariables;
 import com.example.team_project.search.HorizontalScrollAdapter;
-import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -176,12 +175,12 @@ public class EventsFragment extends Fragment implements LocationListener, Google
 
         for (int i = 0; i < tags.size(); i++) {
             if (tags.get(i)) {
-                suggestedStr.add(ComposeReviewActivity.getTagStr(i));
+                suggestedStr.add(PublicVariables.getTagStr(i));
             }
         }
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i)) {
-                suggestedStr.add(ComposeReviewActivity.getCategoryStr(i));
+                suggestedStr.add(PublicVariables.getCategoryStr(i));
             }
         }
 

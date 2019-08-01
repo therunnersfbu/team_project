@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
 
@@ -30,14 +32,13 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvName;
-        private TextView tvDistance;
+        @BindView(R.id.tvName) TextView tvName;
+        @BindView(R.id.tvDistance) TextView tvDistance;
 
         public ViewHolder(@NonNull View view) {
             super(view);
 
-            tvName = (TextView) view.findViewById(R.id.tvName);
-            tvDistance = (TextView) view.findViewById(R.id.tvDistance);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 
