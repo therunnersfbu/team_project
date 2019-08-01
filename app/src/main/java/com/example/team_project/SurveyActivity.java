@@ -55,8 +55,6 @@ public class SurveyActivity extends AppCompatActivity {
         }
     }
 
-    public static final String[] SURVEY_ITEMS = {"Restaurants", "Sightseeing", "NightLife", "Shopping", "Concerts",
-            "Fairs", "Beauty" ,"Working Out", "Parks", "Upscale", "Outdoors", "Indoors", "Family Friendly"};
     private ArrayList<View> items;
     private ArrayList<Boolean> itemsSelected;
     private ArrayList<Boolean> categories;
@@ -95,7 +93,7 @@ public class SurveyActivity extends AppCompatActivity {
         for (int i = 0; i < 20; i++) {
             tags.add(false);
         }
-        for (String i : SURVEY_ITEMS) {
+        for (String i : PublicVariables.SURVEY_ITEMS) {
             View view = createSurveyItem(i);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

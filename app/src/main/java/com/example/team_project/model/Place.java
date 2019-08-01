@@ -1,7 +1,5 @@
 package com.example.team_project.model;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,8 +78,7 @@ public class Place {
     }
 
     public ArrayList<String> getOpenHours() {
-        if(openHours.isEmpty())
-        {
+        if(openHours.isEmpty()) {
             openHours.add(" ");
         }
         return openHours;
@@ -89,10 +86,8 @@ public class Place {
 
     public String getPrice() {
         String pricetag = "";
-        if (price>=0)
-        {
-            for(int i = 0; i<=price; i++)
-            {
+        if (price>=0) {
+            for(int i = 0; i<=price; i++) {
                 pricetag = pricetag+"$";
             }
             return pricetag;
