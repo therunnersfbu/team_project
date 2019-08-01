@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".account.ProfileActivity">
 
     <ImageView
@@ -33,26 +35,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnSurvey"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:text="Update Interests"
-        android:textAllCaps="false"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ivProfilePic"
-        app:layout_constraintStart_toEndOf="@+id/ivProfilePic" />
-
-    <Button
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
         android:text="Logout"
-        app:layout_constraintBottom_toBottomOf="@+id/ivProfilePic"
-        app:layout_constraintStart_toEndOf="@+id/btnSurvey" />
+        app:layout_constraintStart_toEndOf="@+id/ivProfilePic"
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
 
     <TextView
         android:id="@+id/tvLikedSpots"
@@ -60,9 +51,50 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:text="Liked spots:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#000000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hsInterests" />
+
+    <HorizontalScrollView
+        android:id="@+id/hsInterests"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInterests">
+
+        <com.nex3z.flowlayout.FlowLayout
+            android:id="@+id/flSurvey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:flMaxRows="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvGreeting2">
+
+        </com.nex3z.flowlayout.FlowLayout>
+
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/tvInterests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="Current interests:"
+        android:textColor="#000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ivProfilePic" />
 
@@ -74,5 +106,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLikedSpots" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLikedSpots" >
+
+    </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

@@ -47,7 +47,7 @@ public class OtherUserActivity extends AppCompatActivity {
         ids = new ArrayList<>();
         address = new ArrayList<>();
         likedManager = new LinearLayoutManager(this);
-        likedAdapter = new LikedAdapter(liked, distances, ids, address);
+        likedAdapter = new LikedAdapter(liked, distances, ids, address, null);
         rvLiked.setLayoutManager(likedManager);
         rvLiked.setAdapter(likedAdapter);
 
