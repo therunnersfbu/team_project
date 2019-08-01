@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
@@ -37,16 +36,14 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 // The MapFragment displays all of the user's liked and reviewed spots on the map, along with their actual review
 // the liked spots are shown with pink markers and the reviewed events are shown with red markers
-public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, DirectionsApi.GetSingleDistance {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Unbinder unbinder;
     private GoogleMap mgoogleMap;
@@ -130,6 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         api.getDistance();
     }
 
+    @Override
     public void gotDistance(String distanceApi) {
         Boolean spotType = getSpotType(mCurrentSpotId);
         Intent intent = new Intent(getActivity(), DetailsActivity.class);

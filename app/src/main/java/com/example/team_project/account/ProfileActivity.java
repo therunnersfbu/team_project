@@ -51,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements DirectionsApi.GetDistances {
 
     private final int YOUR_SELECT_PICTURE_REQUEST_CODE = 150;
 
@@ -223,11 +223,6 @@ public class ProfileActivity extends AppCompatActivity {
         api.getDistance();
     }
 
-    public void gotDistances(ArrayList<String> distancesFromApi) {
-        distances.addAll(distancesFromApi);
-        likedAdapter.notifyDataSetChanged();
-    }
-
     private void openImageIntent() {
         // Determine Uri of camera image to save.
         final File root = new File(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator);
@@ -355,5 +350,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void gotDistances(ArrayList<String> distancesApi) {
+        distances.addAll(distancesApi);
+        likedAdapter.notifyDataSetChanged();
     }
 }

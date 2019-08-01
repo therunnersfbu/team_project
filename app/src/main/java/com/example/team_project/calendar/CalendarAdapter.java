@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -20,15 +19,13 @@ import com.example.team_project.model.User;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 
 // the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
 // and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
-public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
-
-    ArrayList<String> events;
-    Context context;
+public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
+    private ArrayList<String> events;
+    private Context context;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int count;
@@ -43,6 +40,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         this.events = theDaysEvents;
         this.context = context;
         //mMapFragment = mFragment;
+    }
+
+    public Context getContext() {
+        return this.context;
+    }
+
+    public ArrayList<String> getEvents() {
+        return this.events;
     }
 
     @NonNull
@@ -95,8 +100,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);

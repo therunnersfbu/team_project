@@ -17,19 +17,17 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.
-public class LocationActivity extends AppCompatActivity implements LocationAdapter.AdapterCallback{
+public class LocationActivity extends AppCompatActivity implements LocationAdapter.AdapterCallback, AutocompleteApi.GetAutocomplete  {
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
     private ArrayList<String> mLocations;
-    private PlacesApi pApi;
     private RecyclerView rvLocResults;
     private EditText etSearch;
     private AutocompleteApi LApi;
     private LocationAdapter mLocationAdapter;
     private Button btnSearch;
-
-    RecyclerView.LayoutManager resultsManager;
-    LinearLayoutManager linearLayoutManager;
+    private RecyclerView.LayoutManager resultsManager;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +46,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvLocResults.setLayoutManager(resultsManager);
         //adapter initialization
-        mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds);
+        mLocationAdapter = new LocationAdapter(mLocNames, mLocIds);
         mLocationAdapter.setOnItemClickedListener(this);
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
@@ -65,7 +63,8 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         });
     }
 
-    public void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names) throws JSONException {
+    @Override
+    public void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names) {
         for (int i = 0; i < array.size(); i++) {
             mLocNames.add(names.get(i));
             mLocIds.add(array.get(i));

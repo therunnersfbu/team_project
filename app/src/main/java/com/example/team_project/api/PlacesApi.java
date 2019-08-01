@@ -5,6 +5,7 @@ import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.location.LocationActivity;
 import com.example.team_project.location.LocationAdapter;
+import com.example.team_project.model.Event;
 import com.example.team_project.search.SearchActivity;
 import com.example.team_project.model.Place;
 import com.loopj.android.http.AsyncHttpClient;
@@ -89,11 +90,7 @@ public class PlacesApi {
                         }
                     }
 
-                    if (source instanceof  SearchActivity) {
-                        ((SearchActivity) source).apiFinished(array);
-                    } else if (source instanceof EventsFragment) {
-                        ((EventsFragment) source).gotPlaces(array);
-                    }
+                    ((GetPlaces) source).gotPlaces(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -125,7 +122,7 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
-                    ((EventsDetailsAdapter) source).finishedApiPlace(place);
+                    ((GetPlaces) source).gotPlace(place);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -157,8 +154,7 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
-                    //TODO Memory leak!
-                    ((LocationAdapter) source).apiFinishedGetLocation(place.getLocation());
+                    ((GetLocation) source).gotLocation(place.getLocation());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -180,5 +176,14 @@ public class PlacesApi {
                 throwable.printStackTrace();;
             }
         });
+    }
+
+    public interface GetPlaces {
+        void gotPlaces(JSONArray placesApi);
+        void gotPlace(Place placeApi);
+    }
+
+    public interface GetLocation {
+        void gotLocation(String locationApi);
     }
 }

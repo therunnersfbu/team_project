@@ -5,12 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.team_project.PublicVariables;
@@ -29,21 +27,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import android.support.annotation.Nullable;
 import butterknife.OnClick;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity {
-
-    // permission codes and constant strings
+public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
+    // permission codes and constants
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
     private static String FUTURE_TAG = "Future";
-    private static int DEFAULT_CAT_VALUE = -1;
+    private static String API_ID_KEY = "apiId";
+    private static String CLASS_NAME_TAG = "PlaceEvent";
+    private static String LONGITUDE_TAG = "longitude";
+    private static String LATITUDE_TAG = "latitude";
+    private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
+    private static int PLACES_RADIUS = 10000;
+    private static int EVENTS_RADIUS = 60;
     // tag recycler view
     private boolean isTags = true;
     private HorizontalScrollAdapter mAdapter;
@@ -76,12 +79,13 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
-
+    //layout items
     @BindView(R.id.rvTags) RecyclerView rvTags;
     @BindView(R.id.rvResults) RecyclerView rvResults;
     @BindView(R.id.etLocation) TextView tvLocation;
     @BindView(R.id.etSearch) TextView etSearch;
 
+    //OnClick listeners for buttons
     @OnClick(R.id.etLocation)
     public void locationAct(TextView view) {
         Intent intent = new Intent(view.getContext(), LocationActivity.class);
@@ -107,7 +111,6 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         ButterKnife.bind(this);
         initializeVars();
         //tag recycler view
@@ -118,27 +121,17 @@ public class SearchActivity extends AppCompatActivity {
         // tag items
         mTagReference = new ArrayList<>(Arrays.asList(PublicVariables.primTagRef));
         //result items
-        category = getIntent().getIntExtra(CATEGORY_TAG, DEFAULT_CAT_VALUE);
+        category = getIntent().getIntExtra(CATEGORY_TAG, USER_SEARCH);
         isPlace = isPlace(category);
         //location services
         newLocName = getIntent().getStringExtra(NAME_TAG);
         //layout items
         tvLocation = findViewById(R.id.etLocation);
-        etSearch = findViewById(R.id.etSearch);
         //results recycler view
         rvResults.setLayoutManager(resultsManager);
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
-        tvLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), LocationActivity.class);
-                intent.putExtra(CATEGORY_TAG, category);
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
-
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -154,10 +147,27 @@ public class SearchActivity extends AppCompatActivity {
         });
         //set location
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         }else{
             setMyLocation();
         }
+    }
+
+    // initialize variables used in this class
+    public void initializeVars() {
+        mEventList = new ArrayList<>();
+        mPlaceList = new ArrayList<>();
+        mResults = new ArrayList<>();
+        mDistances = new ArrayList<>();
+        mSubTags = new ArrayList<>();
+        mTaggedResults = new ArrayList<>();
+        mIds = new ArrayList<>();
+        myManager = new LinearLayoutManager(this);
+        resultsManager = new LinearLayoutManager(this);
+        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        eApi = new EventsApi(this);
+        pApi = new PlacesApi(this);
     }
 
     // returns true if the spot is a Place type
@@ -187,7 +197,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
                 isCurLoc = PublicVariables.isCurLoc;
                 newLoc = PublicVariables.newLoc;
@@ -195,7 +205,7 @@ public class SearchActivity extends AppCompatActivity {
                 super.onResume();
                 if(isCurLoc){
                     if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                        ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
                     }else{
                         setMyLocation();
                     }
@@ -219,141 +229,26 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setMyLocation() {
-        longitude = getIntent().getDoubleExtra("longitude", 0.0);
-        latitude = getIntent().getDoubleExtra("latitude", 0.0);
+        longitude = getIntent().getDoubleExtra(LONGITUDE_TAG, DEFAULT_COORD);
+        latitude = getIntent().getDoubleExtra(LATITUDE_TAG, DEFAULT_COORD);
         initializeCategory(category);
         populateList();
     }
 
     // sets the appropriate tags and keyword depending on category
     private void initializeCategory(int category) {
-        switch (category) {
-            case -2:
+        if(category==USER_SEARCH) {
+            if(!etSearch.getText().toString().isEmpty()) {
                 pApi.setKeywords(etSearch.getText().toString());
-                break;
-            case 0:
-                mUserInput = "breakfast";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 1:
-                mUserInput = "brunch";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("bottomless");
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 2:
-                mUserInput = "sweets";
-                pApi.setKeywords("dessert");
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 3:
-                mUserInput = "dinner";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 4:
-                mUserInput = "sights";
-                pApi.setKeywords("museum");
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("museum");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 5:
-                mUserInput = "nightlife";
-                pApi.setKeywords("bar");
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("young");
-                mSubTags.add("clubby");
-                mSubTags.add("food available");
-                mSubTags.add("rooftop");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 6:
-                mUserInput = "shopping";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("mall");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 7:
-                mUserInput = "concerts";
-                eApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("indoors");
-                mSubTags.add("outdoors");
-                mSubTags.add("upscale");
-                mSubTags.add("food available");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 8:
-                mUserInput = "pop-up events";
-                eApi.setKeywords("fair");
-                mSubTags.clear();
-                mSubTags.add("food available");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 9:
-                mUserInput = "beauty";
-                pApi.setKeywords("salon");
-                mSubTags.clear();
-                mSubTags.add("barber");
-                mSubTags.add("spa");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 10:
-                mUserInput = "active";
-                pApi.setKeywords("gym");
-                mSubTags.clear();
-                mSubTags.add("classes");
-                mSubTags.add("trails");
-                mSubTags.add("gyms");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 11:
-                mUserInput = "parks";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("food available");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            default:
-                return;
+            }
         }
-
+        else {
+            mSubTags.clear();
+            mSubTags.addAll(PublicVariables.getTags(category));
+            mUserInput = PublicVariables.getCategoryStr(category);
+            pApi.setKeywords(PublicVariables.getUserInput(category));
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     // query results according to user input
@@ -364,13 +259,13 @@ public class SearchActivity extends AppCompatActivity {
         mIds.clear();
         if (!isPlace) {
             eApi.setDate(FUTURE_TAG);
-            eApi.setLocation(latitude, longitude, 60);
+            eApi.setLocation(latitude, longitude, EVENTS_RADIUS);
         } else {
             pApi.setLocation(latitude, longitude);
-            pApi.setRadius(10000);
+            pApi.setRadius(PLACES_RADIUS);
         }
         mAdapter.notifyDataSetChanged();
-        if(category!=-2) {
+        if(category!=USER_SEARCH) {
             etSearch.setText(mUserInput);
         }
         if (!isPlace) {
@@ -380,102 +275,112 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    // API call finished, data available
-    public void apiFinished(JSONArray array) throws JSONException {
+    // get events from api
+    @Override
+    public void gotEvents(JSONArray eventsApi) {
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
-        boolean isStored = true;
-        if (!isPlace) {
-            for (int i = 0; i < array.length(); i++) {
-                isStored=true;
-                Event event = Event.eventFromJson(array.getJSONObject(i), false);
-                String mId = event.getEventId();
-                if(!mTaggedResults.isEmpty()) {
-                    PlaceEvent mPlaceEvent = query(mId);
-                    for(int j = 0; j<mTaggedResults.size(); j++) {
-                        int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
-                        ArrayList<Integer> mTags = new ArrayList<>();
-                        if(mPlaceEvent== null) {isStored = false; break;}
-                        mTags.addAll(mPlaceEvent.getTags());
-                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0)
-                        {
-                            isStored = false;
-                        }
+        boolean isStored;
 
+        for (int i = 0; i < eventsApi.length(); i++) {
+            isStored=true;
+            Event event = null;
+            try {
+                event = Event.eventFromJson(eventsApi.getJSONObject(i), false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String mId = event.getEventId();
+            if(!mTaggedResults.isEmpty()) {
+                PlaceEvent mPlaceEvent = query(mId);
+                for(int j = 0; j<mTaggedResults.size(); j++) {
+                    int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
+                    ArrayList<Integer> mTags = new ArrayList<>();
+                    if(mPlaceEvent== null) {isStored = false; break;}
+                    mTags.addAll(mPlaceEvent.getTags());
+                    if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
+                        isStored = false;
                     }
-                }
-                if(isStored) {
-                    mIds.add(event.getEventId());
-                    mEventList.add(event);
-                    dApi.addDestination(event.getLocation());
-                    mResults.add(event.getEventName());
-                }
-            }
-            if(mResults.size()<20) {
-                eApi.getMoreEvents();
-            }
-        } else {
-            for (int i = 0; i < array.length(); i++) {
-                isStored=true;
-                Place place = Place.placeFromJson(array.getJSONObject(i), false);
-                String mId = place.getPlaceId();
-                if(!mTaggedResults.isEmpty()) {
-                    PlaceEvent mPlaceEvent = query(mId);
-                    for(int j = 0; j<mTaggedResults.size(); j++)
-                    {
-                        int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
-                        ArrayList<Integer> mTags = new ArrayList<>();
-                        if(mPlaceEvent== null) {isStored = false; break;}
-                        mTags.addAll(mPlaceEvent.getTags());
-                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0)
-                        {
-                            isStored = false;
-                        }
 
-                    }
-                }
-                if(isStored)
-                {
-                    mPlaceList.add(place);
-                    dApi.addDestination(place.getLocation());
-                    mResults.add(place.getPlaceName());
-                    mIds.add(place.getPlaceId());
                 }
             }
-            if(mResults.size()<20) {
-                pApi.getMorePlaces();
+            if(isStored) {
+                mIds.add(event.getEventId());
+                mEventList.add(event);
+                dApi.addDestination(event.getLocation());
+                mResults.add(event.getEventName());
             }
         }
+        if(mResults.size()<20) {
+            eApi.getMoreEvents();
+        }
+
         dApi.getDistance();
     }
 
-    // get the distance from search results to current location
-    public void getDistances(ArrayList<String> result) {
-        mDistances.addAll(result);
-        mResultsAdapter.notifyDataSetChanged();
+    @Override
+    public void gotEvent(Event eventApi) {
+
     }
 
-    // initialize variables used in this class
-    public void initializeVars() {
-        mEventList = new ArrayList<>();
-        mPlaceList = new ArrayList<>();
-        mResults = new ArrayList<>();
-        mDistances = new ArrayList<>();
-        mSubTags = new ArrayList<>();
-        mTaggedResults = new ArrayList<>();
-        mIds = new ArrayList<>();
-        myManager = new LinearLayoutManager(this);
-        resultsManager = new LinearLayoutManager(this);
-        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        eApi = new EventsApi(this);
-        pApi = new PlacesApi(this);
+    // get places from api
+    @Override
+    public void gotPlaces(JSONArray placesApi) {
+        DirectionsApi dApi = new DirectionsApi(this);
+        dApi.setOrigin(latitude, longitude);
+        boolean isStored;
+
+        for (int i = 0; i < placesApi.length(); i++) {
+            isStored=true;
+            Place place = null;
+            try {
+                place = Place.placeFromJson(placesApi.getJSONObject(i), false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String mId = place.getPlaceId();
+            if(!mTaggedResults.isEmpty()) {
+                PlaceEvent mPlaceEvent = query(mId);
+                for(int j = 0; j<mTaggedResults.size(); j++) {
+                    int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
+                    ArrayList<Integer> mTags = new ArrayList<>();
+                    if(mPlaceEvent== null) {isStored = false; break;}
+                    mTags.addAll(mPlaceEvent.getTags());
+                    if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
+                        isStored = false;
+                    }
+                }
+            }
+            if(isStored) {
+                mPlaceList.add(place);
+                dApi.addDestination(place.getLocation());
+                mResults.add(place.getPlaceName());
+                mIds.add(place.getPlaceId());
+            }
+        }
+        if(mResults.size()<20) {
+            pApi.getMorePlaces();
+        }
+
+        dApi.getDistance();
+    }
+
+    @Override
+    public void gotPlace(Place placeApi) {
+
+    }
+
+    // get the distance from search results to current location
+    @Override
+    public void gotDistances(ArrayList<String> distancesApi) {
+        mDistances.addAll(distancesApi);
+        mResultsAdapter.notifyDataSetChanged();
     }
 
     // find PlaceEvent parse object with same ID as api object
     private PlaceEvent query(String id) {
-        ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
-        query.whereContains("apiId", id);
+        ParseQuery<PlaceEvent> query = new ParseQuery(CLASS_NAME_TAG);
+        query.whereContains(API_ID_KEY, id);
         PlaceEvent mPlaceEvent = null;
         try {
             mPlaceEvent = (PlaceEvent) query.getFirst();
@@ -488,5 +393,4 @@ public class SearchActivity extends AppCompatActivity {
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
     }
-
 }

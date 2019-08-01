@@ -32,7 +32,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
         super(0, ItemTouchHelper.RIGHT);
         mAdapter = adapter;
-        icon = ContextCompat.getDrawable(mAdapter.context,
+        icon = ContextCompat.getDrawable(mAdapter.getContext(),
                 R.drawable.ic_delete_white_36);
         background = new ColorDrawable(Color.parseColor("#B71C1C"));
     }
@@ -49,10 +49,10 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         final ParseUser user = ParseUser.getCurrentUser();
         final ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
-        ArrayList<String> rvEvents = mAdapter.events;
+        ArrayList<String> rvEvents = mAdapter.getEvents();
         final String eventToDelete = rvEvents.get(position);
         if (eventToDelete != "NONE!") {
-            new AlertDialog.Builder(mAdapter.context)
+            new AlertDialog.Builder(mAdapter.getContext())
                 .setTitle("Unlike spot")
                 .setMessage("Are you sure you want to delete this spot?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
