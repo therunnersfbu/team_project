@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.search.HorizontalScrollAdapter;
 import com.example.team_project.ComposeReviewActivity;
@@ -36,34 +34,33 @@ import com.example.team_project.search.SearchActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseUser;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class EventsFragment extends Fragment implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
     private Unbinder unbinder;
-    private RecyclerView rvSuggested;
     private ArrayList<String> names;
     private HorizontalScrollAdapter adapter;
     private ArrayList<View> btnCat;
-    private Button btnSearchBar;
     private ImageButton mbtn;
     private double latitude;
     private double longitude;
     private Location location;
     private LocationManager locManager;
-    RecyclerView.LayoutManager myManager;
-    LinearLayoutManager horizontalLayout;
+    private RecyclerView.LayoutManager myManager;
+    private LinearLayoutManager horizontalLayout;
 
     //TODO singleton
     public static int categoryToMark;
@@ -71,6 +68,16 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     public static ArrayList<String> idList;
     public static boolean type;
 
+    @BindView(R.id.rvSuggestions) RecyclerView rvSuggestions;
+
+    @OnClick(R.id.btnSearchBar)
+    public void buttonSearch(Button button) {
+        EventsFragment.categoryToMark = -1;
+        Intent intent = new Intent(getContext(), SearchActivity.class);
+        intent.putExtra("latitude", latitude);
+        intent.putExtra("longitude", longitude);
+        getContext().startActivity(intent);
+    }
 
     @Nullable
     @Override
@@ -85,34 +92,25 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         //initialize with declaration
         type = true;
-        rvSuggested = view.findViewById(R.id.rvSuggestions);
-        btnSearchBar = view.findViewById(R.id.btnSearchBar);
         myManager = new LinearLayoutManager(getContext());
-        rvSuggested.setLayoutManager(myManager);
+        rvSuggestions.setLayoutManager(myManager);
         idList = new ArrayList<>();
         distances = new ArrayList<>();
         names = new ArrayList<>();
         adapter = new HorizontalScrollAdapter(names, false, new SearchActivity());
         horizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvSuggested.setLayoutManager(horizontalLayout);
-        rvSuggested.setAdapter(adapter);
+
+        rvSuggestions.setLayoutManager(horizontalLayout);
+        rvSuggestions.setAdapter(adapter);
+
         btnCat = new ArrayList<>(Arrays.asList(view.findViewById(R.id.ibtnBreakfast), view.findViewById(R.id.ibtnBrunch),
                 view.findViewById(R.id.ibtnLunch), view.findViewById(R.id.ibtnDinner), view.findViewById(R.id.ibtnSights),
                 view.findViewById(R.id.ibtnNight), view.findViewById(R.id.ibtnShopping), view.findViewById(R.id.ibtnConcerts),
                 view.findViewById(R.id.ibtnPop), view.findViewById(R.id.ibtnBeauty), view.findViewById(R.id.ibtnActive),
                 view.findViewById(R.id.ibtnParks)));
-        btnSearchBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EventsFragment.categoryToMark = -1;
-                Intent intent = new Intent(getContext(), SearchActivity.class);
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longitude);
-                getContext().startActivity(intent);
-            }
-        });
 
         for(int i = 0; i<btnCat.size(); i++) {
             final int index = i;
@@ -247,14 +245,11 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.d("location", "granted");
-                    Log.d("location", "second");
                     setMyLocation();
                 } else {
                     Log.d("location", "not granted");

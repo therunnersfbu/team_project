@@ -1,14 +1,8 @@
 package com.example.team_project.model;
 
-import com.parse.Parse;
-import com.parse.ParseACL;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 @ParseClassName("User")

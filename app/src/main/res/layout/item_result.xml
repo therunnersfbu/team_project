@@ -21,13 +21,14 @@
 
         <TextView
             android:id="@+id/tvDistance"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="distance"
             android:textSize="18dp"
+            card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/tvName" />
 
