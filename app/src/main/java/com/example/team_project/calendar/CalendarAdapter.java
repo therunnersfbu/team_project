@@ -3,8 +3,8 @@ package com.example.team_project.calendar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,8 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
+// the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
+// and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
@@ -32,13 +34,15 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private int count;
     private TextView tvEventName;
     private TextView tvAddress;
-    private TextView tvType;
+    private TextView tvEventPlace;
     private ImageView ivEventImage;
+    Fragment mMapFragment;
 
 
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
         this.events = theDaysEvents;
         this.context = context;
+        //mMapFragment = mFragment;
     }
 
     @NonNull
@@ -53,25 +57,25 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         if (events.contains("NONE!")) {
             tvEventName.setText("NONE!");
             tvAddress.setVisibility(View.GONE);
-            tvType.setVisibility(View.GONE);
+            tvEventPlace.setVisibility(View.GONE);
             ivEventImage.setVisibility(View.GONE);
         }else {
             for (int x = 0; x < parseevents.size(); x++) {
                 tvAddress.setVisibility(View.VISIBLE);
-                tvType.setVisibility(View.VISIBLE);
+                tvEventPlace.setVisibility(View.VISIBLE);
                 ivEventImage.setVisibility(View.VISIBLE);
                 String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
                 if (events.get(i).equals(mParseEvent[2])) {
                     tvEventName.setText(mParseEvent[2]);
                     tvAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];
-                    // change type to distance
+                    //mMapFragment.getSpotType
                     if ('E' != eventApiId.charAt(0)) {
-                        tvType.setText("Place");
+                        tvEventPlace.setText("Place");
                         ivEventImage.setImageResource(R.drawable.sky);
                         break;
                     } else {
-                        tvType.setText("Event");
+                        tvEventPlace.setText("Event");
                         ivEventImage.setImageResource(R.drawable.event);
                         break;
                     }
@@ -98,7 +102,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             super(itemView);
             tvEventName = itemView.findViewById(R.id.tvEventName);
             tvAddress = itemView.findViewById(R.id.tvAddress);
-            tvType = itemView.findViewById(R.id.tvType);
+            tvEventPlace = itemView.findViewById(R.id.tvType);
             ivEventImage = itemView.findViewById(R.id.ivEventImage);
             itemView.setOnClickListener(this);
         }
@@ -129,18 +133,17 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public void gotDistance(String distanceApi) {
-        Boolean type;
+        Boolean isEvent;
         String eventApiId = parseevents.get(count).split(PublicVariables.splitindicator)[1];
-        Log.d("CalAda", "id: " + eventApiId);
         if ('E' != eventApiId.charAt(0)) {
-            type = true;
+            isEvent = true;
         } else {
-            type = false;
+            isEvent = false;
         }
 
         Intent intent = new Intent(context, DetailsActivity.class);
         intent.putExtra("eventID", eventApiId);
-        intent.putExtra("type", type);
+        intent.putExtra("type", isEvent);
         intent.putExtra("distance", distanceApi);
         context.startActivity(intent);
     }

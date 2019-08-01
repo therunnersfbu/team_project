@@ -19,6 +19,8 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
+// This class enables the user to swipe a spot in the CalendarFragment recycler view and have the
+// ability to delete it from their calendar and database
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
@@ -67,7 +69,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                         mAdapter.notifyDataSetChanged();
                     }
                 })
-
                 // A null listener allows the button to dismiss the dialog and take no further action.
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

@@ -43,27 +43,44 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-// TODO add comment
+
+// The MapFragment displays all of the user's liked and reviewed spots on the map, along with their actual review
+// the liked spots are shown with pink markers and the reviewed events are shown with red markers
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
-    private Unbinder unbinder;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private Unbinder unbinder;
     private GoogleMap mgoogleMap;
     private ImageButton mMapIcon;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+    private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int maxLimit = 1000;
     private int minZoom = 3;
     private String TAG = "MapFragment";
-    private String apiId;
+    private String mCurrentSpotId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         unbinder = ButterKnife.bind(this, view);
+        //initUserData();
         return view;
     }
 
+    /*private void initUserData() {
+        user = ParseUser.getCurrentUser();
+        //check if data is available or not, if not fetch.
+        if(not fetched){
+            user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    //init likedEvents and addedEvents here.
+                }
+            });
+        }
+
+    }*/
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -100,22 +117,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         enableMyLocationIfPermitted();
         queryReviews();
         queryLikedEvents();
+        queryAddedEvents();
     }
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
-        apiId = marker.getTag().toString();
+        mCurrentSpotId = marker.getTag().toString();
         DirectionsApi api = new DirectionsApi(MapFragment.this);
         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
-        PlaceEvent mParseEvent = query(apiId);
-        api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
+        PlaceEvent parseEvent = query(mCurrentSpotId);
+        api.addDestination(parseEvent.getCoordinates().replace(" ", ","));
         api.getDistance();
     }
 
     public void gotDistance(String distanceApi) {
-        Boolean spotType = getSpotType(apiId);
+        Boolean spotType = getSpotType(mCurrentSpotId);
         Intent intent = new Intent(getActivity(), DetailsActivity.class);
-        intent.putExtra("eventID", apiId);
+        intent.putExtra("eventID", mCurrentSpotId);//TODO constant
         intent.putExtra("type", spotType);
         intent.putExtra("distance", distanceApi);
         startActivity(intent);
@@ -123,7 +141,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     public PlaceEvent query(String id) {
         ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
-        query.whereContains("apiId", id);
+        query.whereContains("mCurrentSpotId", id);
         PlaceEvent mPlaceEvent = null;
         try {
             mPlaceEvent = (PlaceEvent) query.getFirst();
@@ -143,7 +161,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else if (mgoogleMap != null) {
             mgoogleMap.setMyLocationEnabled(true);
-            mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 8));
+            mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 11));
 
         }
     }
@@ -180,10 +198,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         };
 
     protected void queryReviews(){
-        ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
+        final ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
         reviewQuery.setLimit(maxLimit);
         reviewQuery.include(Post.KEY_EVENT_PLACE);
-
+        reviewQuery.include(Post.KEY_USER);
+        reviewQuery.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         reviewQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
@@ -195,7 +214,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
             for(int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-                String review = post.getReview();
+                String review = "Review: " + post.getReview();
                 String name = post.getEventPlace().getName();
                 String apiId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
@@ -208,14 +227,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     protected void queryLikedEvents(){
-        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");
+        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");//TODO make it constant.
         placeEventQuery.setLimit(maxLimit);
-        ArrayList<String> likedEventApis = new ArrayList<>();
+        ArrayList<String> likedEventIds = new ArrayList<>();
         for (int i= 0; i < likedEvents.size();i++){
-            String api = likedEvents.get(i).split(PublicVariables.splitindicator)[0];
-            likedEventApis.add(api);
+            String eventId = likedEvents.get(i).split(PublicVariables.splitindicator)[0];
+            likedEventIds.add(eventId);
         }
-        placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, likedEventApis);
+        placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, likedEventIds);
 
         placeEventQuery.findInBackground(new FindCallback<PlaceEvent>() {
             @Override
@@ -237,11 +256,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         });
     }
 
+    protected void queryAddedEvents(){
+        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");
+        placeEventQuery.setLimit(maxLimit);
+        ArrayList<String> addedEventApis = new ArrayList<>();
+        for (int i= 0; i < addedEvents.size();i++){
+            String api = addedEvents.get(i).split(PublicVariables.splitindicator)[1];
+            addedEventApis.add(api);
+        }
+        placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, addedEventApis);
+
+        placeEventQuery.findInBackground(new FindCallback<PlaceEvent>() {
+            @Override
+            public void done(List<PlaceEvent> placeEvents, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "error with query: " + e.getMessage());
+                    e.printStackTrace();
+                    return;
+                }
+                for (int i = 0; i < placeEvents.size(); i++) {
+                    String placeEventCoord = placeEvents.get(i).getCoordinates();
+                    String placeEventName = placeEvents.get(i).getName();
+                    String apiId = placeEvents.get(i).getAppId();
+                    Float color = BitmapDescriptorFactory.HUE_BLUE;
+                    String snippet = getResources().getString(R.string.liked_event_snippet);
+                    makeMapMarker(placeEventCoord, apiId, placeEventName, snippet, color);
+                }
+            }
+        });
+    }
+
     protected void makeMapMarker(String coordinateString, String apiId, String placeEventName, String snippet, Float color) {
         String[] coordinates = coordinateString.split("\\s+");
         double latitude = Double.parseDouble(coordinates[0]);
         double longitude = Double.parseDouble(coordinates[1]);
-        Log.d("mapfrag", "marker coordinates " + longitude + ", " + latitude);
         Marker marker = mgoogleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .title(placeEventName)
@@ -251,12 +299,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mgoogleMap.setOnInfoWindowClickListener(MapFragment.this);
     }
 
-    protected Boolean getSpotType(String apiId){
+    public Boolean getSpotType(String apiId){
         if ('E' != apiId.charAt(0)) {
-            PublicVariables.spotType = true;
+            PublicVariables.isEvent = true;
         } else {
-            PublicVariables.spotType = false;
+            PublicVariables.isEvent = false;
         }
-        return PublicVariables.spotType;
+        return PublicVariables.isEvent;
     }
 }
