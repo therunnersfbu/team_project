@@ -11,10 +11,8 @@ public class PublicVariables {
     public ArrayList<String> events;
     public static Boolean spotType;
 
-    public static TextView tvEventName;
-    public static TextView tvAddress;
-    public static TextView tvType;
-    public static ImageView ivEventImage;
 
-
+    public static String newLoc;
+    public static String newLocName;
+    public static boolean isCurLoc = true;
 }

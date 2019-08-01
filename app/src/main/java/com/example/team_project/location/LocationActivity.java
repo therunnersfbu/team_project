@@ -1,9 +1,11 @@
 package com.example.team_project.location;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +19,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.
-public class LocationActivity extends AppCompatActivity {
+public class LocationActivity extends AppCompatActivity implements LocationAdapter.AdapterCallback{
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
     private ArrayList<String> mLocations;
@@ -28,7 +30,6 @@ public class LocationActivity extends AppCompatActivity {
     private LocationAdapter mLocationAdapter;
     private Button btnSearch;
     private int category;
-    public static LocationActivity locationActivity;
 
     RecyclerView.LayoutManager resultsManager;
     LinearLayoutManager linearLayoutManager;
@@ -47,7 +48,6 @@ public class LocationActivity extends AppCompatActivity {
         mLocNames = new ArrayList<>();
         rvLocResults.setLayoutManager(resultsManager);
         btnSearch = findViewById(R.id.btnSearch);
-        locationActivity = this;
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +58,7 @@ public class LocationActivity extends AppCompatActivity {
             }
         });
         mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds, category);
+        mLocationAdapter.setOnItemClickedListener(this);
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
         LApi = new AutocompleteApi(this);
@@ -68,12 +69,10 @@ public class LocationActivity extends AppCompatActivity {
             pApi = new PlacesApi(this);
             pApi.getLocation(array.get(i));
             mLocNames.add(names.get(i));
-           // mLocIds.add(array.get(i));
         }
     }
 
     public void apiFinishedGetLocation(String location, String name) throws JSONException {
-      //  mLocNames.add(name);
         mLocations.add(location);
         mLocationAdapter.notifyDataSetChanged();
     }
@@ -81,5 +80,11 @@ public class LocationActivity extends AppCompatActivity {
     private void populateList() {
         LApi.setInput(etSearch.getText().toString());
         LApi.getTopPlaces();
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        Log.e("Test", " "+position);
+        finish();
     }
 }

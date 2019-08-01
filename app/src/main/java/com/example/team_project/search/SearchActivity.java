@@ -3,8 +3,6 @@ package com.example.team_project.search;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +11,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
-import com.example.team_project.location.CurrentLocation;
 import com.example.team_project.location.LocationActivity;
 import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
@@ -42,6 +41,7 @@ public class SearchActivity extends AppCompatActivity {
     private static String LOCATION_TAG = "location";
     private static String FUTURE_TAG = "Future";
     private static int DEFAULT_CAT_VALUE = -1;
+    private static int REQUEST_CODE = 1;
     // tag recycler view
     private boolean isTags = true;
     private RecyclerView rvTags;
@@ -137,7 +137,7 @@ public class SearchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), LocationActivity.class);
                 intent.putExtra(CATEGORY_TAG, category);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         // Adds the scroll listener to RecyclerView
@@ -186,9 +186,9 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        isCurLoc = LocationAdapter.isCurLoc;
-        newLoc = LocationAdapter.mNewLoc;
-        newLocName = LocationAdapter.mLocName;
+        isCurLoc = PublicVariables.isCurLoc;
+        newLoc = PublicVariables.newLoc;
+        newLocName = PublicVariables.newLocName;
         super.onResume();
         if(isCurLoc){
             if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -210,7 +210,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        LocationAdapter.isCurLoc = true;
+        PublicVariables.isCurLoc = true;
         setMyLocation();
     }
 
@@ -446,7 +446,7 @@ public class SearchActivity extends AppCompatActivity {
         mResultsAdapter.notifyDataSetChanged();
     }
 
-    // initialize vairables used in this class
+    // initialize variables used in this class
     public void initializeVars() {
         mEventList = new ArrayList<>();
         mPlaceList = new ArrayList<>();
