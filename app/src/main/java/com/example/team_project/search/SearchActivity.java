@@ -33,7 +33,7 @@ import android.support.annotation.Nullable;
 import butterknife.OnClick;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
     // permission codes and constants
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
@@ -275,73 +275,105 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    // API call finished, data available
-    public void apiFinished(JSONArray array) throws JSONException {
+    // get events from api
+    @Override
+    public void gotEvents(JSONArray eventsApi) {
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
         boolean isStored;
-        if (!isPlace) {
-            for (int i = 0; i < array.length(); i++) {
-                isStored=true;
-                Event event = Event.eventFromJson(array.getJSONObject(i), false);
-                String mId = event.getEventId();
-                if(!mTaggedResults.isEmpty()) {
-                    PlaceEvent mPlaceEvent = query(mId);
-                    for(int j = 0; j<mTaggedResults.size(); j++) {
-                        int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
-                        ArrayList<Integer> mTags = new ArrayList<>();
-                        if(mPlaceEvent== null) {isStored = false; break;}
-                        mTags.addAll(mPlaceEvent.getTags());
-                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
-                            isStored = false;
-                        }
 
+        for (int i = 0; i < eventsApi.length(); i++) {
+            isStored=true;
+            Event event = null;
+            try {
+                event = Event.eventFromJson(eventsApi.getJSONObject(i), false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String mId = event.getEventId();
+            if(!mTaggedResults.isEmpty()) {
+                PlaceEvent mPlaceEvent = query(mId);
+                for(int j = 0; j<mTaggedResults.size(); j++) {
+                    int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
+                    ArrayList<Integer> mTags = new ArrayList<>();
+                    if(mPlaceEvent== null) {isStored = false; break;}
+                    mTags.addAll(mPlaceEvent.getTags());
+                    if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
+                        isStored = false;
                     }
-                }
-                if(isStored) {
-                    mIds.add(event.getEventId());
-                    mEventList.add(event);
-                    dApi.addDestination(event.getLocation());
-                    mResults.add(event.getEventName());
+
                 }
             }
-            if(mResults.size()<20) {
-                eApi.getMoreEvents();
-            }
-        } else {
-            for (int i = 0; i < array.length(); i++) {
-                isStored=true;
-                Place place = Place.placeFromJson(array.getJSONObject(i), false);
-                String mId = place.getPlaceId();
-                if(!mTaggedResults.isEmpty()) {
-                    PlaceEvent mPlaceEvent = query(mId);
-                    for(int j = 0; j<mTaggedResults.size(); j++) {
-                        int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
-                        ArrayList<Integer> mTags = new ArrayList<>();
-                        if(mPlaceEvent== null) {isStored = false; break;}
-                        mTags.addAll(mPlaceEvent.getTags());
-                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
-                            isStored = false;
-                        }
-                    }
-                }
-                if(isStored) {
-                    mPlaceList.add(place);
-                    dApi.addDestination(place.getLocation());
-                    mResults.add(place.getPlaceName());
-                    mIds.add(place.getPlaceId());
-                }
-            }
-            if(mResults.size()<20) {
-                pApi.getMorePlaces();
+            if(isStored) {
+                mIds.add(event.getEventId());
+                mEventList.add(event);
+                dApi.addDestination(event.getLocation());
+                mResults.add(event.getEventName());
             }
         }
+        if(mResults.size()<20) {
+            eApi.getMoreEvents();
+        }
+
         dApi.getDistance();
     }
 
+    @Override
+    public void gotEvent(Event eventApi) {
+
+    }
+
+    // get places from api
+    @Override
+    public void gotPlaces(JSONArray placesApi) {
+        DirectionsApi dApi = new DirectionsApi(this);
+        dApi.setOrigin(latitude, longitude);
+        boolean isStored;
+
+        for (int i = 0; i < placesApi.length(); i++) {
+            isStored=true;
+            Place place = null;
+            try {
+                place = Place.placeFromJson(placesApi.getJSONObject(i), false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String mId = place.getPlaceId();
+            if(!mTaggedResults.isEmpty()) {
+                PlaceEvent mPlaceEvent = query(mId);
+                for(int j = 0; j<mTaggedResults.size(); j++) {
+                    int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
+                    ArrayList<Integer> mTags = new ArrayList<>();
+                    if(mPlaceEvent== null) {isStored = false; break;}
+                    mTags.addAll(mPlaceEvent.getTags());
+                    if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
+                        isStored = false;
+                    }
+                }
+            }
+            if(isStored) {
+                mPlaceList.add(place);
+                dApi.addDestination(place.getLocation());
+                mResults.add(place.getPlaceName());
+                mIds.add(place.getPlaceId());
+            }
+        }
+        if(mResults.size()<20) {
+            pApi.getMorePlaces();
+        }
+
+        dApi.getDistance();
+    }
+
+    @Override
+    public void gotPlace(Place placeApi) {
+
+    }
+
     // get the distance from search results to current location
-    public void getDistances(ArrayList<String> result) {
-        mDistances.addAll(result);
+    @Override
+    public void gotDistances(ArrayList<String> distancesApi) {
+        mDistances.addAll(distancesApi);
         mResultsAdapter.notifyDataSetChanged();
     }
 
@@ -361,5 +393,4 @@ public class SearchActivity extends AppCompatActivity {
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
     }
-
 }

@@ -51,7 +51,7 @@ public class AutocompleteApi {
                         mIds.add(results.getJSONObject(i).getString(PLACE_ID));
                         mNames.add(results.getJSONObject(i).getString(DESCRIPTION_KEY));
                     }
-                    ((LocationActivity) mSource).apiFinishedLocation(mIds, mNames);
+                    ((GetAutocomplete) mSource).apiFinishedLocation(mIds, mNames);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -73,5 +73,9 @@ public class AutocompleteApi {
                 throwable.printStackTrace();;
             }
         });
+    }
+
+    public interface GetAutocomplete {
+        void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names);
     }
 }
