@@ -1,9 +1,11 @@
 package com.example.team_project.search;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,14 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.location.LocationActivity;
-import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
@@ -30,31 +30,30 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 // Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity {
 
     // permission codes and constant strings
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private static final int USER_SEARCH = -2;
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
-    private static String LOCATION_TAG = "location";
     private static String FUTURE_TAG = "Future";
     private static int DEFAULT_CAT_VALUE = -1;
+    private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
     // tag recycler view
     private boolean isTags = true;
-    private RecyclerView rvTags;
     private HorizontalScrollAdapter mAdapter;
     private RecyclerView.LayoutManager resultsManager;
     private LinearLayoutManager horizontalLayout;
     // tag items
     private ArrayList<String> mSubTags;
     private ArrayList<String> mTaggedResults;
-    private String[] primTagRef;
     private ArrayList<String> mTagReference;
     //results recycler view
-    private RecyclerView rvResults;
     private ResultsAdapter mResultsAdapter;
     private RecyclerView.LayoutManager myManager;
     private LinearLayoutManager verticalLayout;
@@ -77,36 +76,47 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
-    //layout items
-    private TextView etSearch;
-    private TextView tvLocation;
-    private Button btnCancel;
-    private Button btnSearch;
 
+    @BindView(R.id.rvTags) RecyclerView rvTags;
+    @BindView(R.id.rvResults) RecyclerView rvResults;
+    @BindView(R.id.etLocation) TextView tvLocation;
+    @BindView(R.id.etSearch) TextView etSearch;
+
+    @OnClick(R.id.etLocation)
+    public void locationAct(TextView view) {
+        Intent intent = new Intent(view.getContext(), LocationActivity.class);
+        intent.putExtra(CATEGORY_TAG, category);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @OnClick(R.id.btnCancel)
+    public void cancel(Button button) {
+        finish();
+        PublicVariables.isCurLoc = true;
+        setMyLocation();
+    }
+
+    @OnClick(R.id.btnSearch)
+    public void search(Button button) {
+        category = USER_SEARCH;
+        initializeCategory(category);
+        populateList();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        ButterKnife.bind(this);
         initializeVars();
         //tag recycler view
-        rvTags = findViewById(R.id.rvTags);
         rvTags.setLayoutManager(myManager);
         mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
         rvTags.setLayoutManager(horizontalLayout);
         rvTags.setAdapter(mAdapter);
         // tag items
-        primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
-                "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
-                "clubby", "mall", "food available", "barber", "spa", "classes", "trails",
-                "gyms", "family friendly", "museums"};
-        mTagReference = new ArrayList<String>(Arrays.asList(primTagRef));
-        //results recycler view
-        rvResults = findViewById(R.id.rvResults);
-        rvResults.setLayoutManager(resultsManager);
-        mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
-        rvResults.setLayoutManager(verticalLayout);
-        rvResults.setAdapter(mResultsAdapter);
+        mTagReference = new ArrayList<>(Arrays.asList(PublicVariables.primTagRef));
         //result items
         category = getIntent().getIntExtra(CATEGORY_TAG, DEFAULT_CAT_VALUE);
         isPlace = isPlace(category);
@@ -115,23 +125,11 @@ public class SearchActivity extends AppCompatActivity {
         //layout items
         tvLocation = findViewById(R.id.etLocation);
         etSearch = findViewById(R.id.etSearch);
-        btnCancel = findViewById(R.id.btnCancel);
-        btnSearch = findViewById(R.id.btnSearch);
-        //on click listeners
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                category = USER_SEARCH;
-                initializeCategory(category);
-                populateList();
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        //results recycler view
+        rvResults.setLayoutManager(resultsManager);
+        mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
+        rvResults.setLayoutManager(verticalLayout);
+        rvResults.setAdapter(mResultsAdapter);
         tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +138,7 @@ public class SearchActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -184,27 +183,32 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    //After LocationActivity has finished setting new current location, query new search results
     @Override
-    protected void onResume() {
-        isCurLoc = PublicVariables.isCurLoc;
-        newLoc = PublicVariables.newLoc;
-        newLocName = PublicVariables.newLocName;
-        super.onResume();
-        if(isCurLoc){
-            if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }else{
-                setMyLocation();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                isCurLoc = PublicVariables.isCurLoc;
+                newLoc = PublicVariables.newLoc;
+                newLocName = PublicVariables.newLocName;
+                super.onResume();
+                if(isCurLoc){
+                    if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }else{
+                        setMyLocation();
+                    }
+                } else {
+                    String[] newCords = newLoc.split("\\s+");
+                    latitude = Double.parseDouble(newCords[0]);
+                    longitude = Double.parseDouble(newCords[1]);
+                    tvLocation.setText(newLocName);
+                    initializeCategory(category);
+                    populateList();
+                }
             }
-        } else {
-            String[] newCords = newLoc.split("\\s+");
-            latitude = Double.parseDouble(newCords[0]);
-            longitude = Double.parseDouble(newCords[1]);
-            tvLocation.setText(newLocName);
-            initializeCategory(category);
-            populateList();
         }
-
     }
 
     @Override
@@ -215,8 +219,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setMyLocation() {
-        longitude = (double) getIntent().getDoubleExtra("longitude", 0.0);
-        latitude = (double) getIntent().getDoubleExtra("latitude", 0.0);
+        longitude = getIntent().getDoubleExtra("longitude", 0.0);
+        latitude = getIntent().getDoubleExtra("latitude", 0.0);
         initializeCategory(category);
         populateList();
     }
@@ -407,6 +411,9 @@ public class SearchActivity extends AppCompatActivity {
                     mResults.add(event.getEventName());
                 }
             }
+            if(mResults.size()<20) {
+                eApi.getMoreEvents();
+            }
         } else {
             for (int i = 0; i < array.length(); i++) {
                 isStored=true;
@@ -435,8 +442,10 @@ public class SearchActivity extends AppCompatActivity {
                     mIds.add(place.getPlaceId());
                 }
             }
+            if(mResults.size()<20) {
+                pApi.getMorePlaces();
+            }
         }
-
         dApi.getDistance();
     }
 

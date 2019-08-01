@@ -4,6 +4,7 @@ import android.util.Log;
 import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.location.LocationActivity;
+import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.search.SearchActivity;
 import com.example.team_project.model.Place;
 import com.loopj.android.http.AsyncHttpClient;
@@ -156,7 +157,8 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
-                    ((LocationActivity) source).apiFinishedGetLocation(place.getLocation(), place.getPlaceName());
+                    //TODO Memory leak!
+                    ((LocationAdapter) source).apiFinishedGetLocation(place.getLocation());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

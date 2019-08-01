@@ -10,14 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.example.team_project.account.ProfileActivity;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.fragments.MapFragment;
 import com.example.team_project.calendar.MyCalendarFragment;
-import com.example.team_project.location.LocationAdapter;
 import com.parse.ParseUser;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

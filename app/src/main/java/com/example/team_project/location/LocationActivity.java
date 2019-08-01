@@ -1,5 +1,6 @@
 package com.example.team_project.location;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,13 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.example.team_project.R;
 import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.api.PlacesApi;
-
 import org.json.JSONException;
-
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.
@@ -29,7 +27,6 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     private AutocompleteApi LApi;
     private LocationAdapter mLocationAdapter;
     private Button btnSearch;
-    private int category;
 
     RecyclerView.LayoutManager resultsManager;
     LinearLayoutManager linearLayoutManager;
@@ -38,16 +35,25 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
-        etSearch = findViewById(R.id.etSearch);
-        rvLocResults = findViewById(R.id.rvLocResults);
+        // lists to hold information from location search results
         mLocations = new ArrayList<>();
-        category = getIntent().getIntExtra("category", -1);
-        resultsManager = new LinearLayoutManager(this);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mLocIds = new ArrayList<>();
         mLocNames = new ArrayList<>();
-        rvLocResults.setLayoutManager(resultsManager);
+        //layout items
+        etSearch = findViewById(R.id.etSearch);
+        rvLocResults = findViewById(R.id.rvLocResults);
         btnSearch = findViewById(R.id.btnSearch);
+        //layout managers
+        resultsManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rvLocResults.setLayoutManager(resultsManager);
+        //adapter initialization
+        mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds);
+        mLocationAdapter.setOnItemClickedListener(this);
+        rvLocResults.setLayoutManager(linearLayoutManager);
+        rvLocResults.setAdapter(mLocationAdapter);
+        LApi = new AutocompleteApi(this);
+        //on click listener for location result selection
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,23 +63,13 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
                 populateList();
             }
         });
-        mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds, category);
-        mLocationAdapter.setOnItemClickedListener(this);
-        rvLocResults.setLayoutManager(linearLayoutManager);
-        rvLocResults.setAdapter(mLocationAdapter);
-        LApi = new AutocompleteApi(this);
     }
 
     public void apiFinishedLocation(ArrayList<String> array, ArrayList<String> names) throws JSONException {
         for (int i = 0; i < array.size(); i++) {
-            pApi = new PlacesApi(this);
-            pApi.getLocation(array.get(i));
             mLocNames.add(names.get(i));
+            mLocIds.add(array.get(i));
         }
-    }
-
-    public void apiFinishedGetLocation(String location, String name) throws JSONException {
-        mLocations.add(location);
         mLocationAdapter.notifyDataSetChanged();
     }
 
@@ -83,8 +79,10 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     }
 
     @Override
-    public void onItemClicked(int position) {
-        Log.e("Test", " "+position);
+    public void onItemClicked() {
+        Log.e("Test", "callback ");
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 }

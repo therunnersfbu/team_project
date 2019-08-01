@@ -16,7 +16,6 @@ import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -30,51 +29,30 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
-import com.example.team_project.utils.BitmapScaler;
 import com.nex3z.flowlayout.FlowLayout;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.DelayQueue;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class ComposeReviewActivity extends AppCompatActivity{
 
     private static final String EVENT_ID = "eventID";
     private static final String NAME = "eventName";
-    /* private static final int[][] tagsToShow = {
-        {2, 4, 6, 7, 18},
-        {1, 2, 4, 6, 7, 18},
-        {2, 4, 6, 7, 18},
-        {2, 4, 6, 7, 18},
-        {2, 7, 18, 19},
-        {2, 3, 10, 12, 5},
-        {2, 11},
-        {9, 8, 2, 12, 18},
-        {12, 18},
-        {13, 14, 18},
-        {15, 16, 17},
-        {12, 18}}; */
     private final int YOUR_SELECT_PICTURE_REQUEST_CODE = 150;
-    private TextView tvHeader;
-    private EditText etBody;
-    private Button btnCancel;
-    private Button btnPost;
-    private ImageView ivPreview;
-    private FlowLayout flTags;
-    private Switch sLocal;
+
     private String id;
     private String name;
     private PlaceEvent placeEvent;
@@ -85,68 +63,67 @@ public class ComposeReviewActivity extends AppCompatActivity{
     private ArrayList<View> tags;
     private ArrayList<Boolean> tagsSelected;
 
+    @BindView(R.id.ivPreview) ImageView ivPreview;
+    @BindView(R.id.tvHeader) TextView tvHeader;
+    @BindView(R.id.etBody) EditText etBody;
+    @BindView(R.id.flTags) FlowLayout flTags;
+    @BindView(R.id.sLocal) Switch sLocal;
+
+    @OnClick(R.id.ivPreview)
+    public void changePic(ImageView view) {
+        askFilePermission();
+    }
+
+    @OnClick(R.id.btnCancel)
+    public void cancel(Button button) {
+        finish();
+    }
+
+    @OnClick(R.id.btnPost)
+    public void post(Button button) {
+        if(etBody.getText().length()<1) {
+            Toast.makeText(ComposeReviewActivity.this, "Can't post an empty review!", Toast.LENGTH_SHORT).show();
+        } else if (!tagsSelected.contains(true)) {
+            Toast.makeText(ComposeReviewActivity.this, "Select at least one tag!", Toast.LENGTH_SHORT).show();
+        } else {
+            checkPlaceEventExists();
+        }
+    }
+
+    @OnTouch(R.id.etBody)
+    public boolean focus(EditText et, MotionEvent event) {
+        if (etBody.hasFocus()) {
+            et.getParent().requestDisallowInterceptTouchEvent(true);
+            switch (event.getAction() & MotionEvent.ACTION_MASK){
+                case MotionEvent.ACTION_SCROLL:
+                    et.getParent().requestDisallowInterceptTouchEvent(false);
+                    return true;
+            }
+        }
+        return false;
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compose_review);
+
+        ButterKnife.bind(this);
         photoFile = null;
-        ivPreview = findViewById(R.id.ivPreview);
-        tvHeader = findViewById(R.id.tvHeader);
-        etBody = findViewById(R.id.etBody);
-        btnCancel = findViewById(R.id.btnCancel);
-        btnPost = findViewById(R.id.btnPost);
-        flTags = findViewById(R.id.flTags);
-        sLocal = findViewById(R.id.sLocal);
+        tags = new ArrayList<>();
+        tagsSelected = new ArrayList<>();
+
         id = getIntent().getStringExtra(EVENT_ID);
         name = getIntent().getStringExtra(NAME);
         location = getIntent().getStringExtra("location");
         tvHeader.setText(name);
-        ivPreview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                askFilePermission();
-            }
-        });
-        btnPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(etBody.getText().length()<1) {
-                    Toast.makeText(ComposeReviewActivity.this, "Can't post an empty review!", Toast.LENGTH_SHORT).show();
-                } else if (!tagsSelected.contains(true)) {
-                    Toast.makeText(ComposeReviewActivity.this, "Select at least one tag!", Toast.LENGTH_SHORT).show();
-                } else {
-                    checkPlaceEventExists();
-                }
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        etBody.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (etBody.hasFocus()) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK){
-                        case MotionEvent.ACTION_SCROLL:
-                            v.getParent().requestDisallowInterceptTouchEvent(false);
-                            return true;
-                    }
-                }
-                return false;
-            }
-        });
 
-        tags = new ArrayList<>();
-        tagsSelected = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             tagsSelected.add(false);
         }
         for (int i = 1; i < 20; i++) {
-            View view = createReviewItem(getTagStr(i));
+            View view = createReviewItem(PublicVariables.getTagStr(i));
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -195,7 +172,6 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 }
                 Bitmap takenImage = BitmapFactory.decodeFile(photoPath);
                 Bitmap resizedBitmap = com.example.team_project.utils.BitmapScaler.scaleToFitWidth(takenImage, 400);
-                ImageView ivPreview = (ImageView) findViewById(R.id.ivPreview);
                 ivPreview.setImageBitmap(resizedBitmap);
                 photoFile = new File(photoPath);
             } else { // Result was a failure
@@ -373,84 +349,6 @@ public class ComposeReviewActivity extends AppCompatActivity{
                 }
                 return;
             }
-        }
-    }
-
-    public static String getTagStr(int i) {
-        switch (i) {
-            case 0:
-        return "TrendyCity verified";
-            case 1:
-        return "bottomless";
-            case 2:
-        return "upscale";
-            case 3:
-        return "young";
-            case 4:
-        return "dress cute";
-            case 5:
-        return "rooftop";
-            case 6:
-        return "dress comfy";
-            case 7:
-        return "insta-worthy";
-            case 8:
-        return "outdoors";
-            case 9:
-        return "indoors";
-            case 10:
-        return "clubby";
-            case 11:
-        return "mall";
-            case 12:
-        return "food available";
-            case 13:
-        return "barber";
-            case 14:
-        return "spa";
-            case 15:
-        return "class";
-            case 16:
-        return "trail";
-            case 17:
-        return "gym";
-            case 18:
-        return "family friendly";
-            case 19:
-        return "museum";
-        default:
-            return "";
-        }
-    }
-
-    public static String getCategoryStr(int i) {
-        switch (i) {
-            case 0:
-                return "breakfast";
-            case 1:
-                return "brunch";
-            case 2:
-                return "lunch";
-            case 3:
-                return "dinner";
-            case 4:
-                return "sights";
-            case 5:
-                return "bar";
-            case 6:
-                return "shopping";
-            case 7:
-                return "concert";
-            case 8:
-                return "fair";
-            case 9:
-                return "spa";
-            case 10:
-                return "gym";
-            case 11:
-                return "park";
-            default:
-                return "";
         }
     }
 }
