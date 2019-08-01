@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Trendy City</string>
     <string name="snack_bar_text">1 Task Deleted</string>
-
     <string name="snack_bar_undo">Undo</string>
+    <string name="location_permission_denied">Location permission not granted, showing default location</string>
+    <string name="liked_event_snippet">Liked Spot!</string>
 
 </resources>

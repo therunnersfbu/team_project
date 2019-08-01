@@ -35,26 +35,24 @@ import java.util.regex.Pattern;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import butterknife.internal.ListenerClass;
 
 public class MyCalendarFragment extends Fragment{
     private Unbinder unbinder;
-    CompactCalendarView compactCalendar;
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
-    Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-    TextView CurrentDate;
-    RecyclerView rvCal;
-    Long epochTime;
-    ParseUser user = ParseUser.getCurrentUser();
-    ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-    ArrayList<String> theDaysEvents;
-    RecyclerView.LayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
-    String splitindicator = "\\(\\)";
-    ImageView ivEventImage;
-
-
-// TODO make if statement to hide extra stuff if "NONE"
+    private CompactCalendarView compactCalendar;
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
+    private Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+    private TextView mCurrentDate;
+    private RecyclerView rvCal;
+    private Long epochTime;
+    private ParseUser user = ParseUser.getCurrentUser();
+    private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+    private ArrayList<String> theDaysEvents;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView.Adapter mAdapter;
+    private String splitindicator = "\\(\\)";
+    private TextView tvAddress;
 
     @Nullable
     @Override
@@ -70,32 +68,20 @@ public class MyCalendarFragment extends Fragment{
         super.onViewCreated(view, savedInstanceState);
 
         rvCal = view.findViewById(R.id.rvCal);
+        tvAddress = view.findViewById(R.id.tvAddress);
         theDaysEvents = new ArrayList<>();
 
 
-        CurrentDate = view.findViewById(R.id.current_Date);
+        mCurrentDate = view.findViewById(R.id.current_Date);
         String currentDate = dateFormat.format(calendar.getTime());
-        CurrentDate.setText(currentDate);
+        mCurrentDate.setText(currentDate);
 
         compactCalendar = view.findViewById(R.id.compactcalendar_view);
         compactCalendar.setUseThreeLetterAbbreviation(true);
 
         // method in order to list the days events when the fragment is clicked
         Date c = Calendar.getInstance().getTime();
-        String numberDate = simpleDateFormat.format(c);
-        if (addedEvents != null) {
-            for (int x = 0; x < addedEvents.size(); x++) {
-                String[] eventarray = addedEvents.get(x).split(splitindicator);
-                if (numberDate.equals(eventarray[0])) {
-                    String eventName = eventarray[3];
-                    Log.d("Swipetodelete", "all event names: " + eventName);
-                    theDaysEvents.add(eventName);
-                }
-            }
-            if (theDaysEvents.size() == 0) {
-                theDaysEvents.add("NONE!");
-            }
-        }
+        retrieveEvents(c);
 
         // add each individual event to calendar
         if (addedEvents != null) {
@@ -110,30 +96,18 @@ public class MyCalendarFragment extends Fragment{
             }
         }
 
-
         // retrieve events on clicked on day and display in recycler view
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
                 theDaysEvents.clear();
-                String numberDate = simpleDateFormat.format(dateClicked);
-                if (addedEvents != null) {
-                    for (int x = 0; x < addedEvents.size(); x++) {
-                        String[] eventarray = addedEvents.get(x).split(splitindicator);
-                        if (numberDate.equals(eventarray[0])) {
-                            String eventName = eventarray[3];
-                            theDaysEvents.add(eventName);
-                        }
-                    }
-                    if (theDaysEvents.size() == 0) {
-                        theDaysEvents.add("NONE!");
-                    }
-                }
+                retrieveEvents(dateClicked);
                 mAdapter.notifyDataSetChanged();
             }
+
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                CurrentDate.setText(dateFormat.format(firstDayOfNewMonth));
+                mCurrentDate.setText(dateFormat.format(firstDayOfNewMonth));
             }
         });
 
@@ -159,6 +133,22 @@ public class MyCalendarFragment extends Fragment{
         Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
         epochTime = milliDate.getTime();
         return epochTime;
+    }
+
+    private void retrieveEvents(Date date) {
+        String numberDate = simpleDateFormat.format(date);
+        if (addedEvents != null) {
+            for (int x = 0; x < addedEvents.size(); x++) {
+                String[] eventarray = addedEvents.get(x).split(splitindicator);
+                if (numberDate.equals(eventarray[0])) {
+                    String eventName = eventarray[2];
+                    theDaysEvents.add(eventName);
+                }
+            }
+            if (theDaysEvents.size() == 0) {
+                theDaysEvents.add("NONE!");
+            }
+        }
     }
 
 }
