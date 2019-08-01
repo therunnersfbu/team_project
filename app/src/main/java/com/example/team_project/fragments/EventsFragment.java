@@ -140,7 +140,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     private void setMyLocation() {
         locManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         boolean network_enabled = locManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
         if (network_enabled) {
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling

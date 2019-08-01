@@ -75,11 +75,8 @@ public class SearchActivity extends AppCompatActivity {
     private double longitude;
     private double latitude;
     private boolean isCurLoc = true;
-    private Location mLocation;
-    private LocationManager mLocManager;
     private String newLoc = "";
     private String newLocName;
-    private CurrentLocation mCurrentLocation;
     //layout items
     private TextView etSearch;
     private TextView tvLocation;
@@ -115,7 +112,6 @@ public class SearchActivity extends AppCompatActivity {
         isPlace = isPlace(category);
         //location services
         newLocName = getIntent().getStringExtra(NAME_TAG);
-        mCurrentLocation = new CurrentLocation(this);
         //layout items
         tvLocation = findViewById(R.id.etLocation);
         etSearch = findViewById(R.id.etSearch);
