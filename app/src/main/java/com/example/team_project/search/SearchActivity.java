@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import android.support.annotation.Nullable;
 import butterknife.OnClick;
 
 // Search page that populates with events that correspond to user-selected keywords
@@ -38,6 +38,11 @@ public class SearchActivity extends AppCompatActivity {
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
     private static String FUTURE_TAG = "Future";
+    private static String API_ID_KEY = "apiId";
+    private static String CLASS_NAME_TAG = "PlaceEvent";
+    private static String LONGITUDE_TAG = "longitude";
+    private static String LATITUDE_TAG = "latitude";
+    private static double DEFAULT_COORD = 0.0;
     private static int DEFAULT_CAT_VALUE = -1;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
@@ -143,7 +148,7 @@ public class SearchActivity extends AppCompatActivity {
         });
         //set location
         if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
         }else{
             setMyLocation();
         }
@@ -193,7 +198,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
                 isCurLoc = PublicVariables.isCurLoc;
                 newLoc = PublicVariables.newLoc;
@@ -201,7 +206,7 @@ public class SearchActivity extends AppCompatActivity {
                 super.onResume();
                 if(isCurLoc){
                     if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                        ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
                     }else{
                         setMyLocation();
                     }
@@ -225,141 +230,24 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setMyLocation() {
-        longitude = getIntent().getDoubleExtra("longitude", 0.0);
-        latitude = getIntent().getDoubleExtra("latitude", 0.0);
+        longitude = getIntent().getDoubleExtra(LONGITUDE_TAG, DEFAULT_COORD);
+        latitude = getIntent().getDoubleExtra(LATITUDE_TAG, DEFAULT_COORD);
         initializeCategory(category);
         populateList();
     }
 
     // sets the appropriate tags and keyword depending on category
     private void initializeCategory(int category) {
-        switch (category) {
-            case -2:
-                pApi.setKeywords(etSearch.getText().toString());
-                break;
-            case 0:
-                mUserInput = "breakfast";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 1:
-                mUserInput = "brunch";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("bottomless");
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 2:
-                mUserInput = "sweets";
-                pApi.setKeywords("dessert");
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 3:
-                mUserInput = "dinner";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("dress cute");
-                mSubTags.add("dress comfy");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 4:
-                mUserInput = "sights";
-                pApi.setKeywords("museum");
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("insta-worthy");
-                mSubTags.add("family friendly");
-                mSubTags.add("museum");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 5:
-                mUserInput = "nightlife";
-                pApi.setKeywords("bar");
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("young");
-                mSubTags.add("clubby");
-                mSubTags.add("food available");
-                mSubTags.add("rooftop");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 6:
-                mUserInput = "shopping";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("upscale");
-                mSubTags.add("mall");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 7:
-                mUserInput = "concerts";
-                eApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("indoors");
-                mSubTags.add("outdoors");
-                mSubTags.add("upscale");
-                mSubTags.add("food available");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 8:
-                mUserInput = "pop-up events";
-                eApi.setKeywords("fair");
-                mSubTags.clear();
-                mSubTags.add("food available");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 9:
-                mUserInput = "beauty";
-                pApi.setKeywords("salon");
-                mSubTags.clear();
-                mSubTags.add("barber");
-                mSubTags.add("spa");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 10:
-                mUserInput = "active";
-                pApi.setKeywords("gym");
-                mSubTags.clear();
-                mSubTags.add("classes");
-                mSubTags.add("trails");
-                mSubTags.add("gyms");
-                mSubTags.add("TrendyCity verified");
-                break;
-            case 11:
-                mUserInput = "parks";
-                pApi.setKeywords(mUserInput);
-                mSubTags.clear();
-                mSubTags.add("food available");
-                mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
-                break;
-            default:
-                return;
+        if(category==USER_SEARCH) {
+            pApi.setKeywords(etSearch.getText().toString());
         }
-
+        else {
+            mSubTags.clear();
+            mSubTags.addAll(PublicVariables.getTags(category));
+            mUserInput = PublicVariables.getCategoryStr(category);
+            pApi.setKeywords(PublicVariables.getUserInput(category));
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
     // query results according to user input
@@ -458,8 +346,8 @@ public class SearchActivity extends AppCompatActivity {
 
     // find PlaceEvent parse object with same ID as api object
     private PlaceEvent query(String id) {
-        ParseQuery<PlaceEvent> query = new ParseQuery("PlaceEvent");
-        query.whereContains("apiId", id);
+        ParseQuery<PlaceEvent> query = new ParseQuery(CLASS_NAME_TAG);
+        query.whereContains(API_ID_KEY, id);
         PlaceEvent mPlaceEvent = null;
         try {
             mPlaceEvent = (PlaceEvent) query.getFirst();

@@ -17,7 +17,7 @@ import java.util.List;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
     private final List<String> mNames;
     private final List<String> mIds;
-    private AdapterCallback callback;
+    private AdapterCallback mCallback;
     private PlacesApi pApi;
 
     public LocationAdapter(ArrayList<String> mNames, ArrayList<String> mIds) {
@@ -25,8 +25,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.mIds = mIds;
     }
 
-    public void setOnItemClickedListener(AdapterCallback mCallback) {
-        this.callback = mCallback;
+    public void setOnItemClickedListener(AdapterCallback callback) {
+        this.mCallback = callback;
     }
 
     // adapter callback to return to Location Activity on result
@@ -76,7 +76,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
 
     public void apiFinishedGetLocation(String location) throws JSONException {
         PublicVariables.newLoc = location;
-        callback.onItemClicked();
+        mCallback.onItemClicked();
     }
 
 }

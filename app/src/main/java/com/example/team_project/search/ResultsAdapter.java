@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
 
+// adapter for spots results after user search
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
     private final boolean isPlace;
     private final List<String> mTagList;
     private final List<String> mDistances;
     private final List<String> mIds;
 
-    public ResultsAdapter(ArrayList<String> tagList, ArrayList<String> distances, ArrayList<String> ids, boolean type) {
-        this.isPlace = type;
+    public ResultsAdapter(ArrayList<String> tagList, ArrayList<String> distances, ArrayList<String> ids, boolean isPlace) {
+        this.isPlace = isPlace;
         this.mTagList = tagList;
         this.mDistances = distances;
         this.mIds = ids;
