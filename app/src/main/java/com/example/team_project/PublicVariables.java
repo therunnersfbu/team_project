@@ -12,6 +12,11 @@ public class PublicVariables {
     public static String newLocName;
     public static boolean isCurLoc = true;
 
+    public static String[] primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
+            "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
+            "clubby", "mall", "food available", "barber", "spa", "classes", "trails",
+            "gyms", "family friendly", "museums"};
+
     public static String getTagStr(int i) {
         switch (i) {
             case 0:
