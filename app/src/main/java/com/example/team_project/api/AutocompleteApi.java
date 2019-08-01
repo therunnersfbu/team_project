@@ -15,40 +15,43 @@ public class AutocompleteApi {
 
     private final String API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
     private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
-
-    private AsyncHttpClient client;
-    private String key;
-    private String input;
-    private ArrayList<String> ids;
-    private ArrayList<String> names;
-    private ArrayList<Double> latitude;
-    private Object source;
+    private final String PREDICTIONS_KEY = "predictions";
+    private final String PLACE_ID = "place_id";
+    private final String DESCRIPTION_KEY = "description";
+    private final String KEY_ENDPOINT = "&mKey=";
+    private final String INPUT_ENDPOINT = "&mInput=";
+    private final String CLASS_TAG = "AutocompleteApi";
+    private AsyncHttpClient mClient;
+    private String mKey;
+    private String mInput;
+    private ArrayList<String> mIds;
+    private ArrayList<String> mNames;
+    private Object mSource;
 
     public AutocompleteApi(Object source) {
-        this.source = source;
-        this.key = "&key=" + API_KEY;
-        client = new AsyncHttpClient();
+        this.mSource = source;
+        this.mKey = KEY_ENDPOINT + API_KEY;
+        mClient = new AsyncHttpClient();
     }
 
-    public void setInput(String input) {
-        this.input = "input=" + input;
+    public void setInput(String mInput) {
+        this.mInput = INPUT_ENDPOINT + mInput;
     }
 
     public void getTopPlaces() {
-        String url = API_BASE_URL + input + key;
-        ids = new ArrayList<>();
-        names = new ArrayList<>();
-        latitude = new ArrayList<>();
-        client.get(url, null, new JsonHttpResponseHandler() {
+        String url = API_BASE_URL + mInput + mKey;
+        mIds = new ArrayList<>();
+        mNames = new ArrayList<>();
+        mClient.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    JSONArray results = response.getJSONArray("predictions");
+                    JSONArray results = response.getJSONArray(PREDICTIONS_KEY);
                     for (int i = 0; i<5; i++) {
-                        ids.add(results.getJSONObject(i).getString("place_id"));
-                        names.add(results.getJSONObject(i).getString("description"));
+                        mIds.add(results.getJSONObject(i).getString(PLACE_ID));
+                        mNames.add(results.getJSONObject(i).getString(DESCRIPTION_KEY));
                     }
-                    ((LocationActivity) source).apiFinishedLocation(ids, names);
+                    ((LocationActivity) mSource).apiFinishedLocation(mIds, mNames);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -56,7 +59,7 @@ public class AutocompleteApi {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e("Places", responseString);
+                Log.e(CLASS_TAG, responseString);
                 throwable.printStackTrace();
             }
 

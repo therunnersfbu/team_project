@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.team_project.PublicVariables;
@@ -29,21 +28,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity {
-
-    // permission codes and constant strings
+    // permission codes and constants
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
     private static String FUTURE_TAG = "Future";
     private static int DEFAULT_CAT_VALUE = -1;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
+    private static int PLACES_RADIUS = 10000;
+    private static int EVENTS_RADIUS = 60;
     // tag recycler view
     private boolean isTags = true;
     private HorizontalScrollAdapter mAdapter;
@@ -76,12 +75,13 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
-
+    //layout items
     @BindView(R.id.rvTags) RecyclerView rvTags;
     @BindView(R.id.rvResults) RecyclerView rvResults;
     @BindView(R.id.etLocation) TextView tvLocation;
     @BindView(R.id.etSearch) TextView etSearch;
 
+    //OnClick listeners for buttons
     @OnClick(R.id.etLocation)
     public void locationAct(TextView view) {
         Intent intent = new Intent(view.getContext(), LocationActivity.class);
@@ -107,7 +107,6 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
         ButterKnife.bind(this);
         initializeVars();
         //tag recycler view
@@ -124,21 +123,11 @@ public class SearchActivity extends AppCompatActivity {
         newLocName = getIntent().getStringExtra(NAME_TAG);
         //layout items
         tvLocation = findViewById(R.id.etLocation);
-        etSearch = findViewById(R.id.etSearch);
         //results recycler view
         rvResults.setLayoutManager(resultsManager);
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
-        tvLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), LocationActivity.class);
-                intent.putExtra(CATEGORY_TAG, category);
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
-
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -158,6 +147,23 @@ public class SearchActivity extends AppCompatActivity {
         }else{
             setMyLocation();
         }
+    }
+
+    // initialize variables used in this class
+    public void initializeVars() {
+        mEventList = new ArrayList<>();
+        mPlaceList = new ArrayList<>();
+        mResults = new ArrayList<>();
+        mDistances = new ArrayList<>();
+        mSubTags = new ArrayList<>();
+        mTaggedResults = new ArrayList<>();
+        mIds = new ArrayList<>();
+        myManager = new LinearLayoutManager(this);
+        resultsManager = new LinearLayoutManager(this);
+        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        eApi = new EventsApi(this);
+        pApi = new PlacesApi(this);
     }
 
     // returns true if the spot is a Place type
@@ -364,13 +370,13 @@ public class SearchActivity extends AppCompatActivity {
         mIds.clear();
         if (!isPlace) {
             eApi.setDate(FUTURE_TAG);
-            eApi.setLocation(latitude, longitude, 60);
+            eApi.setLocation(latitude, longitude, EVENTS_RADIUS);
         } else {
             pApi.setLocation(latitude, longitude);
-            pApi.setRadius(10000);
+            pApi.setRadius(PLACES_RADIUS);
         }
         mAdapter.notifyDataSetChanged();
-        if(category!=-2) {
+        if(category!=USER_SEARCH) {
             etSearch.setText(mUserInput);
         }
         if (!isPlace) {
@@ -384,7 +390,7 @@ public class SearchActivity extends AppCompatActivity {
     public void apiFinished(JSONArray array) throws JSONException {
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
-        boolean isStored = true;
+        boolean isStored;
         if (!isPlace) {
             for (int i = 0; i < array.length(); i++) {
                 isStored=true;
@@ -397,8 +403,7 @@ public class SearchActivity extends AppCompatActivity {
                         ArrayList<Integer> mTags = new ArrayList<>();
                         if(mPlaceEvent== null) {isStored = false; break;}
                         mTags.addAll(mPlaceEvent.getTags());
-                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0)
-                        {
+                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
                             isStored = false;
                         }
 
@@ -421,21 +426,17 @@ public class SearchActivity extends AppCompatActivity {
                 String mId = place.getPlaceId();
                 if(!mTaggedResults.isEmpty()) {
                     PlaceEvent mPlaceEvent = query(mId);
-                    for(int j = 0; j<mTaggedResults.size(); j++)
-                    {
+                    for(int j = 0; j<mTaggedResults.size(); j++) {
                         int tagIndex = mTagReference.indexOf(mTaggedResults.get(j));
                         ArrayList<Integer> mTags = new ArrayList<>();
                         if(mPlaceEvent== null) {isStored = false; break;}
                         mTags.addAll(mPlaceEvent.getTags());
-                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0)
-                        {
+                        if(mTags == null ||mPlaceEvent.getTags().get(tagIndex)==0) {
                             isStored = false;
                         }
-
                     }
                 }
-                if(isStored)
-                {
+                if(isStored) {
                     mPlaceList.add(place);
                     dApi.addDestination(place.getLocation());
                     mResults.add(place.getPlaceName());
@@ -453,23 +454,6 @@ public class SearchActivity extends AppCompatActivity {
     public void getDistances(ArrayList<String> result) {
         mDistances.addAll(result);
         mResultsAdapter.notifyDataSetChanged();
-    }
-
-    // initialize variables used in this class
-    public void initializeVars() {
-        mEventList = new ArrayList<>();
-        mPlaceList = new ArrayList<>();
-        mResults = new ArrayList<>();
-        mDistances = new ArrayList<>();
-        mSubTags = new ArrayList<>();
-        mTaggedResults = new ArrayList<>();
-        mIds = new ArrayList<>();
-        myManager = new LinearLayoutManager(this);
-        resultsManager = new LinearLayoutManager(this);
-        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        eApi = new EventsApi(this);
-        pApi = new PlacesApi(this);
     }
 
     // find PlaceEvent parse object with same ID as api object

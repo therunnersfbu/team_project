@@ -9,22 +9,18 @@ import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.PlacesApi;
-
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 //Updates the list of location options from the API JSON results after each search
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
-    private final List<String> mLocs;
     private final List<String> mNames;
     private final List<String> mIds;
     private AdapterCallback callback;
     private PlacesApi pApi;
 
-    public LocationAdapter(ArrayList<String> mLocs, ArrayList<String> mNames, ArrayList<String> mIds) {
-        this.mLocs = mLocs;
+    public LocationAdapter(ArrayList<String> mNames, ArrayList<String> mIds) {
         this.mNames = mNames;
         this.mIds = mIds;
     }
@@ -38,6 +34,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         void onItemClicked();
     }
 
+    //set onclick on each view item
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvName;
 

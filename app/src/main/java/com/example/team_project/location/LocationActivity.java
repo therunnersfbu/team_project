@@ -27,9 +27,8 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     private AutocompleteApi LApi;
     private LocationAdapter mLocationAdapter;
     private Button btnSearch;
-
-    RecyclerView.LayoutManager resultsManager;
-    LinearLayoutManager linearLayoutManager;
+    private RecyclerView.LayoutManager resultsManager;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvLocResults.setLayoutManager(resultsManager);
         //adapter initialization
-        mLocationAdapter = new LocationAdapter(mLocations, mLocNames, mLocIds);
+        mLocationAdapter = new LocationAdapter(mLocNames, mLocIds);
         mLocationAdapter.setOnItemClickedListener(this);
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
