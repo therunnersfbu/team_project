@@ -46,16 +46,20 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
+// TODO add comment
+// TODO make zoom preferences number a constant and all numbers basically
+// TODO change type to event
+// TODO make gettype function
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private Unbinder unbinder;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
-    private GoogleMap googleMap;
-    ArrayList<Post> reviewCoordinatesList;
-    ImageButton mapicon;
-    ParseUser user = ParseUser.getCurrentUser();
-    ArrayList<String> likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-    String splitindicator = "\\(\\)";
+    private GoogleMap mgoogleMap;
+    private ImageButton mMapIcon;
+    private ParseUser user = ParseUser.getCurrentUser();
+    private ArrayList<String> likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+    private String splitindicator = "\\(\\)";
+    private int maxLimit = 1000;
+    private int minZoom = 3;
 
     @Nullable
     @Override
@@ -75,12 +79,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         Drawable loginActivityBackground = view.findViewById(R.id.mapicon).getBackground();
         loginActivityBackground.setAlpha(230);
 
-        mapicon = view.findViewById(R.id.mapicon);
-        mapicon.setOnClickListener(new View.OnClickListener() {
+        mMapIcon = view.findViewById(R.id.mapicon);
+        mMapIcon.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
                enableMyLocationIfPermitted();
-               googleMap.setMinZoomPreference(3);
+               mgoogleMap.setMinZoomPreference(minZoom);
            }
         });
     }
@@ -93,65 +97,35 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     @Override
     public void onMapReady(GoogleMap map) {
-        googleMap = map;
-        reviewCoordinatesList = new ArrayList<>();
+        mgoogleMap = map;
         queryReviews();
         queryLikedEvents();
 
-        googleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
+        mgoogleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
         enableMyLocationIfPermitted();
 
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.setMinZoomPreference(3);
+        mgoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        mgoogleMap.getUiSettings().setCompassEnabled(true);
+        mgoogleMap.setMinZoomPreference(minZoom);
     }
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
 
-        final LatLng windowPosition = marker.getPosition();
-        ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
-        //when we get post back we'll also get the full details of the user
-        reviewQuery.setLimit(1000);
-        reviewQuery.include(Post.KEY_USER);
-        reviewQuery.include(Post.KEY_EVENT_PLACE);
+        String apiId = marker.getTag().toString();
 
-        reviewQuery.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-            if (e != null) {
-                Log.e("MapFragment", "error with query");
-                e.printStackTrace();
-                return;
-            }
+        Boolean type;
+        if ('E' != apiId.charAt(0)) {
+            type = true;
+        } else {
+            type = false;
+        }
 
-            // for reviews
-            for (int i = 0; i < posts.size(); i++) {
-                Post post = posts.get(i);
-                if (post.getCoordinates() != null){
-
-                String[] reviewCoordinates = post.getCoordinates().split("\\s+");
-                double latitude = Double.parseDouble(reviewCoordinates[0]);
-                double longitude = Double.parseDouble(reviewCoordinates[1]);
-                LatLng markerPosition = new LatLng(latitude, longitude);
-                Boolean type;
-                if (markerPosition.equals(windowPosition)) {
-                    String eventApiId = post.getEventPlace().getAppId();
-                    if ('E' != eventApiId.charAt(0)) {
-                        type = true;
-                    } else {
-                        type = false;
-                    }
-                    Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                    intent.putExtra("eventID", eventApiId);
-                    intent.putExtra("type", type);
-                    intent.putExtra("distance", "unknown");
-                    startActivity(intent);
-                    break;
-                }
-            }}
-            }
-        });
+        Intent intent = new Intent(getActivity(), DetailsActivity.class);
+        intent.putExtra("eventID", apiId);
+        intent.putExtra("type", type);
+        intent.putExtra("distance", "unknown");
+        startActivity(intent);
     }
 
     private void enableMyLocationIfPermitted() {
@@ -162,19 +136,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
-        } else if (googleMap != null) {
-            googleMap.setMyLocationEnabled(true);
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 8));
+        } else if (mgoogleMap != null) {
+            mgoogleMap.setMyLocationEnabled(true);
+            mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 8));
 
         }
     }
 
-
     private void showDefaultLocation() {
-        Toast.makeText(getContext(), "Location permission not granted, " +
-                        "showing default location",
+        Toast.makeText(getContext(),R.string.location_permission_denied,
                 Toast.LENGTH_SHORT).show();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
+        mgoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
     }
 
     @Override
@@ -193,22 +165,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
-
     public GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
-            new GoogleMap.OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
-                    googleMap.setMinZoomPreference(5);
-                    return false;
-                }
-            };
-
+        new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                mgoogleMap.setMinZoomPreference(minZoom);
+                return false;
+            }
+        };
 
     protected void queryReviews(){
         ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
-        //when we get post back we'll also get the full details of the user
-        reviewQuery.setLimit(1000);
-        reviewQuery.include(Post.KEY_USER);
+        reviewQuery.setLimit(maxLimit);
         reviewQuery.include(Post.KEY_EVENT_PLACE);
 
         reviewQuery.findInBackground(new FindCallback<Post>() {
@@ -224,31 +192,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 Post post = posts.get(i);
                 String review = post.getReview();
                 String name = post.getEventPlace().getName();
+                String apiId = post.getEventPlace().getAppId();
+                String coordinates = post.getCoordinates();
+                Float color = BitmapDescriptorFactory.HUE_RED;
                 if (post.getCoordinates() != null){
-                String[] reviewCoordinates = post.getCoordinates().split("\\s+");
-                double latitude = Double.parseDouble(reviewCoordinates[0]);
-                double longitude = Double.parseDouble(reviewCoordinates[1]);
-                Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(latitude, longitude))
-                        .title(name));
-                googleMap.setOnInfoWindowClickListener(MapFragment.this);
+                    makeMapMarker(coordinates, apiId, name, review, color);
             }}
             }
         });
     }
 
     protected void queryLikedEvents(){
-        //gets everything in place event
         ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");
-        //when we get post back we'll also get the full details of the user
-        placeEventQuery.setLimit(1000);
+        placeEventQuery.setLimit(maxLimit);
         ArrayList<String> likedEventApis = new ArrayList<>();
-        //make a list of the api's of all the liked events
         for (int i= 0; i < likedEvents.size();i++){
             String api = likedEvents.get(i).split(splitindicator)[0];
             likedEventApis.add(api);
         }
-
         placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, likedEventApis);
 
         placeEventQuery.findInBackground(new FindCallback<PlaceEvent>() {
@@ -262,17 +223,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 for (int i = 0; i < placeEvents.size(); i++) {
                     String placeEventCoord = placeEvents.get(i).getCoordinates();
                     String placeEventName = placeEvents.get(i).getName();
-                    String[] reviewCoordinates = placeEventCoord.split("\\s+");
-                    double latitude = Double.parseDouble(reviewCoordinates[0]);
-                    double longitude = Double.parseDouble(reviewCoordinates[1]);
-                    Marker reviewmarker = googleMap.addMarker(new MarkerOptions()
-                                .position(new LatLng(latitude, longitude))
-                                .title(placeEventName)
-                                .snippet("Liked Spot!")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE)));
-                    googleMap.setOnInfoWindowClickListener(MapFragment.this);
+                    String apiId = placeEvents.get(i).getAppId();
+                    Float color = BitmapDescriptorFactory.HUE_ROSE;
+                    // TODO look at
+                    String snippet = "Liked Spot!";
+                    makeMapMarker(placeEventCoord, apiId, placeEventName, snippet, color);
                 }
             }
         });
+    }
+
+    protected void makeMapMarker(String coordinateString, String apiId, String placeEventName, String snippet, Float color) {
+        String[] coordinates = coordinateString.split("\\s+");
+        double latitude = Double.parseDouble(coordinates[0]);
+        double longitude = Double.parseDouble(coordinates[1]);
+        Marker marker = mgoogleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(latitude, longitude))
+                .title(placeEventName)
+                .snippet(snippet)
+                .icon(BitmapDescriptorFactory.defaultMarker(color)));
+        marker.setTag(apiId);
+        mgoogleMap.setOnInfoWindowClickListener(MapFragment.this);
     }
 }

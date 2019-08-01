@@ -43,13 +43,13 @@ import java.util.logging.SocketHandler;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> {
 
     ArrayList<String> events;
-    String mRecentlyDeletedItem;
-    int mRecentlyDeletedItemPosition;
-    String splitindicator = "\\(\\)";
+    private String mRecentlyDeletedItem;
+    private int mRecentlyDeletedItemPosition;
+    private String splitindicator = "\\(\\)";
     Context context;
-    ParseUser user = ParseUser.getCurrentUser();
-    ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-    int count;
+    private ParseUser user = ParseUser.getCurrentUser();
+    private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+    private int count;
 
 
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
