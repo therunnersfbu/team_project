@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
@@ -24,6 +25,7 @@ public class AutocompleteApi {
     private JSONArray array;
     private ArrayList<String> ids;
     private ArrayList<String> names;
+    private ArrayList<Double> latitude;
     private Object source;
 
     public AutocompleteApi(Object source) {
@@ -51,6 +53,7 @@ public class AutocompleteApi {
         String url = API_BASE_URL + input + key;
         ids = new ArrayList<>();
         names = new ArrayList<>();
+        latitude = new ArrayList<>();
         client.get(url, null, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {

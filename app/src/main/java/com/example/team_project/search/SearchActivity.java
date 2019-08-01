@@ -1,9 +1,11 @@
 package com.example.team_project.search;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +20,6 @@ import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.location.LocationActivity;
-import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
@@ -34,7 +35,6 @@ import java.util.Arrays;
 public class SearchActivity extends AppCompatActivity {
 
     // permission codes and constant strings
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int USER_SEARCH = -2;
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
@@ -130,6 +130,8 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                PublicVariables.isCurLoc = true;
+                setMyLocation();
             }
         });
         tvLocation.setOnClickListener(new View.OnClickListener() {
@@ -184,27 +186,32 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    //After LocationActivity has finished setting new current location, query new search results
     @Override
-    protected void onResume() {
-        isCurLoc = PublicVariables.isCurLoc;
-        newLoc = PublicVariables.newLoc;
-        newLocName = PublicVariables.newLocName;
-        super.onResume();
-        if(isCurLoc){
-            if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            }else{
-                setMyLocation();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                isCurLoc = PublicVariables.isCurLoc;
+                newLoc = PublicVariables.newLoc;
+                newLocName = PublicVariables.newLocName;
+                super.onResume();
+                if(isCurLoc){
+                    if (ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(SearchActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                    }else{
+                        setMyLocation();
+                    }
+                } else {
+                    String[] newCords = newLoc.split("\\s+");
+                    latitude = Double.parseDouble(newCords[0]);
+                    longitude = Double.parseDouble(newCords[1]);
+                    tvLocation.setText(newLocName);
+                    initializeCategory(category);
+                    populateList();
+                }
             }
-        } else {
-            String[] newCords = newLoc.split("\\s+");
-            latitude = Double.parseDouble(newCords[0]);
-            longitude = Double.parseDouble(newCords[1]);
-            tvLocation.setText(newLocName);
-            initializeCategory(category);
-            populateList();
         }
-
     }
 
     @Override
@@ -436,7 +443,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         }
-
         dApi.getDistance();
     }
 
