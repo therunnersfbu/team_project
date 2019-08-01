@@ -52,36 +52,34 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 // adapter for the item layouts used on the events details page. Includes header and item views that inflate in a RecyclerView
-//TODO: mXXX
-//TODO: folder for events, maps, etc (each main feature should have own folder)
 public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements EventsApi.GetEvents, PlacesApi.GetPlaces {
 
     private static final String TAG = EventsDetailsAdapter.class.getSimpleName();
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-
-    //TODO private static string tags for eventsID etc
+    private final String EVENT_ID = "eventID";
+    private final String EVENT_NAME = "eventName";
+    private final String LOCATION = "location";
+    private final String LIKED_TOAST = "Liked!";
+    private float lastX;
+    private boolean isPlace;
     private List<Post> mPosts;
-    private String id;
-    private boolean type;
-    private String distance;
-    private String coords;
+    private RecyclerView mRecyclerView;
+    private String mId;
+    private String mDistance;
+    private String mCoords;
     private Event mEvent;
     private Place mPlace;
-    private DatePickerDialog picker;
-    private HeaderViewHolder viewHolder;
-    private ItemViewHolder viewHolderP;
-    private Context context;
-    private boolean isLocal;
-    private float lastX;
-    private RecyclerView mRecyclerView;
+    private DatePickerDialog mPicker;
+    private HeaderViewHolder mViewHolder;
+    private Context mContext;
 
-    public EventsDetailsAdapter(ArrayList<Post> mPosts, String id, Boolean type, String distance, Context context) {
-        this.id = id;
-        this.type = type;
-        this.distance = distance;
-        this.context = context;
-        this.mPosts = mPosts;
+    public EventsDetailsAdapter(ArrayList<Post> posts, String id, Boolean isPlace, String distance, Context context) {
+        this.mId = id;
+        this.isPlace = isPlace;
+        this.mDistance = distance;
+        this.mContext = context;
+        this.mPosts = posts;
     }
 
     @Override
@@ -91,7 +89,6 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.tvEventName) TextView tvEventName;
         @BindView(R.id.tvDistance) TextView tvDistance;
         @BindView(R.id.tvAddress) TextView tvAddress;
@@ -108,41 +105,35 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @OnClick(R.id.btnReview)
         public void writeReview(Button button) {
             Intent intent = new Intent(button.getContext(), ComposeReviewActivity.class);
-            intent.putExtra("eventID", id);
+            intent.putExtra(EVENT_ID, mId);
             String location;
-
-            if(type) {
+            if(isPlace) {
                 location = mPlace.getLocation();
-                intent.putExtra("eventName", mPlace.getPlaceName());
+                intent.putExtra(EVENT_NAME, mPlace.getPlaceName());
             } else {
                 location = mEvent.getLocation();
-                intent.putExtra("eventName", mEvent.getEventName());
+                intent.putExtra(EVENT_NAME, mEvent.getEventName());
             }
-
-            intent.putExtra("location", location);
+            intent.putExtra(LOCATION, location);
             button.getContext().startActivity(intent);
         }
 
         public HeaderViewHolder(@NonNull View view) {
             super(view);
             ButterKnife.bind(this, view);
-
-            //TODO enum place / event
-            if(!type) {
+            if(!isPlace) {
                 EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
-                eApi.getSingleEvent(id);
+                eApi.getSingleEvent(mId);
             }
             else {
                 PlacesApi pApi = new PlacesApi(EventsDetailsAdapter.this);
-                pApi.getDetails(id);
+                pApi.getDetails(mId);
             }
         }
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private boolean expanded;
-
+        private boolean isExpanded;
         @BindDrawable(R.drawable.ic_person_black_24dp) Drawable defaultPic;
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
@@ -150,9 +141,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
-
             ButterKnife.bind(this, view);
-            expanded = false;
+            isExpanded = false;
             view.setOnClickListener(this);
         }
 
@@ -168,16 +158,15 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     DetailsActivity.detailsAct.startActivity(intent);
                 }
             });
-
             ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
             if (imageFile != null) {
-                Glide.with(context)
+                Glide.with(mContext)
                         .load(imageFile.getUrl())
                         .placeholder(defaultPic)
                         .error(defaultPic)
                         .into(ivProfilePic);
             } else {
-                Glide.with(context)
+                Glide.with(mContext)
                         .load(defaultPic)
                         .placeholder(defaultPic)
                         .error(defaultPic)
@@ -187,34 +176,34 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         @Override
         public void onClick(View v) {
-            if (expanded) {
+            if (isExpanded) {
                 tvBody.setSingleLine(true);
                 tvBody.setEllipsize(TextUtils.TruncateAt.END);
             } else {
                 tvBody.setSingleLine(false);
                 tvBody.setEllipsize(null);
             }
-            expanded = !expanded;
+            isExpanded = !isExpanded;
         }
     }
 
+    //inflate correct layout file depending on header event, header place, or item comment
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == TYPE_HEADER) {
-            if(!type) {
+            if(!isPlace) {
                 View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header_details, parent, false);
-                viewHolder = new HeaderViewHolder(layoutView);
+                mViewHolder = new HeaderViewHolder(layoutView);
             } else {
                 View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_header_place, parent, false);
-                viewHolder = new HeaderViewHolder(layoutView);
+                mViewHolder = new HeaderViewHolder(layoutView);
             }
-            return viewHolder;
+            return mViewHolder;
         } else if (viewType == TYPE_ITEM) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment_preview, parent, false);
             return new ItemViewHolder(layoutView);
         }
-
         throw new RuntimeException("No match for viewtype");
     }
 
@@ -226,6 +215,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     }
 
+    // determine whether the view is of HEADER or ITEM type
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
@@ -247,23 +237,23 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void gotEvent(final Event eventApi) {
-        viewHolder.tvEventName.setText(eventApi.getEventName());
-        viewHolder.tvDistance.setText(distance);
-        viewHolder.tvAddress.setText(eventApi.getAddress());
-        viewHolder.tvDate.setText(eventApi.getStartTime());
-        viewHolder.tvVenue.setText(eventApi.getVenueName());
-        coords = eventApi.getLocation();
+        mViewHolder.tvEventName.setText(eventApi.getEventName());
+        mViewHolder.tvDistance.setText(mDistance);
+        mViewHolder.tvAddress.setText(eventApi.getAddress());
+        mViewHolder.tvDate.setText(eventApi.getStartTime());
+        mViewHolder.tvVenue.setText(eventApi.getVenueName());
+        mCoords = eventApi.getLocation();
         mEvent = eventApi;
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
         String toLike = eventApi.getEventId() + PublicVariables.separator
                 + eventApi.getEventName() + PublicVariables.separator + eventApi.getAddress();
-        if (liked.contains(toLike)) {
-            viewHolder.ivLike.setActivated(true);
-        }
 
-        viewHolder.ivAdd.setOnClickListener(new View.OnClickListener() {
+        if (liked.contains(toLike)) {
+            mViewHolder.ivLike.setActivated(true);
+        }
+        mViewHolder.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPlaceEventExists(eventApi.getEventName());
@@ -273,12 +263,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         eventApi.getEventId() + PublicVariables.separator + eventApi.getEventName() +
                         PublicVariables.separator + eventApi.getAddress();
                 if (added.contains(eventToAdd)) {
-                    Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Event already added", Toast.LENGTH_LONG).show();
                     Log.d(TAG, "already there");
                 } else {
                     added.add(eventToAdd);
                     user.put(User.KEY_ADDED_EVENTS, added);
-                    Toast.makeText(context, "Event added to your calendar", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "Event added to your calendar", Toast.LENGTH_LONG).show();
                     user.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -293,7 +283,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        viewHolder.ivLike.setOnClickListener(new View.OnClickListener() {
+        //change color and alert parse dashboard when item is liked for event
+        mViewHolder.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPlaceEventExists(eventApi.getEventName());
@@ -310,7 +301,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            Log.d(TAG, "liked!");
+                            Log.d(TAG, LIKED_TOAST);
                         } else {
                             e.printStackTrace();
                         }
@@ -318,7 +309,6 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         });
-
         setImages();
     }
 
@@ -329,13 +319,13 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void gotPlace(final Place placeApi) {
-        viewHolder.tvEventName.setText(placeApi.getPlaceName());
-        viewHolder.tvDistance.setText(distance);
-        viewHolder.tvAddress.setText(placeApi.getAddress());
-        viewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
-        viewHolder.tvNumber.setText(placeApi.getPhoneNumber());
-        viewHolder.tvPrice.setText(placeApi.getPrice());
-        coords = placeApi.getLocation();
+        mViewHolder.tvEventName.setText(placeApi.getPlaceName());
+        mViewHolder.tvDistance.setText(mDistance);
+        mViewHolder.tvAddress.setText(placeApi.getAddress());
+        mViewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
+        mViewHolder.tvNumber.setText(placeApi.getPhoneNumber());
+        mViewHolder.tvPrice.setText(placeApi.getPrice());
+        mCoords = placeApi.getLocation();
         mPlace = placeApi;
 
         ParseUser user = ParseUser.getCurrentUser();
@@ -343,10 +333,10 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         String toLike = placeApi.getPlaceId() + PublicVariables.separator + placeApi.getPlaceName() +
                 PublicVariables.separator + placeApi.getAddress();
         if (liked.contains(toLike)) {
-            viewHolder.ivLike.setActivated(true);
+            mViewHolder.ivLike.setActivated(true);
         }
 
-        viewHolder.ivAdd.setOnClickListener(new View.OnClickListener() {
+        mViewHolder.ivAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPlaceEventExists(placeApi.getPlaceName());
@@ -354,8 +344,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 int day = cldr.get(Calendar.DAY_OF_MONTH);
                 int month = cldr.get(Calendar.MONTH);
                 int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(context,
+                // date mPicker dialog
+                mPicker = new DatePickerDialog(mContext,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -369,12 +359,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                         placeApi.getPlaceName() + PublicVariables.separator + placeApi.getAddress();
                                 Log.d(TAG, placeToAdd);
                                 if (added.contains(placeToAdd)) {
-                                    Toast.makeText(context, "Event already added", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, "Event already added", Toast.LENGTH_LONG).show();
                                     Log.d(TAG, "already there");
                                 } else {
                                     added.add(placeToAdd);
                                     user.put(User.KEY_ADDED_EVENTS, added);
-                                    Toast.makeText(context, "Event added to your calendar", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, "Event added to your calendar", Toast.LENGTH_LONG).show();
                                     user.saveInBackground(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
@@ -388,12 +378,13 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 }
                             }
                         }, year, month, day);
-                picker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-                picker.show();
+                mPicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                mPicker.show();
             }
         });
 
-        viewHolder.ivLike.setOnClickListener(new View.OnClickListener() {
+        //change color and alert parse dashboard when item is liked for place
+        mViewHolder.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPlaceEventExists(placeApi.getPlaceName());
@@ -410,7 +401,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void done(ParseException e) {
                         if (e == null) {
-                            Log.d(TAG, "liked!");
+                            Log.d(TAG, LIKED_TOAST);
                         } else {
                             e.printStackTrace();
                         }
@@ -418,7 +409,6 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         });
-
         setImages();
     }
 
@@ -434,7 +424,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if (e == null) {
                     placeEventList.addAll(objects);
                     for (int i = 0; i < placeEventList.size(); i++) {
-                        if (id.equals(placeEventList.get(i).getAppId())) {
+                        if (mId.equals(placeEventList.get(i).getAppId())) {
                             return;
                         }
                     }
@@ -452,11 +442,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                         categories.set(EventsFragment.categoryToMark, true);
                     }
 
-                    placeEvent[0].put(PlaceEvent.KEY_API, id);
+                    placeEvent[0].put(PlaceEvent.KEY_API, mId);
                     placeEvent[0].put(PlaceEvent.KEY_CATEGORIES, categories);
                     placeEvent[0].put(PlaceEvent.KEY_TAGS, tags);
                     placeEvent[0].setName(name);
-                    placeEvent[0].setCoordinates(coords);
+                    placeEvent[0].setCoordinates(mCoords);
                     placeEvent[0].saveInBackground();
                 } else {
                     e.printStackTrace();
@@ -472,14 +462,14 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             ParseFile file = i.getImage();
             if (file != null) {
                 count++;
-                viewHolder.vfGallery.addView(createGalleryItem(file));
+                mViewHolder.vfGallery.addView(createGalleryItem(file));
             }
         }
 
         if (count == 0) {
-            viewHolder.vfGallery.addView(createPlaceholder());
+            mViewHolder.vfGallery.addView(createPlaceholder());
         } else if (count > 1) {
-            viewHolder.vfGallery.setOnTouchListener(new View.OnTouchListener() {
+            mViewHolder.vfGallery.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent touchevent) {
                     switch (touchevent.getAction()) {
@@ -494,27 +484,27 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                             // if left to right swipe on screen
                             if (lastX < currentX) {
                                 // If no more View/Child to flip
-                                if (viewHolder.vfGallery.getDisplayedChild() == 0)
+                                if (mViewHolder.vfGallery.getDisplayedChild() == 0)
                                     break;
 
-                                // set the required Animation type to ViewFlipper
+                                // set the required Animation isPlace to ViewFlipper
                                 // The Next screen will come in form Left and current Screen will go OUT from Right
-                                viewHolder.vfGallery.setInAnimation(context, R.anim.in_from_left);
-                                viewHolder.vfGallery.setOutAnimation(context, R.anim.out_to_right);
+                                mViewHolder.vfGallery.setInAnimation(mContext, R.anim.in_from_left);
+                                mViewHolder.vfGallery.setOutAnimation(mContext, R.anim.out_to_right);
                                 // Show the next Screen
-                                viewHolder.vfGallery.showNext();
+                                mViewHolder.vfGallery.showNext();
                             }
 
                             // if right to left swipe on screen
                             if (lastX > currentX) {
-                                if (viewHolder.vfGallery.getDisplayedChild() == 1)
+                                if (mViewHolder.vfGallery.getDisplayedChild() == 1)
                                     break;
-                                // set the required Animation type to ViewFlipper
+                                // set the required Animation isPlace to ViewFlipper
                                 // The Next screen will come in form Right and current Screen will go OUT from Left
-                                viewHolder.vfGallery.setInAnimation(context, R.anim.in_from_right);
-                                viewHolder.vfGallery.setOutAnimation(context, R.anim.out_to_left);
+                                mViewHolder.vfGallery.setInAnimation(mContext, R.anim.in_from_right);
+                                mViewHolder.vfGallery.setOutAnimation(mContext, R.anim.out_to_left);
                                 // Show The Previous Screen
-                                viewHolder.vfGallery.showPrevious();
+                                mViewHolder.vfGallery.showPrevious();
                             }
                             break;
                         }
@@ -526,14 +516,14 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private ImageView createGalleryItem(ParseFile file) {
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ImageView view = (ImageView) inflater.inflate(R.layout.item_gallery, null);
-        Glide.with(context).load(file.getUrl()).into(view);
+        Glide.with(mContext).load(file.getUrl()).into(view);
         return view;
     }
 
     private  TextView createPlaceholder() {
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return (TextView) inflater.inflate(R.layout.item_gallery_placeholder, null);
     }
 }

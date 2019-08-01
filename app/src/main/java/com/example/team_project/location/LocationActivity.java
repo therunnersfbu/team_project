@@ -21,7 +21,6 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
     private ArrayList<String> mLocations;
-    private PlacesApi pApi;
     private RecyclerView rvLocResults;
     private EditText etSearch;
     private AutocompleteApi LApi;

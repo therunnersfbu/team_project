@@ -72,7 +72,7 @@ public class PublicVariables {
             case 1:
                 return "brunch";
             case 2:
-                return "lunch";
+                return "sweets";
             case 3:
                 return "dinner";
             case 4:
@@ -95,4 +95,140 @@ public class PublicVariables {
                 return "";
         }
     }
+
+    public static String getUserInput(int i) {
+        switch (i) {
+            case 0:
+                return "breakfast";
+            case 1:
+                return "brunch";
+            case 2:
+                return "dessert";
+            case 3:
+                return "dinner";
+            case 4:
+                return "museum";
+            case 5:
+                return "bar";
+            case 6:
+                return "shopping";
+            case 7:
+                return "concert";
+            case 8:
+                return "fair";
+            case 9:
+                return "salon";
+            case 10:
+                return "gym";
+            case 11:
+                return "park";
+            default:
+                return "";
+        }
+    }
+
+    public static ArrayList<String> getTags(int category) {
+        ArrayList<String> mSubTags = new ArrayList<>();
+        switch (category) {
+            case 0:
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 1:
+                mSubTags.clear();
+                mSubTags.add("bottomless");
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 2:
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 3:
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("dress cute");
+                mSubTags.add("dress comfy");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 4:
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("insta-worthy");
+                mSubTags.add("family friendly");
+                mSubTags.add("museum");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 5:
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("young");
+                mSubTags.add("clubby");
+                mSubTags.add("food available");
+                mSubTags.add("rooftop");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 6:
+                mSubTags.clear();
+                mSubTags.add("upscale");
+                mSubTags.add("mall");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 7:
+                mSubTags.clear();
+                mSubTags.add("indoors");
+                mSubTags.add("outdoors");
+                mSubTags.add("upscale");
+                mSubTags.add("food available");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 8:
+                mSubTags.clear();
+                mSubTags.add("food available");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 9:
+                mSubTags.clear();
+                mSubTags.add("barber");
+                mSubTags.add("spa");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 10:
+                mSubTags.clear();
+                mSubTags.add("classes");
+                mSubTags.add("trails");
+                mSubTags.add("gyms");
+                mSubTags.add("TrendyCity verified");
+                break;
+            case 11:
+                mSubTags.clear();
+                mSubTags.add("food available");
+                mSubTags.add("family friendly");
+                mSubTags.add("TrendyCity verified");
+                break;
+            default:
+                return null;
+        }
+        return mSubTags;
+    }
+
 }

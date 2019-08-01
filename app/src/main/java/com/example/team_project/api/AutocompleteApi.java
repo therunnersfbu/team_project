@@ -12,7 +12,6 @@ import cz.msebera.android.httpclient.Header;
 
 //Calls to the Google Maps API to find relevant location choices
 public class AutocompleteApi {
-
     private final String API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
     private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
     private final String PREDICTIONS_KEY = "predictions";
@@ -21,6 +20,7 @@ public class AutocompleteApi {
     private final String KEY_ENDPOINT = "&key=";
     private final String INPUT_ENDPOINT = "&input=";
     private final String CLASS_TAG = "AutocompleteApi";
+    private final int RESULT_LIMIT = 5;
     private AsyncHttpClient mClient;
     private String mKey;
     private String mInput;
@@ -47,7 +47,7 @@ public class AutocompleteApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     JSONArray results = response.getJSONArray(PREDICTIONS_KEY);
-                    for (int i = 0; i<5; i++) {
+                    for (int i = 0; i<RESULT_LIMIT; i++) {
                         mIds.add(results.getJSONObject(i).getString(PLACE_ID));
                         mNames.add(results.getJSONObject(i).getString(DESCRIPTION_KEY));
                     }
