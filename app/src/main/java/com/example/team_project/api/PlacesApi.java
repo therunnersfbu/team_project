@@ -1,7 +1,6 @@
 package com.example.team_project.api;
 
 import android.util.Log;
-
 import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.location.LocationActivity;
@@ -16,6 +15,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 public class PlacesApi {
+
     private final String API_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
     private final String API_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
@@ -88,6 +88,7 @@ public class PlacesApi {
                             array.put(results.getJSONObject(i));
                         }
                     }
+
                     if (source instanceof  SearchActivity) {
                         ((SearchActivity) source).apiFinished(array);
                     } else if (source instanceof EventsFragment) {
@@ -124,7 +125,6 @@ public class PlacesApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Place place = Place.placeFromJson(response.getJSONObject("result"), true);
-                    //TODO Memory leak!
                     ((EventsDetailsAdapter) source).finishedApiPlace(place);
                 } catch (JSONException e) {
                     e.printStackTrace();

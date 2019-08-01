@@ -1,28 +1,24 @@
 package com.example.team_project.api;
 
 import android.util.Log;
-
 import com.example.team_project.location.LocationActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
 //Calls to the Google Maps API to find relevant location choices
 public class AutocompleteApi {
+
     private final String API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
     private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
 
     private AsyncHttpClient client;
     private String key;
     private String input;
-    private JSONArray array;
     private ArrayList<String> ids;
     private ArrayList<String> names;
     private ArrayList<Double> latitude;
@@ -30,26 +26,15 @@ public class AutocompleteApi {
 
     public AutocompleteApi(Object source) {
         this.source = source;
-        this.key = "&key="+API_KEY;
+        this.key = "&key=" + API_KEY;
         client = new AsyncHttpClient();
-        array = new JSONArray();
-    }
-
-    public void getTopPlaces() {
-        array = new JSONArray();
-        getPlaces();
     }
 
     public void setInput(String input) {
         this.input = "input=" + input;
     }
 
-    public void getMorePlaces() {
-        array = new JSONArray();
-        getPlaces();
-    }
-
-    private void getPlaces() {
+    public void getTopPlaces() {
         String url = API_BASE_URL + input + key;
         ids = new ArrayList<>();
         names = new ArrayList<>();

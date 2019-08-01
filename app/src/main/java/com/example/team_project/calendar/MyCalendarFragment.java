@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
@@ -31,19 +32,18 @@ import butterknife.Unbinder;
 
 public class MyCalendarFragment extends Fragment{
     private Unbinder unbinder;
-    private CompactCalendarView compactCalendar;
+    private CompactCalendarView mCompactCalendar;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     private Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     private TextView mCurrentDate;
-    private RecyclerView rvCal;
+    private RecyclerView mCalRV;
     private Long epochTime;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private ArrayList<String> theDaysEvents;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-    private String splitindicator = "\\(\\)";
 
     @Nullable
     @Override
@@ -58,36 +58,22 @@ public class MyCalendarFragment extends Fragment{
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvCal = view.findViewById(R.id.rvCal);
+        mCalRV = view.findViewById(R.id.rvCal);
         theDaysEvents = new ArrayList<>();
-
 
         mCurrentDate = view.findViewById(R.id.current_Date);
         String currentDate = dateFormat.format(calendar.getTime());
         mCurrentDate.setText(currentDate);
 
-        compactCalendar = view.findViewById(R.id.compactcalendar_view);
-        compactCalendar.setUseThreeLetterAbbreviation(true);
+        mCompactCalendar = view.findViewById(R.id.compactcalendar_view);
+        mCompactCalendar.setUseThreeLetterAbbreviation(true);
 
-        // method in order to list the days events when the fragment is clicked
-        Date c = Calendar.getInstance().getTime();
-        retrieveEvents(c);
-
-        // add each individual event to calendar
-        if (addedEvents != null) {
-            for (int x = 0; x < addedEvents.size(); x++) {
-                Event event = null;
-                try {
-                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(splitindicator)[0]));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                compactCalendar.addEvent(event);
-            }
-        }
+        Date mToday = Calendar.getInstance().getTime();
+        retrieveEvents(mToday);
+        addSpotDots();
 
         // retrieve events on clicked on day and display in recycler view
-        compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+        mCompactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
                 theDaysEvents.clear();
@@ -107,10 +93,10 @@ public class MyCalendarFragment extends Fragment{
     private void setRecyclerView(View view) {
         mLayoutManager = new LinearLayoutManager(getContext());
         mAdapter = new CalendarAdapter(getContext(),theDaysEvents);
-        rvCal.setLayoutManager(mLayoutManager);
-        rvCal.setAdapter(mAdapter);
+        mCalRV.setLayoutManager(mLayoutManager);
+        mCalRV.setAdapter(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
-        itemTouchHelper.attachToRecyclerView(rvCal);
+        itemTouchHelper.attachToRecyclerView(mCalRV);
     }
 
     @Override
@@ -129,7 +115,7 @@ public class MyCalendarFragment extends Fragment{
         String numberDate = simpleDateFormat.format(date);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
-                String[] eventarray = addedEvents.get(x).split(splitindicator);
+                String[] eventarray = addedEvents.get(x).split(PublicVariables.splitindicator);
                 if (numberDate.equals(eventarray[0])) {
                     String eventName = eventarray[2];
                     theDaysEvents.add(eventName);
@@ -137,6 +123,20 @@ public class MyCalendarFragment extends Fragment{
             }
             if (theDaysEvents.size() == 0) {
                 theDaysEvents.add("NONE!");
+            }
+        }
+    }
+
+    private void addSpotDots (){
+        if (addedEvents != null) {
+            for (int x = 0; x < addedEvents.size(); x++) {
+                Event event = null;
+                try {
+                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(PublicVariables.splitindicator)[0]));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                mCompactCalendar.addEvent(event);
             }
         }
     }

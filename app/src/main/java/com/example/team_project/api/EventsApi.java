@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 public class EventsApi {
+
     private final  String API_BASE_URL = "http://api.eventful.com/json/events/search?";
     private final String API_SINGLE_URL = "http://api.eventful.com/json/events/get?";
     private final  String  API_KEY = "sM8TM8LQGWR9Zkwr";

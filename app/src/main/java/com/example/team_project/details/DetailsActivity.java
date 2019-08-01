@@ -11,27 +11,33 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class DetailsActivity extends AppCompatActivity {
-    private RecyclerView rvEventsDetail;
-    private String id;
-    private boolean type;
-    private String distance;
-    public static DetailsActivity detailsAct;
+
     public static final String EVENT_ID = "eventID";
     public static final String TYPE = "type";
     public static final String DISTANCE = "distance";
+
+    public static DetailsActivity detailsAct;
+    private String id;
+    private boolean type;
+    private String distance;
+
+    @BindView(R.id.rvEventsDetail) RecyclerView rvEventsDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        detailsAct = this;
+        ButterKnife.bind(this);
 
+        detailsAct = this;
         id = getIntent().getStringExtra(EVENT_ID);
         type = getIntent().getBooleanExtra(TYPE, true);
         distance = getIntent().getStringExtra(DISTANCE);
-        rvEventsDetail = (RecyclerView)findViewById(R.id.rvEventsDetail);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
     }
@@ -50,15 +56,16 @@ public class DetailsActivity extends AppCompatActivity {
                 if (e == null) {
                     ArrayList<Post> postsForThisEvent = new ArrayList<>();
                     postsForThisEvent.add(new Post());
+
                     for (Post i : objects) {
                         if (id.equals(i.getEventPlace().getAppId())) {
                             postsForThisEvent.add(i);
                         }
                     }
+
                     EventsDetailsAdapter adapter = new EventsDetailsAdapter(
                             postsForThisEvent, id, type, distance, DetailsActivity.this);
                     rvEventsDetail.setAdapter(adapter);
-
                 } else {
                     e.printStackTrace();
                 }

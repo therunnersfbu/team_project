@@ -1,14 +1,7 @@
 package com.example.team_project.model;
 
-import android.util.Log;
-
 import com.parse.ParseClassName;
-import com.parse.ParseFile;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-import java.io.File;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 @ParseClassName("PlaceEvent")

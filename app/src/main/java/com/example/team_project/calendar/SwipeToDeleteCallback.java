@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.parse.ParseUser;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-    CalendarAdapter mAdapter;
-    String splitindicator = "\\(\\)";
+    private CalendarAdapter mAdapter;
     private Drawable icon;
     private final ColorDrawable background;
 
@@ -56,7 +56,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                     String eventToDelete = rvEvents.get(position);
 
                     for (int x = 0; x < parseevents.size(); x++) {
-                        if (eventToDelete.equals(parseevents.get(x).split(splitindicator)[2])) {
+                        if (eventToDelete.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
                             parseevents.remove(x);
                             user.put(User.KEY_ADDED_EVENTS, parseevents);
                         }

@@ -9,14 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.fragments.EventsFragment;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 // This adapter handles horizontal scrolling for the Tag and Suggestion CardViews. Used in Search Activity
 public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScrollAdapter.ViewHolder> {
@@ -36,13 +37,13 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private TextView tvName;
-        private View view;
+
+        @BindView(R.id.tvName) TextView tvName;
 
         public ViewHolder(@NonNull final View view) {
             super(view);
-            this.view = view;
-            tvName = (TextView) view.findViewById(R.id.tvName);
+
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
             tvName.setOnClickListener(new View.OnClickListener() {
                 @Override

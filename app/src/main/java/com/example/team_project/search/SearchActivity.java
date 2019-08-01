@@ -13,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -31,6 +30,10 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 // Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity {
 
@@ -44,7 +47,6 @@ public class SearchActivity extends AppCompatActivity {
     private static int REQUEST_CODE = 1;
     // tag recycler view
     private boolean isTags = true;
-    private RecyclerView rvTags;
     private HorizontalScrollAdapter mAdapter;
     private RecyclerView.LayoutManager resultsManager;
     private LinearLayoutManager horizontalLayout;
@@ -54,7 +56,6 @@ public class SearchActivity extends AppCompatActivity {
     private String[] primTagRef;
     private ArrayList<String> mTagReference;
     //results recycler view
-    private RecyclerView rvResults;
     private ResultsAdapter mResultsAdapter;
     private RecyclerView.LayoutManager myManager;
     private LinearLayoutManager verticalLayout;
@@ -77,20 +78,41 @@ public class SearchActivity extends AppCompatActivity {
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
-    //layout items
-    private TextView etSearch;
-    private TextView tvLocation;
-    private Button btnCancel;
-    private Button btnSearch;
 
+    @BindView(R.id.rvTags) RecyclerView rvTags;
+    @BindView(R.id.rvResults) RecyclerView rvResults;
+    @BindView(R.id.etLocation) TextView tvLocation;
+    @BindView(R.id.etSearch) TextView etSearch;
+
+    @OnClick(R.id.etLocation)
+    public void locationAct(TextView view) {
+        Intent intent = new Intent(view.getContext(), LocationActivity.class);
+        intent.putExtra(CATEGORY_TAG, category);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @OnClick(R.id.btnCancel)
+    public void cancel(Button button) {
+        finish();
+        PublicVariables.isCurLoc = true;
+        setMyLocation();
+    }
+
+    @OnClick(R.id.btnSearch)
+    public void search(Button button) {
+        category = USER_SEARCH;
+        initializeCategory(category);
+        populateList();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        ButterKnife.bind(this);
         initializeVars();
         //tag recycler view
-        rvTags = findViewById(R.id.rvTags);
         rvTags.setLayoutManager(myManager);
         mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
         rvTags.setLayoutManager(horizontalLayout);
@@ -100,9 +122,8 @@ public class SearchActivity extends AppCompatActivity {
                 "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
                 "clubby", "mall", "food available", "barber", "spa", "classes", "trails",
                 "gyms", "family friendly", "museums"};
-        mTagReference = new ArrayList<String>(Arrays.asList(primTagRef));
+        mTagReference = new ArrayList<>(Arrays.asList(primTagRef));
         //results recycler view
-        rvResults = findViewById(R.id.rvResults);
         rvResults.setLayoutManager(resultsManager);
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
@@ -115,25 +136,6 @@ public class SearchActivity extends AppCompatActivity {
         //layout items
         tvLocation = findViewById(R.id.etLocation);
         etSearch = findViewById(R.id.etSearch);
-        btnCancel = findViewById(R.id.btnCancel);
-        btnSearch = findViewById(R.id.btnSearch);
-        //on click listeners
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                category = USER_SEARCH;
-                initializeCategory(category);
-                populateList();
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                PublicVariables.isCurLoc = true;
-                setMyLocation();
-            }
-        });
         tvLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +144,7 @@ public class SearchActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -222,8 +225,8 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void setMyLocation() {
-        longitude = (double) getIntent().getDoubleExtra("longitude", 0.0);
-        latitude = (double) getIntent().getDoubleExtra("latitude", 0.0);
+        longitude = getIntent().getDoubleExtra("longitude", 0.0);
+        latitude = getIntent().getDoubleExtra("latitude", 0.0);
         initializeCategory(category);
         populateList();
     }
