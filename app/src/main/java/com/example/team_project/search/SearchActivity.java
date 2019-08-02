@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
@@ -36,6 +37,8 @@ import butterknife.ButterKnife;
 import android.support.annotation.Nullable;
 import butterknife.OnClick;
 
+import static android.view.View.GONE;
+
 // Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
     // permission codes and constants
@@ -47,7 +50,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
     private static int EVENTS_SEARCH = -3;
-    private static int RESULT_LIMIT = 20;
     private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
@@ -86,6 +88,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private String newLoc = "";
     private String newLocName;
     //layout items
+    @BindView(R.id.pbSpinner) ProgressBar mProgressBar;
     @BindView(R.id.rvTags) RecyclerView rvTags;
     @BindView(R.id.rvResults) RecyclerView rvResults;
     @BindView(R.id.etLocation) TextView tvLocation;
@@ -108,6 +111,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
+        mProgressBar.setVisibility(View.VISIBLE);
         if(isPlace) {
             category = USER_SEARCH;
         }
@@ -142,13 +146,15 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         isPlace = isPlace(category);
         //location services
         newLocName = getIntent().getStringExtra(NAME_TAG);
-        //layout items
-        tvLocation = findViewById(R.id.etLocation);
         //results recycler view
         rvResults.setLayoutManager(resultsManager);
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
+        //set progressbar to invisible if user input window open
+        if(category==USER_SEARCH) {
+            mProgressBar.setVisibility(GONE);
+        }
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -340,10 +346,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             }
         }
 
- //       if(mResults.size()<RESULT_LIMIT) {
- //           eApi.getMoreEvents();
-  //      }
-
         dApi.getDistance();
     }
 
@@ -387,10 +389,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mIds.add(place.getPlaceId());
             }
         }
-        if(mResults.size()<RESULT_LIMIT) {
-            pApi.getMorePlaces();
-        }
-
         dApi.getDistance();
     }
 
@@ -402,6 +400,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     // get the distance from search results to current location
     @Override
     public void gotDistances(ArrayList<String> distancesApi) {
+        mProgressBar.setVisibility(GONE);
         mDistances.addAll(distancesApi);
         mResultsAdapter.notifyDataSetChanged();
     }

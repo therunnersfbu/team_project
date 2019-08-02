@@ -1,10 +1,12 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/cardview_light_background</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="ProgBar" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorAccent">@color/appThemeBlue</item>
     </style>
 </resources>
