@@ -17,7 +17,7 @@ import cz.msebera.android.httpclient.Header;
 public class DirectionsApi {
 
     private static final String API_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
-    private static final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
+    private static final String  API_KEY = "AIzaSyCaKvMq8I_i61_FEWjMHIK8otRYOeI6i8o";
 
     private AsyncHttpClient client;
     private String origin;
