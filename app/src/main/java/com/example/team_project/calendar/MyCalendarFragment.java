@@ -1,5 +1,6 @@
 package com.example.team_project.calendar;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
+import com.example.team_project.utils.ContextProvider;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.parse.ParseUser;
@@ -89,7 +91,12 @@ public class MyCalendarFragment extends Fragment{
 
     private void setRecyclerView(View view) {
         mLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new CalendarAdapter(getContext(),theDaysEvents);
+        mAdapter = new CalendarAdapter(new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return getActivity();
+            }
+        }, theDaysEvents);
         mCalRV.setLayoutManager(mLayoutManager);
         mCalRV.setAdapter(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));

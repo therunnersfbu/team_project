@@ -1,11 +1,13 @@
 package com.example.team_project.details;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import com.example.team_project.R;
 import com.example.team_project.model.Post;
+import com.example.team_project.utils.ContextProvider;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -20,7 +22,6 @@ public class DetailsActivity extends AppCompatActivity {
     public static final String TYPE = "type";
     public static final String DISTANCE = "distance";
 
-    public static DetailsActivity detailsAct;
     private String id;
     private boolean type;
     private String distance;
@@ -33,7 +34,6 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
 
-        detailsAct = this;
         id = getIntent().getStringExtra(EVENT_ID);
         type = getIntent().getBooleanExtra(TYPE, true);
         distance = getIntent().getStringExtra(DISTANCE);
@@ -64,7 +64,12 @@ public class DetailsActivity extends AppCompatActivity {
                     }
 
                     EventsDetailsAdapter adapter = new EventsDetailsAdapter(
-                            postsForThisEvent, id, type, distance, DetailsActivity.this);
+                            postsForThisEvent, id, type, distance, new ContextProvider() {
+                        @Override
+                        public Context getContext() {
+                            return DetailsActivity.this;
+                        }
+                    });
                     rvEventsDetail.setAdapter(adapter);
                 } else {
                     e.printStackTrace();

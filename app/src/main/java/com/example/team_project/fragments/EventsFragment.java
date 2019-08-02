@@ -31,6 +31,7 @@ import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.User;
 import com.example.team_project.search.SearchActivity;
+import com.example.team_project.utils.ContextProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseUser;
@@ -98,7 +99,12 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         idList = new ArrayList<>();
         distances = new ArrayList<>();
         mNames = new ArrayList<>();
-        mAdapter = new HorizontalScrollAdapter(mNames, false, new SearchActivity());
+        mAdapter = new HorizontalScrollAdapter(mNames, false, new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return getActivity();
+            }
+        });
         mHorizontalLayout = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
 
         rvSuggestions.setLayoutManager(mHorizontalLayout);

@@ -34,6 +34,7 @@ import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
+import com.example.team_project.utils.ContextProvider;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -74,11 +75,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private HeaderViewHolder mViewHolder;
     private Context mContext;
 
-    public EventsDetailsAdapter(ArrayList<Post> posts, String id, Boolean isPlace, String distance, Context context) {
+    public EventsDetailsAdapter(ArrayList<Post> posts, String id, Boolean isPlace, String distance, ContextProvider cp) {
         this.mId = id;
         this.isPlace = isPlace;
         this.mDistance = distance;
-        this.mContext = context;
+        this.mContext = cp.getContext();
         this.mPosts = posts;
     }
 
@@ -154,8 +155,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 @Override
                 public void onClick(View v) {
                     BottomNavActivity.targetUser = user;
-                    final Intent intent = new Intent(DetailsActivity.detailsAct, OtherUserActivity.class);
-                    DetailsActivity.detailsAct.startActivity(intent);
+                    final Intent intent = new Intent(mContext, OtherUserActivity.class);
+                    mContext.startActivity(intent);
                 }
             });
             ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
