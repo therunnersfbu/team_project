@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -20,32 +20,34 @@ import com.example.team_project.utils.ContextProvider;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 
+// the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
+// and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
-
-    private ArrayList<String> events;
-    private Context context;
+    private ArrayList<String> mEvents;
+    private Context mContext;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-    private int count;
-    private TextView tvEventName;
-    private TextView tvAddress;
-    private TextView tvType;
-    private ImageView ivEventImage;
+    private int mCount;
+    private TextView mTVEventName;
+    private TextView mTVAddress;
+    private TextView mTVEventPlace;
+    private ImageView mIVEventImage;
 
 
     public CalendarAdapter(ContextProvider cp, ArrayList<String> theDaysEvents) {
-        this.events = theDaysEvents;
-        this.context = cp.getContext();
+        this.mEvents = theDaysEvents;
+        this.mContext = cp.getContext();
     }
 
-    public Context getContext() {
-        return this.context;
+    public Context getmContext() {
+        return this.mContext;
     }
 
-    public ArrayList<String> getEvents() {
-        return this.events;
+    public ArrayList<String> getmEvents() {
+        return this.mEvents;
     }
 
     @NonNull
@@ -57,29 +59,28 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        if (events.contains("NONE!")) {
-            tvEventName.setText("NONE!");
-            tvAddress.setVisibility(View.GONE);
-            tvType.setVisibility(View.GONE);
-            ivEventImage.setVisibility(View.GONE);
+        if (mEvents.contains("NONE!")) {
+            mTVEventName.setText("NONE!");
+            mTVAddress.setVisibility(View.GONE);
+            mTVEventPlace.setVisibility(View.GONE);
+            mIVEventImage.setVisibility(View.GONE);
         }else {
             for (int x = 0; x < parseevents.size(); x++) {
-                tvAddress.setVisibility(View.VISIBLE);
-                tvType.setVisibility(View.VISIBLE);
-                ivEventImage.setVisibility(View.VISIBLE);
+                mTVAddress.setVisibility(View.VISIBLE);
+                mTVEventPlace.setVisibility(View.VISIBLE);
+                mIVEventImage.setVisibility(View.VISIBLE);
                 String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
-                if (events.get(i).equals(mParseEvent[2])) {
-                    tvEventName.setText(mParseEvent[2]);
-                    tvAddress.setText(mParseEvent[3]);
+                if (mEvents.get(i).equals(mParseEvent[2])) {
+                    mTVEventName.setText(mParseEvent[2]);
+                    mTVAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];
-                    // change type to distance
                     if ('E' != eventApiId.charAt(0)) {
-                        tvType.setText("Place");
-                        ivEventImage.setImageResource(R.drawable.sky);
+                        mTVEventPlace.setText("Place");
+                        mIVEventImage.setImageResource(R.drawable.sky);
                         break;
                     } else {
-                        tvType.setText("Event");
-                        ivEventImage.setImageResource(R.drawable.event);
+                        mTVEventPlace.setText("Event");
+                        mIVEventImage.setImageResource(R.drawable.event);
                         break;
                     }
                 }
@@ -89,66 +90,60 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return mEvents.size();
     }
 
     public void deleteItem(int position) {
-        events.remove(position);
+        mEvents.remove(position);
         notifyItemRemoved(position);
-    }
-
-    @Override
-    public void gotDistance(String distanceApi) {
-        Boolean type;
-        String eventApiId = parseevents.get(count).split(PublicVariables.splitindicator)[1];
-        Log.d("CalAda", "id: " + eventApiId);
-        if ('E' != eventApiId.charAt(0)) {
-            type = true;
-        } else {
-            type = false;
-        }
-
-        Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra("eventID", eventApiId);
-        intent.putExtra("type", type);
-        intent.putExtra("distance", distanceApi);
-        context.startActivity(intent);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            tvEventName = itemView.findViewById(R.id.tvEventName);
-            tvAddress = itemView.findViewById(R.id.tvAddress);
-            tvType = itemView.findViewById(R.id.tvType);
-            ivEventImage = itemView.findViewById(R.id.ivEventImage);
+            mTVEventName = itemView.findViewById(R.id.tvEventName);
+            mTVAddress = itemView.findViewById(R.id.tvAddress);
+            mTVEventPlace = itemView.findViewById(R.id.tvType);
+            mIVEventImage = itemView.findViewById(R.id.ivEventImage);
             itemView.setOnClickListener(this);
         }
 
         // to click event and be taken to DetailsActivity
         @Override
         public void onClick(View v) {
-            //gets item position
             int position = getAdapterPosition();
-            //make sure the position is valid
             if (position != RecyclerView.NO_POSITION) {
-                //get the event at the position
-                String eventname = events.get(position);
+                String eventname = mEvents.get(position);
                 for (int x = 0; x < parseevents.size(); x++) {
-                    // match event
                     if (eventname.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
                         String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
                         DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
                         PlaceEvent mParseEvent = query(eventapi);
-
-                        count = x;
+                        mCount = x;
                         api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
                         api.getDistance();
                     }
                 }
             }
         }
+    }
+
+    public void gotDistance(String distanceApi) {
+        Boolean isEvent;
+        String eventApiId = parseevents.get(mCount).split(PublicVariables.splitindicator)[1];
+        if ('E' != eventApiId.charAt(0)) {
+            isEvent = true;
+        } else {
+            isEvent = false;
+        }
+
+        // string must be hardcoded because you cannot store strings in String.xml and retrieve
+        Intent intent = new Intent(mContext, DetailsActivity.class);
+        intent.putExtra("eventID", eventApiId);
+        intent.putExtra("type", isEvent);
+        intent.putExtra("distance", distanceApi);
+        mContext.startActivity(intent);
     }
 
     public PlaceEvent query(String id) {

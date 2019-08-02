@@ -29,15 +29,17 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+// The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
+// events and allows the user to click on variuous days and see all their added spots for that day
 public class MyCalendarFragment extends Fragment{
-    private Unbinder unbinder;
+    private Unbinder mUnbinder;
     private CompactCalendarView mCompactCalendar;
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
+    private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     private Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
     private TextView mCurrentDate;
     private RecyclerView mCalRV;
-    private Long epochTime;
+    private Long mEpochTime;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private ArrayList<String> theDaysEvents;
@@ -49,7 +51,7 @@ public class MyCalendarFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_my_calendar, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        mUnbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -61,7 +63,7 @@ public class MyCalendarFragment extends Fragment{
         theDaysEvents = new ArrayList<>();
 
         mCurrentDate = view.findViewById(R.id.current_Date);
-        String currentDate = dateFormat.format(calendar.getTime());
+        String currentDate = mDateFormat.format(calendar.getTime());
         mCurrentDate.setText(currentDate);
 
         mCompactCalendar = view.findViewById(R.id.compactcalendar_view);
@@ -82,7 +84,7 @@ public class MyCalendarFragment extends Fragment{
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                mCurrentDate.setText(dateFormat.format(firstDayOfNewMonth));
+                mCurrentDate.setText(mDateFormat.format(firstDayOfNewMonth));
             }
         });
 
@@ -106,17 +108,17 @@ public class MyCalendarFragment extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        mUnbinder.unbind();
     }
 
     public long myMilliSecConvert(String date) throws ParseException {
         Date milliDate = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        epochTime = milliDate.getTime();
-        return epochTime;
+        mEpochTime = milliDate.getTime();
+        return mEpochTime;
     }
 
     private void retrieveEvents(Date date) {
-        String numberDate = simpleDateFormat.format(date);
+        String numberDate = mSimpleDateFormat.format(date);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
                 String[] eventarray = addedEvents.get(x).split(PublicVariables.splitindicator);
