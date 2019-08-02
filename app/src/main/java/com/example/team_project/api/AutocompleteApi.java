@@ -12,7 +12,7 @@ import cz.msebera.android.httpclient.Header;
 //Calls to the Google Maps API to find relevant location choices
 public class AutocompleteApi {
     private final String API_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
-    private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
+    private final String  API_KEY = "AIzaSyCaKvMq8I_i61_FEWjMHIK8otRYOeI6i8o";
     private final String PREDICTIONS_KEY = "predictions";
     private final String PLACE_ID = "place_id";
     private final String DESCRIPTION_KEY = "description";

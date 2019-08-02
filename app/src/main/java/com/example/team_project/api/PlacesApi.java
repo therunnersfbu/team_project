@@ -18,7 +18,7 @@ import cz.msebera.android.httpclient.Header;
 public class PlacesApi {
 
     private final String API_BASE_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
-    private final String  API_KEY = "AIzaSyAJwFw0rvA3FQzEmbC-iw6CXfyTr9PibgA";
+    private final String  API_KEY = "AIzaSyCaKvMq8I_i61_FEWjMHIK8otRYOeI6i8o";
     private final String API_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
 
     private AsyncHttpClient client;
