@@ -82,4 +82,4 @@ lint/tmp/
 # lint/reports/
 
 # secrets
-**/*/res/values/secrets.xml
+**/*/res/values/secret.xml
