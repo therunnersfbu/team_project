@@ -1,11 +1,16 @@
 package com.example.team_project.details;
 
 import android.content.Context;
+import android.media.browse.MediaBrowser;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import com.example.team_project.R;
+import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Post;
 import com.example.team_project.utils.ContextProvider;
 import com.parse.FindCallback;
@@ -16,7 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailsActivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity implements EventsDetailsAdapter.AdapterCallback{
 
     public static final String EVENT_ID = "eventID";
     public static final String TYPE = "type";
@@ -27,6 +32,7 @@ public class DetailsActivity extends AppCompatActivity {
     private String distance;
 
     @BindView(R.id.rvEventsDetail) RecyclerView rvEventsDetail;
+    @BindView(R.id.pbSpinner) ProgressBar mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,10 +75,16 @@ public class DetailsActivity extends AppCompatActivity {
                         }
                     });
                     rvEventsDetail.setAdapter(adapter);
+                    adapter.setOnItemClickedListener(DetailsActivity.this);
                 } else {
                     e.printStackTrace();
                 }
             }
         });
+    }
+
+    @Override
+    public void onItemClicked() {
+        mSpinner.setVisibility(View.GONE);
     }
 }

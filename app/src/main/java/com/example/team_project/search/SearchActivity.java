@@ -14,12 +14,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
+import com.example.team_project.details.DetailsActivity;
+import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.location.LocationActivity;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
@@ -40,7 +43,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
+public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances, ResultsAdapter.AdapterCallback{
     // permission codes and constants
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
@@ -124,6 +127,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        mProgressBar.setVisibility(GONE);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
@@ -151,6 +160,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
+        mResultsAdapter.setOnItemClickedListener(this);
         //set progressbar to invisible if user input window open
         if(category==USER_SEARCH) {
             mProgressBar.setVisibility(GONE);
@@ -221,6 +231,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mProgressBar.setVisibility(GONE);
         if (requestCode == REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK){
                 isCurLoc = PublicVariables.isCurLoc;
@@ -428,5 +439,10 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
+    }
+
+    @Override
+    public void onItemClicked() {
+        mProgressBar.setVisibility(View.GONE);
     }
 }
