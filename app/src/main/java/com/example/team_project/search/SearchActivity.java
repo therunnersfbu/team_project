@@ -203,6 +203,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     // new results query after input filtered by tag
     public void setNewSearchText(ArrayList<String> addTagsToSearch) {
+        mProgressBar.setVisibility(View.VISIBLE);
         mTaggedResults = addTagsToSearch;
         mEventList.clear();
         mPlaceList.clear();
@@ -315,7 +316,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         DirectionsApi dApi = new DirectionsApi(this);
         dApi.setOrigin(latitude, longitude);
         boolean isStored;
-
         for (int i = 0; i < eventsApi.length(); i++) {
             isStored=true;
             Event event = null;
@@ -345,7 +345,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mResults.add(event.getEventName());
             }
         }
-
         dApi.getDistance();
     }
 
@@ -394,7 +393,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     @Override
     public void gotPlace(Place placeApi) {
-
     }
 
     // get the distance from search results to current location

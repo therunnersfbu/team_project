@@ -7,38 +7,25 @@
     tools:context=".details.DetailsActivity">
 
 
-    <TextView
-        android:id="@+id/tvLikedSpots"
-        android:layout_width="420dp"
-        android:layout_height="166dp"
-        android:layout_marginBottom="15dp"
-        android:background="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/vfGallery"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
         android:id="@+id/ivAdd"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="18dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:background="#00ffffff"
         android:tint="@color/hyperlinkBlue"
         app:layout_constraintEnd_toStartOf="@+id/ivUpload"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivLike"
         app:srcCompat="@drawable/add_button" />
 
     <ViewFlipper
         android:id="@+id/vfGallery"
         android:layout_width="0dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNumber">
+        app:layout_constraintTop_toTopOf="parent">
 
         <!--<ImageView-->
         <!--android:id="@+id/ivPhoto"-->
@@ -56,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:fontFamily="sans-serif"
@@ -65,29 +52,19 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/ivLike"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/vfGallery" />
 
     <ImageView
         android:id="@+id/ivLike"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="22dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:tint="@color/colorAccent"
         app:layout_constraintEnd_toStartOf="@+id/ivAdd"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vfGallery"
         app:srcCompat="@drawable/like_selector" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTags"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vfGallery" />
 
     <Button
         android:id="@+id/btnReview"
@@ -95,24 +72,23 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:text="write a review"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvTags" />
+        app:layout_constraintTop_toBottomOf="@+id/tvNumber" />
 
     <ImageView
         android:id="@+id/ivUpload"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="18dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:tint="#8F8F8F"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivLike"
         app:srcCompat="@drawable/download" />
 
     <TextView
@@ -151,14 +127,11 @@
         android:id="@+id/tvPrice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:fontFamily="sans-serif-thin"
         android:text="Price"
         android:textColor="#000000"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/tvLikedSpots"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toTopOf="@+id/tvDistance" />
 

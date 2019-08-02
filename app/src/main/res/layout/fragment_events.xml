@@ -14,6 +14,7 @@
         android:layout_marginTop="8dp"
         android:background="#00FFFFFF"
         android:backgroundTint="@color/white"
+        android:clickable="true"
         android:scaleType="fitCenter"
         android:scaleX=".8"
         android:scaleY=".8"
@@ -79,6 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="breakfast"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnBreakfast"
         app:layout_constraintStart_toStartOf="@+id/ibtnBreakfast"
         app:layout_constraintTop_toBottomOf="@+id/ibtnBreakfast" />
@@ -88,6 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
+        android:transitionName="category"
         android:text="brunch"
         app:layout_constraintEnd_toEndOf="@+id/ibtnBrunch"
         app:layout_constraintStart_toStartOf="@+id/ibtnBrunch"
@@ -99,6 +102,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="sweets"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnLunch"
         app:layout_constraintStart_toStartOf="@+id/ibtnLunch"
         app:layout_constraintTop_toBottomOf="@+id/ibtnLunch" />
@@ -107,6 +111,7 @@
         android:id="@+id/tvDinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:transitionName="category"
         android:layout_marginTop="1dp"
         android:text="dinner"
         app:layout_constraintEnd_toEndOf="@+id/ibtnDinner"
@@ -183,6 +188,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="sights"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnSights"
         app:layout_constraintStart_toStartOf="@+id/ibtnSights"
         app:layout_constraintTop_toBottomOf="@+id/ibtnSights" />
@@ -193,6 +199,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="nightlife"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnNight"
         app:layout_constraintStart_toStartOf="@+id/ibtnNight"
         app:layout_constraintTop_toBottomOf="@+id/ibtnNight" />
@@ -203,6 +210,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="shopping"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnShopping"
         app:layout_constraintStart_toStartOf="@+id/ibtnShopping"
         app:layout_constraintTop_toBottomOf="@+id/ibtnShopping" />
@@ -213,6 +221,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="concerts"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnConcerts"
         app:layout_constraintStart_toStartOf="@+id/ibtnConcerts"
         app:layout_constraintTop_toBottomOf="@+id/ibtnConcerts" />
@@ -240,6 +249,7 @@
         android:layout_marginTop="1dp"
         android:gravity="center"
         android:text="pop-up events"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnPop"
         app:layout_constraintStart_toStartOf="@+id/ibtnPop"
         app:layout_constraintTop_toBottomOf="@+id/ibtnPop" />
@@ -266,6 +276,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="beauty"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnBeauty"
         app:layout_constraintStart_toStartOf="@+id/ibtnBeauty"
         app:layout_constraintTop_toBottomOf="@+id/ibtnBeauty" />
@@ -291,6 +302,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
+        android:transitionName="category"
         android:text="active"
         app:layout_constraintEnd_toEndOf="@+id/ibtnActive"
         app:layout_constraintStart_toStartOf="@+id/ibtnActive"
@@ -321,6 +333,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:text="parks"
+        android:transitionName="category"
         app:layout_constraintEnd_toEndOf="@+id/ibtnParks"
         app:layout_constraintStart_toStartOf="@+id/ibtnParks"
         app:layout_constraintTop_toBottomOf="@+id/ibtnParks" />
@@ -348,6 +361,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginLeft="2dp"
         android:layout_marginTop="8dp"
+        android:transitionName="category"
         android:fontFamily="sans-serif"
         android:text="Suggested spots for you"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"

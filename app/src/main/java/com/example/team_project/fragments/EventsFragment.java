@@ -1,6 +1,7 @@
 package com.example.team_project.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.search.HorizontalScrollAdapter;
@@ -58,8 +63,10 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     private LinearLayoutManager mHorizontalLayout;
     private ArrayList<String> mNames;
     private ArrayList<View> btnCat;
+    private ArrayList<View> textCat;
     private HorizontalScrollAdapter mAdapter;
     private ImageButton mBtn;
+    private TextView mText;
 
     //TODO singleton
     public static int categoryToMark;
@@ -91,7 +98,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         //initialize with declaration
         type = true;
         myManager = new LinearLayoutManager(getContext());
@@ -115,6 +121,11 @@ public class EventsFragment extends Fragment implements LocationListener, Google
                 view.findViewById(R.id.ibtnNight), view.findViewById(R.id.ibtnShopping), view.findViewById(R.id.ibtnConcerts),
                 view.findViewById(R.id.ibtnPop), view.findViewById(R.id.ibtnBeauty), view.findViewById(R.id.ibtnActive),
                 view.findViewById(R.id.ibtnParks)));
+        textCat = new ArrayList<>(Arrays.asList(view.findViewById(R.id.tvBreakfast), view.findViewById(R.id.tvBrunch),
+                view.findViewById(R.id.tvLunch), view.findViewById(R.id.tvDinner), view.findViewById(R.id.tvSights),
+                view.findViewById(R.id.tvDrinks), view.findViewById(R.id.tvShopping), view.findViewById(R.id.tvConcerts),
+                view.findViewById(R.id.tvPop), view.findViewById(R.id.tvBeauty), view.findViewById(R.id.tvActive),
+                view.findViewById(R.id.tvParks)));
 
         for(int i = 0; i<btnCat.size(); i++) {
             final int index = i;
@@ -122,12 +133,14 @@ public class EventsFragment extends Fragment implements LocationListener, Google
             mBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    mText = (TextView) textCat.get(index);
                     EventsFragment.categoryToMark = index;
                     Intent intent = new Intent(getContext(), SearchActivity.class);
                     intent.putExtra("category", index);
                     intent.putExtra("latitude", mLatitude);
                     intent.putExtra("longitude", mLongitude);
-                    getContext().startActivity(intent);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) getContext(), (View)mText, "category");
+                    getContext().startActivity(intent, options.toBundle());
                 }
             });
         }
