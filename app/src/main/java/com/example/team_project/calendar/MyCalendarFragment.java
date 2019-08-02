@@ -10,10 +10,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
@@ -50,6 +52,7 @@ public class MyCalendarFragment extends Fragment{
     private ArrayList<String> theDaysEvents;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
+    private Toast toast;
 
     @BindView(R.id.rvCal) RecyclerView mCalRV;
     @BindView(R.id.tvNoEvent) TextView mNoneTV;
@@ -97,6 +100,7 @@ public class MyCalendarFragment extends Fragment{
         Date mToday = Calendar.getInstance().getTime();
         retrieveEvents(mToday);
         addSpotDots();
+        showInitialToast(view);
 
         // retrieve events on clicked on day and display in recycler view
         mCompactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -173,6 +177,25 @@ public class MyCalendarFragment extends Fragment{
                 }
                 mCompactCalendar.addEvent(event);
             }
+        }
+    }
+
+    private void showInitialToast(View view){
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_calendar,
+                (ViewGroup) view.findViewById(R.id.custom_cal_toast_container));
+        toast = new Toast(getContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, -200);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (toast != null) {
+            toast.cancel();
         }
     }
 

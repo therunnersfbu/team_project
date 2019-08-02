@@ -1,6 +1,8 @@
 package com.example.team_project.api;
 
 import android.util.Log;
+
+import com.example.team_project.PublicVariables;
 import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.search.SearchActivity;
@@ -16,7 +18,7 @@ public class EventsApi {
 
     private final  String API_BASE_URL = "http://api.eventful.com/json/events/search?";
     private final String API_SINGLE_URL = "http://api.eventful.com/json/events/get?";
-    private final  String  API_KEY = "sM8TM8LQGWR9Zkwr";
+    private final  String  API_KEY = PublicVariables.eventfulApi;
 
     private AsyncHttpClient client;
     private int page;

@@ -36,6 +36,8 @@ public class BottomNavActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         PublicVariables.isCurLoc = true;
+        PublicVariables.googleApi = getString(R.string.google_maps_api_key);
+        PublicVariables.eventfulApi = getString(R.string.eventful_api_key);
 
         //TODO do not save as public static var
         final FragmentManager fragmentManager = getSupportFragmentManager();
