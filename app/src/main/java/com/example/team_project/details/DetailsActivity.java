@@ -32,12 +32,10 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
-
         detailsAct = this;
         id = getIntent().getStringExtra(EVENT_ID);
         type = getIntent().getBooleanExtra(TYPE, true);
         distance = getIntent().getStringExtra(DISTANCE);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
     }

@@ -17,6 +17,9 @@ import butterknife.ButterKnife;
 // adapter for spots results after user search
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHolder> {
     private final boolean isPlace;
+    private static String ID_TAG= "eventID";
+    private static String IS_PLACE_TAG= "type";
+    private static String DISTANCE_TAG= "distance";
     private final List<String> mTagList;
     private final List<String> mDistances;
     private final List<String> mIds;
@@ -43,9 +46,9 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
                 Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                intent.putExtra("eventID", mIds.get(position));
-                intent.putExtra("isPlace", isPlace);
-                intent.putExtra("distance", mDistances.get(position));
+                intent.putExtra(ID_TAG, mIds.get(position));
+                intent.putExtra(IS_PLACE_TAG, isPlace);
+                intent.putExtra(DISTANCE_TAG, mDistances.get(position));
                 v.getContext().startActivity(intent);
             }
         }

@@ -17,6 +17,7 @@
         android:scaleType="fitCenter"
         android:scaleX=".8"
         android:scaleY=".8"
+        android:tint="#FFC107"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         app:srcCompat="@drawable/fried_egg_outline_24_4x" />
@@ -32,6 +33,7 @@
         android:scaleType="centerInside"
         android:scaleX=".75"
         android:scaleY=".75"
+        android:tint="#03A9F4"
         app:layout_constraintStart_toEndOf="@+id/ibtnBreakfast"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         app:srcCompat="@drawable/fork_knife_outline_24_4x" />
@@ -47,6 +49,7 @@
         android:scaleType="fitCenter"
         android:scaleX=".75"
         android:scaleY=".75"
+        android:tint="#F1AC9A"
         app:layout_constraintStart_toEndOf="@+id/ibtnBrunch"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         app:srcCompat="@drawable/ice_cream_outline_24_4x" />
@@ -65,6 +68,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/steak_outline_24_4x"
+        android:tint="#804739"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnLunch"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar" />
@@ -121,6 +125,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/politics_outline_24_4x"
+        android:tint="#009688"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBreakfast" />
 
@@ -136,6 +141,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/cocktail_outline_24_4x"
+        android:tint="#673AB7"
         app:layout_constraintStart_toEndOf="@+id/ibtnSights"
         app:layout_constraintTop_toBottomOf="@+id/tvBrunch" />
 
@@ -151,6 +157,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/shopping_bag_outline_24_4x"
+        android:tint="#FF9800"
         app:layout_constraintStart_toEndOf="@+id/ibtnNight"
         app:layout_constraintTop_toBottomOf="@+id/tvLunch" />
 
@@ -166,6 +173,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/microphone_karaoke_outline_24_4x"
+        android:tint="#E91E63"
         app:layout_constraintStart_toEndOf="@+id/ibtnShopping"
         app:layout_constraintTop_toBottomOf="@+id/tvDinner" />
 
@@ -221,6 +229,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/arts_outline_24_4x"
+        android:tint="#83B6F5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSights" />
 
@@ -247,6 +256,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/blow_dryer_outline_24_4x"
+        android:tint="#FF5E5E"
         app:layout_constraintStart_toEndOf="@+id/ibtnPop"
         app:layout_constraintTop_toBottomOf="@+id/tvDrinks" />
 
@@ -272,6 +282,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/dumbbell_outline_24_4x"
+        android:tint="#ADADAD"
         app:layout_constraintStart_toEndOf="@+id/ibtnBeauty"
         app:layout_constraintTop_toBottomOf="@+id/tvShopping" />
 
@@ -299,6 +310,7 @@
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/tree_outline_24_4x"
+        android:tint="#8BC34A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnActive"
         app:layout_constraintTop_toBottomOf="@+id/tvConcerts" />
@@ -319,8 +331,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="6dp"
         android:scrollbars="horizontal"
         app:layout_constraintEnd_toEndOf="parent"

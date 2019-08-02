@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,11 +55,11 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
             if (isTags) {
                 mTagToAdd = tvName.getText().toString();
                 if(!mAddTagsToSearch.contains(mTagToAdd)) {
-                    v.getBackground().setColorFilter(Color.parseColor("#6238c9"), PorterDuff.Mode.DARKEN);
+                    v.getBackground().setColorFilter(ContextCompat.getColor(v.getContext(), R.color.filterSelected), PorterDuff.Mode.DARKEN);
                     mAddTagsToSearch.add(mTagToAdd);
                 }
                 else {
-                    v.getBackground().setColorFilter(Color.parseColor("#3e91f7"), PorterDuff.Mode.LIGHTEN);
+                    v.getBackground().setColorFilter(ContextCompat.getColor(v.getContext(), R.color.filterNotSelected), PorterDuff.Mode.LIGHTEN);
                     mAddTagsToSearch.remove(mTagToAdd);
                 }
                 notifyDataSetChanged();

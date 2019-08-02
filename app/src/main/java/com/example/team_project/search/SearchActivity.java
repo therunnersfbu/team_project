@@ -42,6 +42,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private static String CLASS_NAME_TAG = "PlaceEvent";
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
+    private static int RESULT_LIMIT = 20;
     private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
@@ -242,6 +243,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 pApi.setKeywords(etSearch.getText().toString());
             }
         }
+        else if(!isPlace) {
+            mSubTags.clear();
+            mSubTags.addAll(PublicVariables.getTags(category));
+            mUserInput = PublicVariables.getCategoryStr(category);
+            eApi.setKeywords(PublicVariables.getUserInput(category));
+        }
         else {
             mSubTags.clear();
             mSubTags.addAll(PublicVariables.getTags(category));
@@ -311,7 +318,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mResults.add(event.getEventName());
             }
         }
-        if(mResults.size()<20) {
+        if(mResults.size()<RESULT_LIMIT) {
             eApi.getMoreEvents();
         }
 
@@ -358,7 +365,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mIds.add(place.getPlaceId());
             }
         }
-        if(mResults.size()<20) {
+        if(mResults.size()<RESULT_LIMIT) {
             pApi.getMorePlaces();
         }
 

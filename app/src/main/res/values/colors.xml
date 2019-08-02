@@ -11,4 +11,9 @@
     <color name="tagSelected">#ff3030</color>
     <color name="reviewNot">#ACE0FF</color>
     <color name="calMaroon">#B71C1C</color>
+    <color name = "appThemeBlue">#6d9eeb</color>
+    <color name="appThemeDark">#5C85C4</color>
+    <color name="appThemeLight">#89B1F0</color>
+    <color name="filterSelected">#6238c9</color>
+    <color name="filterNotSelected">#3e91f7</color>
 </resources>

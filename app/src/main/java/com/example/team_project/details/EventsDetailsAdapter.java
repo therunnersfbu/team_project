@@ -74,7 +74,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private HeaderViewHolder mViewHolder;
     private Context mContext;
 
-    public EventsDetailsAdapter(ArrayList<Post> posts, String id, Boolean isPlace, String distance, Context context) {
+    public EventsDetailsAdapter(ArrayList<Post> posts, String id, boolean isPlace, String distance, Context context) {
         this.mId = id;
         this.isPlace = isPlace;
         this.mDistance = distance;
