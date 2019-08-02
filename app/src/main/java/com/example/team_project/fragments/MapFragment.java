@@ -286,7 +286,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     String placeEventName = placeEvents.get(i).getName();
                     String addedSpotId = placeEvents.get(i).getAppId();
                     Float color = BitmapDescriptorFactory.HUE_BLUE;
-                    String snippet = getResources().getString(R.string.liked_event_snippet);
+                    String snippet = getResources().getString(R.string.saved_event_snippet);
                     makeMapMarker(placeEventCoord, addedSpotId, placeEventName, snippet, color);
                 }
             }

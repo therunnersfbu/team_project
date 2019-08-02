@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.parse.GetCallback;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.text.ParseException;
@@ -43,11 +46,10 @@ public class MyCalendarFragment extends Fragment{
     private TextView mCurrentDate;
     private RecyclerView mCalRV;
     private Long mEpochTime;
-    private ParseUser user = ParseUser.getCurrentUser();
-    private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+    private ParseUser user;
+    private ArrayList<String> addedEvents;
     private ArrayList<String> theDaysEvents;
     private RecyclerView.LayoutManager mLayoutManager;
-    private LayoutInflater mNoneLayoutInflater;
     private RecyclerView.Adapter mAdapter;
     private TextView mNoneTV;
 
@@ -57,12 +59,12 @@ public class MyCalendarFragment extends Fragment{
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_my_calendar, container, false);
         mUnbinder = ButterKnife.bind(this, view);
-        //initUserData();
+        initUserData();
         return view;
     }
 
     // ensures and checks if there is user data available and if so it initializes the list
-    /*private void initUserData() {
+    private void initUserData() {
         user = ParseUser.getCurrentUser();
         if (user != null) {
             user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
@@ -75,7 +77,7 @@ public class MyCalendarFragment extends Fragment{
             Log.d(getResources().getString(R.string.calendar_frag_tag), getResources().getString(R.string.user_error_message));
             return;
         }
-    }*/
+    }
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
@@ -151,7 +153,8 @@ public class MyCalendarFragment extends Fragment{
             }
             if (theDaysEvents.size() == 0) {
                 mNoneTV.setVisibility(View.VISIBLE);
-
+            }else {
+                mNoneTV.setVisibility(View.GONE);
             }
         }
     }
