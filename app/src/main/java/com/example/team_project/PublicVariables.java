@@ -11,6 +11,7 @@ public class PublicVariables {
     public static Boolean isEvent;
     public static String newLoc;
     public static String newLocName;
+    //TODO save currentlocation on Parse
     public static boolean isCurLoc = true;
     public static String googleApi;
     public static String eventfulApi;
@@ -22,6 +23,19 @@ public class PublicVariables {
             PublicVariables.isEvent = false;
         }
         return PublicVariables.isEvent;
+    }
+
+    public enum eventCategories {
+        CONCERT,
+        FAIR;
+
+        public int isPlace() {
+            switch(this) {
+                case CONCERT: return 7;
+                case FAIR: return 8;
+                default: return -1;
+            }
+        }
     }
 
     public static String[] primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",

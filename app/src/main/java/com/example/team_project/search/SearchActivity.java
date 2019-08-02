@@ -52,6 +52,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private static String CLASS_NAME_TAG = "PlaceEvent";
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
+    private static String SPLITER = "\\s+";
     private static int EVENTS_SEARCH = -3;
     private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
@@ -64,8 +65,8 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private RecyclerView.LayoutManager resultsManager;
     private LinearLayoutManager horizontalLayout;
     // tag items
-    private ArrayList<String> mSubTags;
-    private ArrayList<String> mTaggedResults;
+    private ArrayList<String> mSubTags = new ArrayList<>();
+    private ArrayList<String> mTaggedResults = new ArrayList<>();
     private ArrayList<String> mTagReference;
     //results recycler view
     private ResultsAdapter mResultsAdapter;
@@ -76,20 +77,31 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private boolean isPlace = true;
     private boolean canGetMore = true;
     private String mUserInput = "";
-    private ArrayList<String> mResults;
-    private ArrayList<Event> mEventList;
-    private ArrayList<Place> mPlaceList;
-    private ArrayList<String> mDistances;
-    private ArrayList<String> mIds;
+    private ArrayList<String> mResults = new ArrayList<>();
+    private ArrayList<Event> mEventList = new ArrayList<>();
+    private ArrayList<Place> mPlaceList = new ArrayList<>();
+    private ArrayList<String> mDistances = new ArrayList<>();
+    private ArrayList<String> mIds = new ArrayList<>();
     //api clients
-    private EventsApi eApi;
-    private PlacesApi pApi;
+    private EventsApi eApi = new EventsApi(this);
+    private PlacesApi pApi = new PlacesApi(this);
     //location services
     private double longitude;
     private double latitude;
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
+    private enum eventCategories {
+        CONCERT,
+        FAIR;
+        public int isPlace() {
+            switch(this) {
+                case CONCERT: return 7;
+                case FAIR: return 8;
+                default: return -5;
+            }
+        }
+    }
     //layout items
     @BindView(R.id.pbSpinner) ProgressBar mProgressBar;
     @BindView(R.id.rvTags) RecyclerView rvTags;
@@ -137,7 +149,11 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
-        initializeVars();
+        // layout managers
+        myManager = new LinearLayoutManager(this);
+        resultsManager = new LinearLayoutManager(this);
+        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //tag recycler view
         rvTags.setLayoutManager(myManager);
         mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, new ContextProvider() {
@@ -186,26 +202,9 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         }
     }
 
-    // initialize variables used in this class
-    public void initializeVars() {
-        mEventList = new ArrayList<>();
-        mPlaceList = new ArrayList<>();
-        mResults = new ArrayList<>();
-        mDistances = new ArrayList<>();
-        mSubTags = new ArrayList<>();
-        mTaggedResults = new ArrayList<>();
-        mIds = new ArrayList<>();
-        myManager = new LinearLayoutManager(this);
-        resultsManager = new LinearLayoutManager(this);
-        horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        eApi = new EventsApi(this);
-        pApi = new PlacesApi(this);
-    }
-
     // returns true if the spot is a Place type
     private boolean isPlace(int category) {
-        if(category == 7 || category == 8) {
+        if(category == eventCategories.CONCERT.isPlace()|| category == eventCategories.FAIR.isPlace()) {
             return false;
         }
         return true;
@@ -215,10 +214,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     public void setNewSearchText(ArrayList<String> addTagsToSearch) {
         mProgressBar.setVisibility(View.VISIBLE);
         mTaggedResults = addTagsToSearch;
-        mEventList.clear();
-        mPlaceList.clear();
-        mResults.clear();
-        mIds.clear();
+        clearLists();
         mResultsAdapter.notifyDataSetChanged();
         if (!isPlace) {
             eApi.getTopEvents();
@@ -245,7 +241,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                         setMyLocation();
                     }
                 } else {
-                    String[] newCords = newLoc.split("\\s+");
+                    String[] newCords = newLoc.split(SPLITER);
                     latitude = Double.parseDouble(newCords[0]);
                     longitude = Double.parseDouble(newCords[1]);
                     tvLocation.setText(newLocName);
@@ -297,12 +293,16 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         mAdapter.notifyDataSetChanged();
     }
 
-    // query results according to user input
-    private void populateList() {
+    private void clearLists() {
         mEventList.clear();
         mPlaceList.clear();
         mResults.clear();
         mIds.clear();
+    }
+
+    // query results according to user input
+    private void populateList() {
+        clearLists();
         if (!isPlace) {
             eApi.setDate(FUTURE_TAG);
             eApi.setLocation(latitude, longitude, EVENTS_RADIUS);
