@@ -62,8 +62,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private ArrayList<String> addedEvents;
     private int mMaxLimit = 1000;
     private int mMinZoom = 3;
-    private int mToastLength = 4;
     private String mCurrentSpotId;
+    private Toast toast;
 
     @BindView(R.id.mapicon) ImageButton mMapIcon;
     @BindString(R.string.map_frag_tag) String mMapFragTag;
@@ -341,15 +341,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void showInitialToast(View view){
-        for (int i = 0; i < mToastLength; i++) {
             LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.custom_toast,
-                    (ViewGroup) view.findViewById(R.id.custom_toast_container));
-            final Toast toast = new Toast(getContext());
+            View layout = inflater.inflate(R.layout.toast_map,
+                    (ViewGroup) view.findViewById(R.id.custom_map_toast_container));
+            toast = new Toast(getContext());
             toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout);
             toast.show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (toast != null) {
+            toast.cancel();
         }
     }
 }
