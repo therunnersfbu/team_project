@@ -135,7 +135,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private boolean isExpanded;
-        @BindDrawable(R.drawable.ic_person_black_24dp) Drawable defaultPic;
+        @BindDrawable(R.drawable.default_profilepic) Drawable defaultPic;
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
         @BindView(R.id.tvBody) TextView tvBody;

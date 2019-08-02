@@ -59,14 +59,14 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
         if (imageFile != null) {
             Glide.with(this)
                     .load(imageFile.getUrl())
-                    .placeholder(R.drawable.ic_person_black_24dp)
-                    .error(R.drawable.ic_person_black_24dp)
+                    .placeholder(R.drawable.default_profilepic)
+                    .error(R.drawable.default_profilepic)
                     .into(ivProfilePic);
         } else {
             Glide.with(this)
-                    .load(R.drawable.ic_person_black_24dp)
-                    .placeholder(R.drawable.ic_person_black_24dp)
-                    .error(R.drawable.ic_person_black_24dp)
+                    .load(R.drawable.default_profilepic)
+                    .placeholder(R.drawable.default_profilepic)
+                    .error(R.drawable.default_profilepic)
                     .into(ivProfilePic);
         }
 
