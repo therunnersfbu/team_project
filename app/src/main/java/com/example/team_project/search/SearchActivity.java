@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.team_project.PublicVariables;
@@ -44,6 +46,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private static String CLASS_NAME_TAG = "PlaceEvent";
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
+    private static int EVENTS_SEARCH = -3;
     private static int RESULT_LIMIT = 20;
     private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
@@ -105,7 +108,13 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
-        category = USER_SEARCH;
+        if(isPlace) {
+            category = USER_SEARCH;
+        }
+        else {
+            category = EVENTS_SEARCH;
+        }
+        hideKeyboard(this);
         initializeCategory(category);
         populateList();
     }
@@ -245,7 +254,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     // sets the appropriate tags and keyword depending on category
     private void initializeCategory(int category) {
-        if(category==USER_SEARCH) {
+        if(category == EVENTS_SEARCH) {
+            if(!etSearch.getText().toString().isEmpty()) {
+                eApi.setKeywords(etSearch.getText().toString());
+            }
+        }
+        else if(category==USER_SEARCH) {
             if(!etSearch.getText().toString().isEmpty()) {
                 pApi.setKeywords(etSearch.getText().toString());
             }
@@ -279,7 +293,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             pApi.setRadius(PLACES_RADIUS);
         }
         mAdapter.notifyDataSetChanged();
-        if(category!=USER_SEARCH) {
+        if(category!=USER_SEARCH&&category!=EVENTS_SEARCH) {
             etSearch.setText(mUserInput);
         }
         if (!isPlace) {
@@ -403,6 +417,16 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             e.printStackTrace();
         }
         return mPlaceEvent;
+    }
+
+    //hide emulator keyboard
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void setCanGetMore(boolean canGetMore) {
