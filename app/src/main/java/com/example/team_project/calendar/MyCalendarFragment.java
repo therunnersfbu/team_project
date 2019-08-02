@@ -12,18 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.parse.ParseUser;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -42,7 +45,9 @@ public class MyCalendarFragment extends Fragment{
     private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private ArrayList<String> theDaysEvents;
     private RecyclerView.LayoutManager mLayoutManager;
+    private LayoutInflater mNoneLayoutInflater;
     private RecyclerView.Adapter mAdapter;
+    private TextView mNoneTV;
 
     @Nullable
     @Override
@@ -50,14 +55,32 @@ public class MyCalendarFragment extends Fragment{
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_my_calendar, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        //initUserData();
         return view;
     }
+
+    // ensures and checks if there is user data available and if so it initializes the list
+    /*private void initUserData() {
+        user = ParseUser.getCurrentUser();
+        if (user != null) {
+            user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, com.parse.ParseException e) {
+                    addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                }
+            });
+        }else{
+            Log.d(getResources().getString(R.string.calendar_frag_tag), getResources().getString(R.string.user_error_message));
+            return;
+        }
+    }*/
 
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mCalRV = view.findViewById(R.id.rvCal);
+        mNoneTV = view.findViewById(R.id.tvNoEvent);
         theDaysEvents = new ArrayList<>();
 
         mCurrentDate = view.findViewById(R.id.current_Date);
@@ -85,7 +108,6 @@ public class MyCalendarFragment extends Fragment{
                 mCurrentDate.setText(mDateFormat.format(firstDayOfNewMonth));
             }
         });
-
         setRecyclerView(view);
     }
 
@@ -121,7 +143,8 @@ public class MyCalendarFragment extends Fragment{
                 }
             }
             if (theDaysEvents.size() == 0) {
-                theDaysEvents.add("NONE!");
+                mNoneTV.setVisibility(View.VISIBLE);
+
             }
         }
     }

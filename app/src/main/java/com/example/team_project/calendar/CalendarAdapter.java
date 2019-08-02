@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
+// TODO fix on Click
 // the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
 // and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
@@ -58,16 +59,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        if (mEvents.contains("NONE!")) {
-            mTVEventName.setText("NONE!");
-            mTVAddress.setVisibility(View.GONE);
-            mTVEventPlace.setVisibility(View.GONE);
-            mIVEventImage.setVisibility(View.GONE);
-        }else {
             for (int x = 0; x < parseevents.size(); x++) {
-                mTVAddress.setVisibility(View.VISIBLE);
-                mTVEventPlace.setVisibility(View.VISIBLE);
-                mIVEventImage.setVisibility(View.VISIBLE);
                 String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
                 if (mEvents.get(i).equals(mParseEvent[2])) {
                     mTVEventName.setText(mParseEvent[2]);
@@ -83,7 +75,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                         break;
                     }
                 }
-            }
         }
     }
 
@@ -136,7 +127,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         } else {
             isEvent = false;
         }
-
         // string must be hardcoded because you cannot store strings in String.xml and retrieve
         Intent intent = new Intent(mContext, DetailsActivity.class);
         intent.putExtra("eventID", eventApiId);
