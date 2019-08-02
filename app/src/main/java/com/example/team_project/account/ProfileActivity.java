@@ -68,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.flSurvey) FlowLayout flSurvey;
     @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
     @BindDrawable(R.drawable.ic_person_black_24dp) Drawable defaultPic;
     @BindDrawable(R.drawable.ic_add_black_24dp) Drawable surveyAdd;
@@ -101,6 +102,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         rvLiked.setAdapter(likedAdapter);
         user = BottomNavActivity.targetUser;
         tvName.setText(user.getString(User.KEY_NAME));
+        tvUsername.setText(user.getUsername());
 
         ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
         if (imageFile != null) {

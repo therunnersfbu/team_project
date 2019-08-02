@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.team_project.model.User;
-import com.example.team_project.utils.RandomString;
 import com.nex3z.flowlayout.FlowLayout;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -61,6 +60,7 @@ public class SurveyActivity extends AppCompatActivity {
     private ArrayList<Boolean> categories;
     private ArrayList<Boolean> tags;
     private String username;
+    private String name;
     private String email;
     private String password;
     private boolean retaking;
@@ -74,6 +74,7 @@ public class SurveyActivity extends AppCompatActivity {
         retaking = getIntent().getBooleanExtra("retaking", false);
         if (!retaking) {
             username = getIntent().getStringExtra("username");
+            name = getIntent().getStringExtra("name");
             email = getIntent().getStringExtra("email");
             password = getIntent().getStringExtra("password");
         } else {
@@ -287,10 +288,10 @@ public class SurveyActivity extends AppCompatActivity {
     private void signup() {
         // create user to save with all properties
         ParseUser user = new ParseUser();
-        user.setUsername(RandomString.getAlphaNumericString(25));
+        user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
-        user.put(User.KEY_NAME, username);
+        user.put(User.KEY_NAME, name);
         user.put(User.KEY_CATEGORIES, categories);
         user.put(User.KEY_TAGS, tags);
         user.put(User.KEY_VERIFIED, false);
