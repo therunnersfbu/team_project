@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".account.OtherUserActivity"></activity>
+        <activity android:name=".usersearch.UserSearchActivity"></activity>
+        <activity android:name=".account.OtherUserActivity" />
         <activity android:name=".location.LocationActivity" />
         <activity android:name=".ComposeReviewActivity" />
         <activity android:name=".details.DetailsActivity" />

@@ -14,6 +14,7 @@ import com.example.team_project.account.ProfileActivity;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.fragments.MapFragment;
 import com.example.team_project.calendar.MyCalendarFragment;
+import com.example.team_project.usersearch.UserSearchActivity;
 import com.parse.ParseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,6 +90,9 @@ public class BottomNavActivity extends AppCompatActivity {
         if (id == R.id.item_profile) {
             Intent i = new Intent(this, ProfileActivity.class);
             startActivityForResult(i, 1);
+        } else if (id == R.id.item_user_search) {
+            Intent i = new Intent(this, UserSearchActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
