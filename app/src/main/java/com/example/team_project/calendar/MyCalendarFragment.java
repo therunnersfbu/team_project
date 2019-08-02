@@ -35,9 +35,6 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 // TODO get dots to refresh
-// TODO after you click an event with a new days events it doesnt refresh
-// TODO check if it refreshed the days events then look at the view and my new if statement
-// TODO if you click on day with two things in the recycler view then that the first spot will not leave
 // The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
 // events and allows the user to click on variuous days and see all their added spots for that day
 public class MyCalendarFragment extends Fragment{
@@ -62,13 +59,14 @@ public class MyCalendarFragment extends Fragment{
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_my_calendar, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+        user = ParseUser.getCurrentUser();
+        addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
         initUserData();
         return view;
     }
 
     // ensures and checks if there is user data available and if so it initializes the list
     private void initUserData() {
-        user = ParseUser.getCurrentUser();
         if (user != null) {
             user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                 @Override
