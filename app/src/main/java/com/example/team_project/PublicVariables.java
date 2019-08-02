@@ -12,6 +12,8 @@ public class PublicVariables {
     public static String newLoc;
     public static String newLocName;
     public static boolean isCurLoc = true;
+    public static String googleApi;
+    public static String eventfulApi;
 
     public static Boolean isEvent(String apiId){
         if ('E' != apiId.charAt(0)) {
