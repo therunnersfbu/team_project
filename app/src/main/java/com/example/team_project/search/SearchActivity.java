@@ -2,6 +2,7 @@ package com.example.team_project.search;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.example.team_project.location.LocationActivity;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
+import com.example.team_project.utils.ContextProvider;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -42,6 +44,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private static String CLASS_NAME_TAG = "PlaceEvent";
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
+    private static int RESULT_LIMIT = 20;
     private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
@@ -115,7 +118,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         initializeVars();
         //tag recycler view
         rvTags.setLayoutManager(myManager);
-        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
+        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return SearchActivity.this;
+            }
+        });
         rvTags.setLayoutManager(horizontalLayout);
         rvTags.setAdapter(mAdapter);
         // tag items
@@ -242,6 +250,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 pApi.setKeywords(etSearch.getText().toString());
             }
         }
+        else if(!isPlace) {
+            mSubTags.clear();
+            mSubTags.addAll(PublicVariables.getTags(category));
+            mUserInput = PublicVariables.getCategoryStr(category);
+            eApi.setKeywords(PublicVariables.getUserInput(category));
+        }
         else {
             mSubTags.clear();
             mSubTags.addAll(PublicVariables.getTags(category));
@@ -311,9 +325,10 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mResults.add(event.getEventName());
             }
         }
-        if(mResults.size()<20) {
-            eApi.getMoreEvents();
-        }
+
+ //       if(mResults.size()<RESULT_LIMIT) {
+ //           eApi.getMoreEvents();
+  //      }
 
         dApi.getDistance();
     }
@@ -358,7 +373,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mIds.add(place.getPlaceId());
             }
         }
-        if(mResults.size()<20) {
+        if(mResults.size()<RESULT_LIMIT) {
             pApi.getMorePlaces();
         }
 

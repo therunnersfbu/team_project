@@ -16,6 +16,7 @@ import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
+import com.example.team_project.utils.ContextProvider;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -37,9 +38,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private ImageView mIVEventImage;
 
 
-    public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
+    public CalendarAdapter(ContextProvider cp, ArrayList<String> theDaysEvents) {
         this.mEvents = theDaysEvents;
-        this.mContext = context;
+        this.mContext = cp.getContext();
     }
 
     public Context getmContext() {

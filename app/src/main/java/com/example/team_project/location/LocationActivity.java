@@ -12,8 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import com.example.team_project.R;
 import com.example.team_project.api.AutocompleteApi;
-import com.example.team_project.api.PlacesApi;
-import org.json.JSONException;
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.
@@ -79,7 +77,6 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
     @Override
     public void onItemClicked() {
-        Log.e("Test", "callback ");
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();

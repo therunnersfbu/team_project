@@ -2,14 +2,21 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/colorPrimary"
-    app:titleTextColor="@android:color/white">
+    android:background="@color/appThemeBlue"
+    android:backgroundTint="@color/appThemeBlue"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/instagram_logo" />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/appThemeBlue"
+        android:backgroundTint="@color/appThemeBlue"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:scaleType="fitCenter"
+        android:scaleX="1.2"
+        android:scaleY="1"
+        app:srcCompat="@drawable/app_logo" />
 
 </android.support.v7.widget.Toolbar>

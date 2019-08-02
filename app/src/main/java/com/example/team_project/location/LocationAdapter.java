@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.PlacesApi;
-import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,6 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         this.mCallback = callback;
     }
 
-    // adapter callback to return to Location Activity on result
     public interface AdapterCallback {
         void onItemClicked();
     }

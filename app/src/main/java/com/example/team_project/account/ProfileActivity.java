@@ -80,9 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     @OnClick(R.id.btnLogout)
     public void logout(Button button) {
         ParseUser.logOut();
-        final Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-        startActivity(intent);
-        BottomNavActivity.bottomNavAct.finish();
+        setResult(RESULT_OK, new Intent());
         finish();
     }
 
@@ -120,6 +118,12 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         }
 
         getLiked();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED, new Intent());
+        finish();
     }
 
     @Override

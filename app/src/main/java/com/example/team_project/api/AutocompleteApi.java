@@ -1,7 +1,6 @@
 package com.example.team_project.api;
 
 import android.util.Log;
-import com.example.team_project.location.LocationActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONArray;

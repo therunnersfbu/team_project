@@ -81,13 +81,13 @@ public class PublicVariables {
             case 1:
                 return "brunch";
             case 2:
-                return "sweets";
+                return "dessert";
             case 3:
                 return "dinner";
             case 4:
-                return "sights";
+                return "museum";
             case 5:
-                return "bar";
+                return "nightlife";
             case 6:
                 return "shopping";
             case 7:
@@ -95,7 +95,7 @@ public class PublicVariables {
             case 8:
                 return "fair";
             case 9:
-                return "spa";
+                return "salon";
             case 10:
                 return "gym";
             case 11:
