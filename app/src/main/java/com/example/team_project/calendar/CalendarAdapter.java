@@ -2,6 +2,7 @@ package com.example.team_project.calendar;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,20 +25,21 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+
+import butterknife.BindDrawable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 // TODO check on click
 // the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
 // and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
+
     private ArrayList<String> mEvents;
     private Context mContext;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int mCount;
-    private TextView mTVEventName;
-    private TextView mTVAddress;
-    private TextView mTVEventPlace;
-    private ImageView mIVEventImage;
-
 
     public CalendarAdapter(ContextProvider cp, ArrayList<String> theDaysEvents) {
         this.mEvents = theDaysEvents;
@@ -62,25 +64,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
         Log.d("calada", "event in onBindViewHolder:" + mEvents.get(i)); // correct
-        for (int x = 0; x < parseevents.size(); x++) {
-            String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
-            if (mEvents.get(i).equals(mParseEvent[2])) {
-                Log.d("calada", "setting name:" + mParseEvent[2]); // correct
-                mTVEventName.setText(mParseEvent[2]);
-                mTVAddress.setText(mParseEvent[3]);
-                String eventApiId = mParseEvent[1];
-                if ('E' != eventApiId.charAt(0)) {
-                    mTVEventPlace.setText("Place");
-                    mIVEventImage.setImageResource(R.drawable.sky);
-                    break;
-                } else {
-                    mTVEventPlace.setText("Event");
-                    mIVEventImage.setImageResource(R.drawable.event);
-                    break;
-                }
-            }
-        }
-}
+        viewHolder.bind();
+    }
 
     @Override
     public int getItemCount() {
@@ -93,13 +78,38 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        @BindView(R.id.tvEventName) TextView mTVEventName;
+        @BindView(R.id.tvAddress) TextView mTVAddress;
+        @BindView(R.id.tvType) TextView mTVEventPlace;
+        @BindView(R.id.ivEventImage) ImageView mIVEventImage;
+
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            mTVEventName = itemView.findViewById(R.id.tvEventName);
-            mTVAddress = itemView.findViewById(R.id.tvAddress);
-            mTVEventPlace = itemView.findViewById(R.id.tvType);
-            mIVEventImage = itemView.findViewById(R.id.ivEventImage);
+
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
+        }
+
+        private void bind() {
+            for (int x = 0; x < parseevents.size(); x++) {
+                String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
+                if (mEvents.get(getAdapterPosition()).equals(mParseEvent[2])) {
+                    Log.d("calada", "setting name:" + mParseEvent[2]); // correct
+                    mTVEventName.setText(mParseEvent[2]);
+                    mTVAddress.setText(mParseEvent[3]);
+                    String eventApiId = mParseEvent[1];
+                    if ('E' != eventApiId.charAt(0)) {
+                        mTVEventPlace.setText("Place");
+                        mIVEventImage.setImageResource(R.drawable.sky);
+                        break;
+                    } else {
+                        mTVEventPlace.setText("Event");
+                        mIVEventImage.setImageResource(R.drawable.event);
+                        break;
+                    }
+                }
+            }
         }
 
         @Override

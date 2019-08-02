@@ -44,16 +44,19 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 // The MapFragment displays all of the user's liked and reviewed spots on the map, along with their actual review
 // the liked spots are shown with pink markers and the reviewed events are shown with red markers
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, DirectionsApi.GetSingleDistance {
+
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private Unbinder mUnbinder;
     private GoogleMap mGoogleMap;
-    private ImageButton mMapIcon;
     private ParseUser user;
     private ArrayList<String> likedEvents;
     private ArrayList<String> addedEvents;
@@ -61,6 +64,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private int mMinZoom = 3;
     private int mToastLength = 4;
     private String mCurrentSpotId;
+
+    @BindView(R.id.mapicon) ImageButton mMapIcon;
+    @BindString(R.string.map_frag_tag) String mMapFragTag;
+    @BindString(R.string.user_error_message) String mUserErrorMessage;
+    @BindString(R.string.review) String mReview;
+    @BindString(R.string.event_id) String mEventId;
+    @BindString(R.string.type) String mType;
+    @BindString(R.string.distance) String mDistance;
+    @BindString(R.string.place_event_class_name) String mPlaceEventClassName;
+    @BindString(R.string.location_permission_denied) String mLocationPermissionDenied;
+    @BindString(R.string.query_error_message) String mQueryErrorMessage;
+    @BindString(R.string.liked_event_snippet) String mLikedEventSnippet;
+    @BindString(R.string.saved_event_snippet) String mSavedEventSnippet;
+
+    @OnClick(R.id.mapicon)
+    public void mapiconClick(ImageButton button) {
+        enableMyLocationIfPermitted();
+        mGoogleMap.setMinZoomPreference(mMinZoom);
+    }
 
     @Nullable
     @Override
@@ -84,7 +106,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
             });
         }else{
-            Log.d(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.user_error_message));
+            Log.d(mMapFragTag, mUserErrorMessage);
             return;
         }
     }
@@ -98,7 +120,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        Drawable loginActivityBackground = view.findViewById(R.id.mapicon).getBackground();
+        Drawable loginActivityBackground = mMapIcon.getBackground();
         loginActivityBackground.setAlpha(230);
 
         mMapIcon = view.findViewById(R.id.mapicon);
@@ -145,14 +167,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void gotDistance(String distanceApi) {
         Boolean spotType = getSpotType(mCurrentSpotId);
         Intent intent = new Intent(getActivity(), DetailsActivity.class);
-        intent.putExtra(getResources().getString(R.string.event_id), mCurrentSpotId);
-        intent.putExtra(getResources().getString(R.string.type), spotType);
-        intent.putExtra(getResources().getString(R.string.distance), distanceApi);
+        intent.putExtra(mEventId, mCurrentSpotId);
+        intent.putExtra(mType, spotType);
+        intent.putExtra(mDistance, distanceApi);
         startActivity(intent);
     }
 
     public PlaceEvent query(String currentSpotId) {
-        ParseQuery<PlaceEvent> query = new ParseQuery(getResources().getString(R.string.place_event_class_name));
+        ParseQuery<PlaceEvent> query = new ParseQuery(mPlaceEventClassName);
         query.whereContains(PlaceEvent.KEY_API, currentSpotId);
         PlaceEvent mPlaceEvent = null;
         try {
@@ -179,7 +201,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void showDefaultLocation() {
-        Toast.makeText(getContext(),R.string.location_permission_denied,
+        Toast.makeText(getContext(),mLocationPermissionDenied,
                 Toast.LENGTH_SHORT).show();
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
     }
@@ -210,7 +232,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         };
 
     protected void queryReviews(){
-        final ParseQuery<Post> reviewQuery = new ParseQuery<Post>(Post.class);
+        final ParseQuery<Post> reviewQuery = new ParseQuery<>(Post.class);
         reviewQuery.setLimit(mMaxLimit);
         reviewQuery.include(Post.KEY_EVENT_PLACE);
         reviewQuery.include(Post.KEY_USER);
@@ -219,14 +241,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<Post> posts, ParseException e) {
             if (e != null) {
-                Log.e(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.query_error_message) + e.getMessage());
+                Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
                 e.printStackTrace();
                 return;
             }
 
             for(int i = 0; i < posts.size(); i++) {
                 Post post = posts.get(i);
-                String review = getResources().getString(R.string.review) + post.getReview();
+                String review = mReview + post.getReview();
                 String name = post.getEventPlace().getName();
                 String reviewId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
@@ -239,7 +261,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     protected void queryLikedEvents(){
-        ParseQuery placeEventQuery = new ParseQuery(getResources().getString(R.string.place_event_class_name));
+        ParseQuery placeEventQuery = new ParseQuery(mPlaceEventClassName);
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> likedEventIds = new ArrayList<>();
         for (int i= 0; i < likedEvents.size();i++){
@@ -252,7 +274,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
                 if (e != null) {
-                    Log.e(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.query_error_message) + e.getMessage());
+                    Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -269,7 +291,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     protected void queryAddedEvents(){
-        ParseQuery placeEventQuery = new ParseQuery(getResources().getString(R.string.place_event_class_name));
+        ParseQuery placeEventQuery = new ParseQuery(mPlaceEventClassName);
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> addedEventApis = new ArrayList<>();
         for (int i= 0; i < addedEvents.size();i++){
@@ -282,7 +304,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
                 if (e != null) {
-                    Log.e(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.query_error_message) + e.getMessage());
+                    Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -291,7 +313,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     String placeEventName = placeEvents.get(i).getName();
                     String addedSpotId = placeEvents.get(i).getAppId();
                     Float color = BitmapDescriptorFactory.HUE_BLUE;
-                    String snippet = getResources().getString(R.string.saved_event_snippet);
+                    String snippet = mSavedEventSnippet;
                     makeMapMarker(placeEventCoord, addedSpotId, placeEventName, snippet, color);
                 }
             }

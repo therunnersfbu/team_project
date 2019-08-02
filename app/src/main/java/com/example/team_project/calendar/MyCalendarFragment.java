@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindString;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 // TODO get dots to refresh
@@ -39,19 +41,22 @@ import butterknife.Unbinder;
 // events and allows the user to click on variuous days and see all their added spots for that day
 public class MyCalendarFragment extends Fragment{
     private Unbinder mUnbinder;
-    private CompactCalendarView mCompactCalendar;
     private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
     private Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
-    private TextView mCurrentDate;
-    private RecyclerView mCalRV;
     private Long mEpochTime;
     private ParseUser user;
     private ArrayList<String> addedEvents;
     private ArrayList<String> theDaysEvents;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
-    private TextView mNoneTV;
+
+    @BindView(R.id.rvCal) RecyclerView mCalRV;
+    @BindView(R.id.tvNoEvent) TextView mNoneTV;
+    @BindView(R.id.current_Date) TextView mCurrentDate;
+    @BindView(R.id.compactcalendar_view) CompactCalendarView mCompactCalendar;
+    @BindString(R.string.calendar_frag_tag) String mCalendarFragTag;
+    @BindString(R.string.user_error_message) String mUserErrorMessage;
 
     @Nullable
     @Override
@@ -75,7 +80,7 @@ public class MyCalendarFragment extends Fragment{
                 }
             });
         }else{
-            Log.d(getResources().getString(R.string.calendar_frag_tag), getResources().getString(R.string.user_error_message));
+            Log.d(mCalendarFragTag, mUserErrorMessage);
             return;
         }
     }
@@ -84,15 +89,9 @@ public class MyCalendarFragment extends Fragment{
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mCalRV = view.findViewById(R.id.rvCal);
-        mNoneTV = view.findViewById(R.id.tvNoEvent);
         theDaysEvents = new ArrayList<>();
-
-        mCurrentDate = view.findViewById(R.id.current_Date);
         String currentDate = mDateFormat.format(calendar.getTime());
         mCurrentDate.setText(currentDate);
-
-        mCompactCalendar = view.findViewById(R.id.compactcalendar_view);
         mCompactCalendar.setUseThreeLetterAbbreviation(true);
 
         Date mToday = Calendar.getInstance().getTime();

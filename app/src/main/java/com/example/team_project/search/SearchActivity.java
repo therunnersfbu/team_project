@@ -10,7 +10,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
@@ -34,6 +37,8 @@ import butterknife.ButterKnife;
 import android.support.annotation.Nullable;
 import butterknife.OnClick;
 
+import static android.view.View.GONE;
+
 // Search page that populates with events that correspond to user-selected keywords
 public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
     // permission codes and constants
@@ -44,7 +49,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private static String CLASS_NAME_TAG = "PlaceEvent";
     private static String LONGITUDE_TAG = "longitude";
     private static String LATITUDE_TAG = "latitude";
-    private static int RESULT_LIMIT = 20;
+    private static int EVENTS_SEARCH = -3;
     private static double DEFAULT_COORD = 0.0;
     private static final int USER_SEARCH = -2;
     private static int REQUEST_CODE = 1;
@@ -83,6 +88,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private String newLoc = "";
     private String newLocName;
     //layout items
+    @BindView(R.id.pbSpinner) ProgressBar mProgressBar;
     @BindView(R.id.rvTags) RecyclerView rvTags;
     @BindView(R.id.rvResults) RecyclerView rvResults;
     @BindView(R.id.etLocation) TextView tvLocation;
@@ -105,7 +111,14 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
-        category = USER_SEARCH;
+        mProgressBar.setVisibility(View.VISIBLE);
+        if(isPlace) {
+            category = USER_SEARCH;
+        }
+        else {
+            category = EVENTS_SEARCH;
+        }
+        hideKeyboard(this);
         initializeCategory(category);
         populateList();
     }
@@ -133,13 +146,15 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         isPlace = isPlace(category);
         //location services
         newLocName = getIntent().getStringExtra(NAME_TAG);
-        //layout items
-        tvLocation = findViewById(R.id.etLocation);
         //results recycler view
         rvResults.setLayoutManager(resultsManager);
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
+        //set progressbar to invisible if user input window open
+        if(category==USER_SEARCH) {
+            mProgressBar.setVisibility(GONE);
+        }
         // Adds the scroll listener to RecyclerView
         rvResults.addOnScrollListener(new EndlessRecyclerViewScrollListener(verticalLayout) {
             @Override
@@ -245,7 +260,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     // sets the appropriate tags and keyword depending on category
     private void initializeCategory(int category) {
-        if(category==USER_SEARCH) {
+        if(category == EVENTS_SEARCH) {
+            if(!etSearch.getText().toString().isEmpty()) {
+                eApi.setKeywords(etSearch.getText().toString());
+            }
+        }
+        else if(category==USER_SEARCH) {
             if(!etSearch.getText().toString().isEmpty()) {
                 pApi.setKeywords(etSearch.getText().toString());
             }
@@ -279,7 +299,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             pApi.setRadius(PLACES_RADIUS);
         }
         mAdapter.notifyDataSetChanged();
-        if(category!=USER_SEARCH) {
+        if(category!=USER_SEARCH&&category!=EVENTS_SEARCH) {
             etSearch.setText(mUserInput);
         }
         if (!isPlace) {
@@ -326,10 +346,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             }
         }
 
- //       if(mResults.size()<RESULT_LIMIT) {
- //           eApi.getMoreEvents();
-  //      }
-
         dApi.getDistance();
     }
 
@@ -373,10 +389,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mIds.add(place.getPlaceId());
             }
         }
-        if(mResults.size()<RESULT_LIMIT) {
-            pApi.getMorePlaces();
-        }
-
         dApi.getDistance();
     }
 
@@ -388,6 +400,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     // get the distance from search results to current location
     @Override
     public void gotDistances(ArrayList<String> distancesApi) {
+        mProgressBar.setVisibility(GONE);
         mDistances.addAll(distancesApi);
         mResultsAdapter.notifyDataSetChanged();
     }
@@ -403,6 +416,16 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             e.printStackTrace();
         }
         return mPlaceEvent;
+    }
+
+    //hide emulator keyboard
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public void setCanGetMore(boolean canGetMore) {
