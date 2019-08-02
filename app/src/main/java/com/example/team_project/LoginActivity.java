@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
-    @BindView(R.id.etUsername)
+    @BindView(R.id.etName)
     EditText etUsername;
     @BindView(R.id.etPassword)
     EditText etPassword;

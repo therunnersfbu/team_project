@@ -33,6 +33,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
 
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.tvName) TextView tvName;
+    @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
 
     @Override
@@ -52,6 +53,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
         rvLiked.setAdapter(likedAdapter);
         user = BottomNavActivity.targetUser;
         tvName.setText(user.getString(User.KEY_NAME));
+        tvUsername.setText(user.getUsername());
 
         ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
         if (imageFile != null) {
