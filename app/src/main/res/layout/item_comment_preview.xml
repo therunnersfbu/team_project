@@ -8,7 +8,7 @@
     android:padding="15dp"
     android:animateLayoutChanges="true">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfilePic"
         android:layout_width="50dp"
         android:layout_height="50dp"

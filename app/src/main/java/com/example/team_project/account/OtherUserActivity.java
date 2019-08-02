@@ -71,6 +71,8 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
                     .load(defaultPic)
                     .placeholder(defaultPic)
                     .error(defaultPic)
+                    .placeholder(defaultPic)
+                    .error(defaultPic)
                     .into(ivProfilePic);
         }
 

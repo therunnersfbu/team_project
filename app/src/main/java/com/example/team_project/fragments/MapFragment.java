@@ -90,7 +90,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         initUserData();
-
         return view;
     }
 
@@ -141,7 +140,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     @Override
     public void onMapReady(GoogleMap map) {
-        //Toast.makeText(getContext(),"bbb", Toast.LENGTH_LONG).show();
         mGoogleMap = map;
         mGoogleMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -226,7 +224,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                mGoogleMap.setMinZoomPreference(mMinZoom);
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , mMinZoom));
                 return false;
             }
         };
