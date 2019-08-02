@@ -2,6 +2,7 @@ package com.example.team_project.search;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.example.team_project.location.LocationActivity;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
+import com.example.team_project.utils.ContextProvider;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -116,7 +118,12 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         initializeVars();
         //tag recycler view
         rvTags.setLayoutManager(myManager);
-        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, this);
+        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return SearchActivity.this;
+            }
+        });
         rvTags.setLayoutManager(horizontalLayout);
         rvTags.setAdapter(mAdapter);
         // tag items
@@ -318,9 +325,10 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mResults.add(event.getEventName());
             }
         }
-        if(mResults.size()<RESULT_LIMIT) {
-            eApi.getMoreEvents();
-        }
+
+ //       if(mResults.size()<RESULT_LIMIT) {
+ //           eApi.getMoreEvents();
+  //      }
 
         dApi.getDistance();
     }

@@ -19,6 +19,8 @@ import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
+// This class enables the user to swipe a spot in the CalendarFragment recycler view and have the
+// ability to delete it from their calendar and database
 
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
@@ -30,7 +32,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     public SwipeToDeleteCallback(CalendarAdapter adapter) {
         super(0, ItemTouchHelper.RIGHT);
         mAdapter = adapter;
-        icon = ContextCompat.getDrawable(mAdapter.getContext(),
+        icon = ContextCompat.getDrawable(mAdapter.getmContext(),
                 R.drawable.ic_delete_white_36);
         background = new ColorDrawable(Color.parseColor("#B71C1C"));
     }
@@ -47,10 +49,10 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         final ParseUser user = ParseUser.getCurrentUser();
         final ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
 
-        ArrayList<String> rvEvents = mAdapter.getEvents();
+        ArrayList<String> rvEvents = mAdapter.getmEvents();
         final String eventToDelete = rvEvents.get(position);
         if (eventToDelete != "NONE!") {
-            new AlertDialog.Builder(mAdapter.getContext())
+            new AlertDialog.Builder(mAdapter.getmContext())
                 .setTitle("Unlike spot")
                 .setMessage("Are you sure you want to delete this spot?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -67,7 +69,6 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                         mAdapter.notifyDataSetChanged();
                     }
                 })
-
                 // A null listener allows the button to dismiss the dialog and take no further action.
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

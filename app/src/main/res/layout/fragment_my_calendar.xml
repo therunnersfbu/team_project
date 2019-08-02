@@ -38,7 +38,7 @@
        android:layout_height="wrap_content">
 
        <TextView
-           android:id="@+id/textView3"
+           android:id="@+id/border_line"
            android:layout_width="349dp"
            android:layout_height="3dp"
            android:layout_marginStart="8dp"
@@ -74,7 +74,7 @@
         android:layout_marginBottom="15dp"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
-        android:text="Events:"
+        android:text="Spots:"
         android:textColor="@android:color/black"
         android:textSize="27sp"
         android:textStyle="bold" />

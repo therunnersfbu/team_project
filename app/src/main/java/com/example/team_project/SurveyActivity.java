@@ -302,9 +302,7 @@ public class SurveyActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e == null) {
                     Log.d("SurveyActivity", "Sign up successful");
-                    final Intent intent = new Intent(SurveyActivity.this, BottomNavActivity.class);
-                    startActivity(intent);
-                    SignUpActivity.signupAct.finish();
+                    setResult(RESULT_OK, new Intent());
                     finish();
                 } else {
                     Log.e("SurveyActivity", "Sign Up failure");
@@ -329,5 +327,11 @@ public class SurveyActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED, new Intent());
+        finish();
     }
 }

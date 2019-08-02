@@ -5,5 +5,11 @@
     <string name="location_permission_denied">Location permission not granted, showing default location</string>
     <string name="liked_event_snippet">Liked Spot!</string>
     <string name="query_error_message">error with query: </string>
+    <string name="cal_delete_message">Are you sure you want to delete this spot?</string>
+    <string name="event_id">eventID</string>
+    <string name="type">type</string>
+    <string name="distance">distance</string>
+    <string name="review">Review: </string>
+    <string name="place_event_class_name">PlaceEvent</string>
 
 </resources>

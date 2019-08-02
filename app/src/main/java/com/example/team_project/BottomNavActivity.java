@@ -23,7 +23,6 @@ public class BottomNavActivity extends AppCompatActivity {
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     //TODO save as private
-    public static BottomNavActivity bottomNavAct;
     public static ParseUser targetUser;
     public static double currentLat;
     public static double currentLng;
@@ -38,8 +37,6 @@ public class BottomNavActivity extends AppCompatActivity {
         PublicVariables.isCurLoc = true;
 
         //TODO do not save as public static var
-        BottomNavActivity.bottomNavAct = this;
-
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
@@ -91,9 +88,17 @@ public class BottomNavActivity extends AppCompatActivity {
 
         if (id == R.id.item_profile) {
             Intent i = new Intent(this, ProfileActivity.class);
-            startActivity(i);
+            startActivityForResult(i, 1);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
     }
 }

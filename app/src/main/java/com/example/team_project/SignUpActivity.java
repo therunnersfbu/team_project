@@ -30,22 +30,27 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public static Activity signupAct;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-        signupAct = this;
     }
 
-        // User Signup
-        private void signup (String username, String password, String email){
-            final Intent intent = new Intent(this, SurveyActivity.class);
-            intent.putExtra("username", username);
-            intent.putExtra("email", email);
-            intent.putExtra("password", password);
-            startActivity(intent);
+    // User Signup
+    private void signup (String username, String password, String email) {
+        final Intent intent = new Intent(this, SurveyActivity.class);
+        intent.putExtra("username", username);
+        intent.putExtra("email", email);
+        intent.putExtra("password", password);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            startActivity(new Intent(this, BottomNavActivity.class));
+            finish();
         }
     }
+}
