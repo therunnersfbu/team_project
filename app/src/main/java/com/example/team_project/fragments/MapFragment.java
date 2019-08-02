@@ -64,6 +64,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private int mMinZoom = 3;
     private String mCurrentSpotId;
     private Toast toast;
+    private LatLng mUnitedStates = new LatLng(39.8283, -98.5795);
 
     @BindView(R.id.mapicon) ImageButton mMapIcon;
     @BindString(R.string.map_frag_tag) String mMapFragTag;
@@ -126,7 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mMapIcon.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
+               mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mUnitedStates , 0));
                mGoogleMap.setMinZoomPreference(mMinZoom);
            }
         });

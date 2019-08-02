@@ -38,7 +38,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-// TODO get dots to refresh
+
 // The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
 // events and allows the user to click on variuous days and see all their added spots for that day
 public class MyCalendarFragment extends Fragment{
@@ -156,7 +156,6 @@ public class MyCalendarFragment extends Fragment{
                     String eventName = eventarray[2];
                     theDaysEvents.add(eventName);
                 }
-                Log.d("calfrag", "the days events: " + theDaysEvents);
             }
             if (theDaysEvents.size() == 0) {
                 mNoneTV.setVisibility(View.VISIBLE);

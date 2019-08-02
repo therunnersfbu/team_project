@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 // This class enables the user to swipe a spot in the CalendarFragment recycler view and have the
 // ability to delete it from their calendar and database
-
 public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
     private CalendarAdapter mAdapter;
@@ -48,7 +47,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
         final ParseUser user = ParseUser.getCurrentUser();
         final ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-
+        // strings must be hardcoded becuase this is not an activity or fragment because context is needed
         ArrayList<String> rvEvents = mAdapter.getmEvents();
         final String eventToDelete = rvEvents.get(position);
         if (eventToDelete != "NONE!") {

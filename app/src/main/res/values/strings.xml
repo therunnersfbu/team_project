@@ -15,4 +15,5 @@
     <string name="place_event_class_name">PlaceEvent</string>
     <string name="calendar_frag_tag">CalendarFragment</string>
     <string name="map_frag_tag">MapFragment</string>
+    <string name="delete_spot_confirmation">Are you sure you want to delete this spot?</string>
 </resources>
