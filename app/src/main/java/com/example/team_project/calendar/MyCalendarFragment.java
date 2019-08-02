@@ -34,7 +34,10 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
+// TODO get dots to refresh
+// TODO after you click an event with a new days events it doesnt refresh
+// TODO check if it refreshed the days events then look at the view and my new if statement
+// TODO if you click on day with two things in the recycler view then that the first spot will not leave
 // The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
 // events and allows the user to click on variuous days and see all their added spots for that day
 public class MyCalendarFragment extends Fragment{
@@ -112,6 +115,7 @@ public class MyCalendarFragment extends Fragment{
                 mCurrentDate.setText(mDateFormat.format(firstDayOfNewMonth));
             }
         });
+
         setRecyclerView(view);
     }
 
@@ -142,6 +146,7 @@ public class MyCalendarFragment extends Fragment{
     }
 
     private void retrieveEvents(Date date) {
+        mCalRV.removeAllViews();
         String numberDate = mSimpleDateFormat.format(date);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
@@ -150,6 +155,7 @@ public class MyCalendarFragment extends Fragment{
                     String eventName = eventarray[2];
                     theDaysEvents.add(eventName);
                 }
+                Log.d("calfrag", "the days events: " + theDaysEvents);
             }
             if (theDaysEvents.size() == 0) {
                 mNoneTV.setVisibility(View.VISIBLE);
