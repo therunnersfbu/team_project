@@ -29,11 +29,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private Context mContext;
     private ParseUser user = ParseUser.getCurrentUser();
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-    private int count;
-    private TextView tvEventName;
-    private TextView tvAddress;
-    private TextView tvEventPlace;
-    private ImageView ivEventImage;
+    private int mCount;
+    private TextView mTVEventName;
+    private TextView mTVAddress;
+    private TextView mTVEventPlace;
+    private ImageView mIVEventImage;
 
 
     public CalendarAdapter(Context context, ArrayList<String> theDaysEvents) {
@@ -59,27 +59,27 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
         if (mEvents.contains("NONE!")) {
-            tvEventName.setText("NONE!");
-            tvAddress.setVisibility(View.GONE);
-            tvEventPlace.setVisibility(View.GONE);
-            ivEventImage.setVisibility(View.GONE);
+            mTVEventName.setText("NONE!");
+            mTVAddress.setVisibility(View.GONE);
+            mTVEventPlace.setVisibility(View.GONE);
+            mIVEventImage.setVisibility(View.GONE);
         }else {
             for (int x = 0; x < parseevents.size(); x++) {
-                tvAddress.setVisibility(View.VISIBLE);
-                tvEventPlace.setVisibility(View.VISIBLE);
-                ivEventImage.setVisibility(View.VISIBLE);
+                mTVAddress.setVisibility(View.VISIBLE);
+                mTVEventPlace.setVisibility(View.VISIBLE);
+                mIVEventImage.setVisibility(View.VISIBLE);
                 String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
                 if (mEvents.get(i).equals(mParseEvent[2])) {
-                    tvEventName.setText(mParseEvent[2]);
-                    tvAddress.setText(mParseEvent[3]);
+                    mTVEventName.setText(mParseEvent[2]);
+                    mTVAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];
                     if ('E' != eventApiId.charAt(0)) {
-                        tvEventPlace.setText("Place");
-                        ivEventImage.setImageResource(R.drawable.sky);
+                        mTVEventPlace.setText("Place");
+                        mIVEventImage.setImageResource(R.drawable.sky);
                         break;
                     } else {
-                        tvEventPlace.setText("Event");
-                        ivEventImage.setImageResource(R.drawable.event);
+                        mTVEventPlace.setText("Event");
+                        mIVEventImage.setImageResource(R.drawable.event);
                         break;
                     }
                 }
@@ -101,10 +101,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            tvEventName = itemView.findViewById(R.id.tvEventName);
-            tvAddress = itemView.findViewById(R.id.tvAddress);
-            tvEventPlace = itemView.findViewById(R.id.tvType);
-            ivEventImage = itemView.findViewById(R.id.ivEventImage);
+            mTVEventName = itemView.findViewById(R.id.tvEventName);
+            mTVAddress = itemView.findViewById(R.id.tvAddress);
+            mTVEventPlace = itemView.findViewById(R.id.tvType);
+            mIVEventImage = itemView.findViewById(R.id.ivEventImage);
             itemView.setOnClickListener(this);
         }
 
@@ -119,7 +119,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                         String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
                         DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
                         PlaceEvent mParseEvent = query(eventapi);
-                        count = x;
+                        mCount = x;
                         api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
                         api.getDistance();
                     }
@@ -130,7 +130,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     public void gotDistance(String distanceApi) {
         Boolean isEvent;
-        String eventApiId = parseevents.get(count).split(PublicVariables.splitindicator)[1];
+        String eventApiId = parseevents.get(mCount).split(PublicVariables.splitindicator)[1];
         if ('E' != eventApiId.charAt(0)) {
             isEvent = true;
         } else {
