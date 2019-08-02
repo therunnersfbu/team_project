@@ -523,8 +523,9 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         return view;
     }
 
-    private  TextView createPlaceholder() {
+    private  ImageView createPlaceholder() {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return (TextView) inflater.inflate(R.layout.item_gallery_placeholder, null);
+        ImageView view = (ImageView) inflater.inflate(R.layout.item_gallery_placeholder, null);
+        return view;
     }
 }

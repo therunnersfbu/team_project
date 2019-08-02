@@ -5,8 +5,10 @@
         <item name="colorPrimary">@color/cardview_light_background</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
     <style name="ProgBar" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorAccent">@color/appThemeBlue</item>
     </style>
+
 </resources>
