@@ -32,7 +32,7 @@ public class UserSearchActivity extends AppCompatActivity {
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
         String searchText = mSearchBar.getText().toString();
-        ParseQuery query = new ParseQuery("User");
+        ParseQuery query = new ParseQuery("_User");
         query.setLimit(1000);
         query.whereContains(User.KEY_USERNAME, searchText);
 
@@ -65,12 +65,5 @@ public class UserSearchActivity extends AppCompatActivity {
         });
         mRvResults.setLayoutManager(new LinearLayoutManager(this));
         mRvResults.setAdapter(mAdapter);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mUserList.clear();
-        mAdapter.notifyDataSetChanged();
     }
 }
