@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.team_project.BottomNavActivity;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -22,7 +24,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-
+// TODO check on click
 // the Calendar Adapter allows for the spots information to be seen within the recycler view of the CalendarFragment
 // and allows the user to click a spot in the recycler view and be sent to the Details Activity for that specific event
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements DirectionsApi.GetSingleDistance {
@@ -59,34 +61,26 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        if (mEvents.contains("NONE!")) {
-            mTVEventName.setText("NONE!");
-            mTVAddress.setVisibility(View.GONE);
-            mTVEventPlace.setVisibility(View.GONE);
-            mIVEventImage.setVisibility(View.GONE);
-        }else {
-            for (int x = 0; x < parseevents.size(); x++) {
-                mTVAddress.setVisibility(View.VISIBLE);
-                mTVEventPlace.setVisibility(View.VISIBLE);
-                mIVEventImage.setVisibility(View.VISIBLE);
-                String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
-                if (mEvents.get(i).equals(mParseEvent[2])) {
-                    mTVEventName.setText(mParseEvent[2]);
-                    mTVAddress.setText(mParseEvent[3]);
-                    String eventApiId = mParseEvent[1];
-                    if ('E' != eventApiId.charAt(0)) {
-                        mTVEventPlace.setText("Place");
-                        mIVEventImage.setImageResource(R.drawable.sky);
-                        break;
-                    } else {
-                        mTVEventPlace.setText("Event");
-                        mIVEventImage.setImageResource(R.drawable.event);
-                        break;
-                    }
+        Log.d("calada", "event in onBindViewHolder:" + mEvents.get(i)); // correct
+        for (int x = 0; x < parseevents.size(); x++) {
+            String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
+            if (mEvents.get(i).equals(mParseEvent[2])) {
+                Log.d("calada", "setting name:" + mParseEvent[2]); // correct
+                mTVEventName.setText(mParseEvent[2]);
+                mTVAddress.setText(mParseEvent[3]);
+                String eventApiId = mParseEvent[1];
+                if ('E' != eventApiId.charAt(0)) {
+                    mTVEventPlace.setText("Place");
+                    mIVEventImage.setImageResource(R.drawable.sky);
+                    break;
+                } else {
+                    mTVEventPlace.setText("Event");
+                    mIVEventImage.setImageResource(R.drawable.event);
+                    break;
                 }
             }
         }
-    }
+}
 
     @Override
     public int getItemCount() {
@@ -99,7 +93,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             mTVEventName = itemView.findViewById(R.id.tvEventName);
@@ -109,16 +102,17 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             itemView.setOnClickListener(this);
         }
 
-        // to click event and be taken to DetailsActivity
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 String eventname = mEvents.get(position);
+                Log.d("calada", "event name in onClick: " + eventname);
                 for (int x = 0; x < parseevents.size(); x++) {
                     if (eventname.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
                         String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
                         DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
+                        api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
                         PlaceEvent mParseEvent = query(eventapi);
                         mCount = x;
                         api.addDestination(mParseEvent.getCoordinates().replace(" ", ","));
@@ -137,8 +131,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         } else {
             isEvent = false;
         }
-
-        // string must be hardcoded because you cannot store strings in String.xml and retrieve
+        // name must be hardcoded in adapter in order to go to intent
         Intent intent = new Intent(mContext, DetailsActivity.class);
         intent.putExtra("eventID", eventApiId);
         intent.putExtra("type", isEvent);

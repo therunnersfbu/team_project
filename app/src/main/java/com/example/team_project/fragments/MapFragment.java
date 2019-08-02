@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
@@ -33,11 +34,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -48,12 +53,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Unbinder mUnbinder;
     private GoogleMap mGoogleMap;
     private ImageButton mMapIcon;
-    private ParseUser user = ParseUser.getCurrentUser();
-    private ArrayList<String> likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-    private ArrayList<String> addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+    private ParseUser user;
+    private ArrayList<String> likedEvents;
+    private ArrayList<String> addedEvents;
     private int mMaxLimit = 1000;
     private int mMinZoom = 3;
-    private String mTAG = "MapFragment";
     private String mCurrentSpotId;
 
     @Nullable
@@ -61,23 +65,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         mUnbinder = ButterKnife.bind(this, view);
-        //initUserData();
+        initUserData();
         return view;
     }
 
-    /*private void initUserData() {
+    // ensures and checks if there is user data available and if so it initializes the list
+    private void initUserData() {
         user = ParseUser.getCurrentUser();
-        //check if data is available or not, if not fetch.
-        if(not fetched){
+        if (user != null) {
             user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject object, ParseException e) {
-                    //init likedEvents and addedEvents here.
+                    likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+                    addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+
                 }
             });
+        }else{
+            Log.d(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.user_error_message));
+            return;
         }
+    }
 
-    }*/
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -205,7 +214,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<Post> posts, ParseException e) {
             if (e != null) {
-                Log.e(mTAG, getResources().getString(R.string.query_error_message) + e.getMessage());
+                Log.e(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.query_error_message) + e.getMessage());
                 e.printStackTrace();
                 return;
             }
@@ -225,7 +234,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     protected void queryLikedEvents(){
-        ParseQuery placeEventQuery = new ParseQuery(getResources().getString(R.string.place_event_class_name));//TODO make it constant.
+        ParseQuery placeEventQuery = new ParseQuery(getResources().getString(R.string.place_event_class_name));
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> likedEventIds = new ArrayList<>();
         for (int i= 0; i < likedEvents.size();i++){
@@ -238,7 +247,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
                 if (e != null) {
-                    Log.e(mTAG, getResources().getString(R.string.query_error_message) + e.getMessage());
+                    Log.e(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.query_error_message) + e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -268,7 +277,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
                 if (e != null) {
-                    Log.e(mTAG, getResources().getString(R.string.query_error_message) + e.getMessage());
+                    Log.e(getResources().getString(R.string.map_frag_tag), getResources().getString(R.string.query_error_message) + e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -277,7 +286,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     String placeEventName = placeEvents.get(i).getName();
                     String addedSpotId = placeEvents.get(i).getAppId();
                     Float color = BitmapDescriptorFactory.HUE_BLUE;
-                    String snippet = getResources().getString(R.string.liked_event_snippet);
+                    String snippet = getResources().getString(R.string.saved_event_snippet);
                     makeMapMarker(placeEventCoord, addedSpotId, placeEventName, snippet, color);
                 }
             }
