@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
+import com.example.team_project.details.EventsDetailsAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
@@ -23,12 +25,21 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     private final List<String> mTagList;
     private final List<String> mDistances;
     private final List<String> mIds;
+    private AdapterCallback mCallback;
 
     public ResultsAdapter(ArrayList<String> tagList, ArrayList<String> distances, ArrayList<String> ids, boolean isPlace) {
         this.isPlace = isPlace;
         this.mTagList = tagList;
         this.mDistances = distances;
         this.mIds = ids;
+    }
+
+    public void setOnItemClickedListener(ResultsAdapter.AdapterCallback callback) {
+        this.mCallback = callback;
+    }
+
+    public interface AdapterCallback {
+        void onItemClicked();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -39,6 +50,9 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
             super(view);
             ButterKnife.bind(this, view);
             view.setOnClickListener(this);
+            if(mTagList.isEmpty()) {
+                mCallback.onItemClicked();
+            }
         }
 
         @Override

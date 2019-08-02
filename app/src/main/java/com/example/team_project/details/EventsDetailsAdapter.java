@@ -29,6 +29,7 @@ import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.fragments.EventsFragment;
+import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
@@ -74,6 +75,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private DatePickerDialog mPicker;
     private HeaderViewHolder mViewHolder;
     private Context mContext;
+    private AdapterCallback mCallback;
 
     public EventsDetailsAdapter(ArrayList<Post> posts, String id, boolean isPlace, String distance, ContextProvider context) {
         this.mId = id;
@@ -87,6 +89,14 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
         mRecyclerView = recyclerView;
+    }
+
+    public void setOnItemClickedListener(EventsDetailsAdapter.AdapterCallback callback) {
+        this.mCallback = callback;
+    }
+
+    public interface AdapterCallback {
+        void onItemClicked();
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -311,6 +321,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
         setImages();
+        mCallback.onItemClicked();
     }
 
     @Override
@@ -411,6 +422,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
         });
         setImages();
+        mCallback.onItemClicked();
     }
 
     private void checkPlaceEventExists(final String name) {
