@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private ArrayList<String> addedEvents;
     private int mMaxLimit = 1000;
     private int mMinZoom = 3;
+    private int mToastLength = 4;
     private String mCurrentSpotId;
 
     @BindView(R.id.mapicon) ImageButton mMapIcon;
@@ -100,7 +102,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 public void done(ParseObject object, ParseException e) {
                     likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
                     addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-
                 }
             });
         }else{
@@ -113,11 +114,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        showInitialToast(view);
+
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
         Drawable loginActivityBackground = mMapIcon.getBackground();
         loginActivityBackground.setAlpha(230);
+
+        mMapIcon = view.findViewById(R.id.mapicon);
+        mMapIcon.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
+               mGoogleMap.setMinZoomPreference(mMinZoom);
+           }
+        });
     }
 
     @Override
@@ -212,7 +224,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
-                mGoogleMap.setMinZoomPreference(mMinZoom);
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , mMinZoom));
                 return false;
             }
         };
@@ -268,7 +280,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     String placeEventCoord = placeEvents.get(i).getCoordinates();
                     String placeEventName = placeEvents.get(i).getName();
                     String likedSpotId = placeEvents.get(i).getAppId();
-                    Float color = BitmapDescriptorFactory.HUE_ROSE;
+                    Float color = BitmapDescriptorFactory.HUE_YELLOW;
                     String snippet = mLikedEventSnippet;
                     makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
                 }
@@ -319,12 +331,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mGoogleMap.setOnInfoWindowClickListener(MapFragment.this);
     }
 
-    public Boolean getSpotType(String id){
+    private Boolean getSpotType(String id){
         if ('E' != id.charAt(0)) {
             PublicVariables.isEvent = true;
         } else {
             PublicVariables.isEvent = false;
         }
         return PublicVariables.isEvent;
+    }
+
+    private void showInitialToast(View view){
+        for (int i = 0; i < mToastLength; i++) {
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.custom_toast,
+                    (ViewGroup) view.findViewById(R.id.custom_toast_container));
+            final Toast toast = new Toast(getContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout);
+            toast.show();
+        }
     }
 }

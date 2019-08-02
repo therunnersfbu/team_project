@@ -8,11 +8,13 @@
     android:padding="15dp"
     android:animateLayoutChanges="true">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ivProfilePic"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:adjustViewBounds="true"
         android:background="@color/colorAccent"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@color/colorAccent" />

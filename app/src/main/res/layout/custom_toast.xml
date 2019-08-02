@@ -1,0 +1,114 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/custom_toast_container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#DAAA"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvYellow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BLUE!"
+        android:textColor="#0D43EC"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvSavedSpots"
+        app:layout_constraintTop_toTopOf="@+id/tvSavedSpots" />
+
+    <ImageView
+        android:id="@+id/ivMapMarkers"
+        android:layout_width="194dp"
+        android:layout_height="115dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/tvSavedSpots"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvToastIntro"
+        app:srcCompat="@drawable/multiplemarkers" />
+
+    <TextView
+        android:id="@+id/tvToastIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="See your spots!"
+        android:textColor="#FFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/ivMapMarkers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvYellowSpots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:text="Liked spots are"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvYellow"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvReviewsSpots" />
+
+    <TextView
+        android:id="@+id/tvYellow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="YELLOW!"
+        android:textColor="@color/quantum_yellow600"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvYellowSpots"
+        app:layout_constraintTop_toTopOf="@+id/tvYellowSpots" />
+
+    <TextView
+        android:id="@+id/tvYellow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RED!"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvReviewsSpots"
+        app:layout_constraintTop_toTopOf="@+id/tvReviewsSpots" />
+
+    <TextView
+        android:id="@+id/tvSavedSpots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saved spots are"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvReviewsSpots"
+        app:layout_constraintEnd_toStartOf="@+id/tvYellow3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivMapMarkers" />
+
+    <TextView
+        android:id="@+id/tvReviewsSpots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="3dp"
+        android:layout_marginRight="3dp"
+        android:text="Reviewed spots are"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvYellowSpots"
+        app:layout_constraintEnd_toStartOf="@+id/tvYellow2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSavedSpots" />
+</android.support.constraint.ConstraintLayout>

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 @ParseClassName("User")
 public class User extends ParseObject {
     // list the attributes
+    public static final String KEY_USERNAME = "username";
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
