@@ -72,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
-    @BindDrawable(R.drawable.default_profilepic) Drawable defaultPic;
+    @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
     @BindDrawable(R.drawable.ic_add_black_24dp) Drawable surveyAdd;
 
     @OnClick(R.id.ivProfilePic)
@@ -114,7 +114,11 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
                     .error(defaultPic)
                     .into(ivProfilePic);
         } else {
-            ivProfilePic.setImageResource(R.drawable.default_profilepic);
+            Glide.with(this)
+                    .load(defaultPic)
+                    .placeholder(defaultPic)
+                    .error(defaultPic)
+                    .into(ivProfilePic);
         }
 
         getLiked();

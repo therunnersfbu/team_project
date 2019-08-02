@@ -1,5 +1,6 @@
 package com.example.team_project.account;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,8 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import java.util.ArrayList;
+
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -31,6 +34,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
     private LikedAdapter likedAdapter;
     private ParseUser user;
 
+    @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvUsername) TextView tvUsername;
@@ -59,14 +63,16 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
         if (imageFile != null) {
             Glide.with(this)
                     .load(imageFile.getUrl())
-                    .placeholder(R.drawable.default_profilepic)
-                    .error(R.drawable.default_profilepic)
+                    .placeholder(defaultPic)
+                    .error(defaultPic)
                     .into(ivProfilePic);
         } else {
             Glide.with(this)
-                    .load(R.drawable.default_profilepic)
-                    .placeholder(R.drawable.default_profilepic)
-                    .error(R.drawable.default_profilepic)
+                    .load(defaultPic)
+                    .placeholder(defaultPic)
+                    .error(defaultPic)
+                    .placeholder(defaultPic)
+                    .error(defaultPic)
                     .into(ivProfilePic);
         }
 
