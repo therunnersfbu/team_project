@@ -75,6 +75,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     public static boolean type;
 
     @BindView(R.id.rvSuggestions) RecyclerView rvSuggestions;
+    @BindView(R.id.btnSearchBar) Button btnSearchBar;
 
     @OnClick(R.id.btnSearchBar)
     public void buttonSearch(Button button) {
@@ -82,7 +83,8 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         Intent intent = new Intent(getContext(), SearchActivity.class);
         intent.putExtra("latitude", mLatitude);
         intent.putExtra("longitude", mLongitude);
-        getContext().startActivity(intent);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) getContext(), (View)btnSearchBar, "category");
+        getContext().startActivity(intent, options.toBundle());
     }
 
     @Nullable

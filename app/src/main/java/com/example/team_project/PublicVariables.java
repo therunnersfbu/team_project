@@ -25,19 +25,6 @@ public class PublicVariables {
         return PublicVariables.isEvent;
     }
 
-    public enum eventCategories {
-        CONCERT,
-        FAIR;
-
-        public int isPlace() {
-            switch(this) {
-                case CONCERT: return 7;
-                case FAIR: return 8;
-                default: return -1;
-            }
-        }
-    }
-
     public static String[] primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
             "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
             "clubby", "mall", "food available", "barber", "spa", "classes", "trails",
