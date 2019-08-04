@@ -12,13 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.team_project.PublicVariables;
+import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.User;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -62,7 +64,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
                             String likeId = ids.get(getAdapterPosition());
                             String likeName = names.get(getAdapterPosition());
                             for (int i = 0; i < liked.size(); i++) {
-                                String[] temp = liked.get(i).split(PublicVariables.splitindicator);
+                                String[] temp = liked.get(i).split(Constants.splitindicator);
                                 if (temp[0].equals(likeId) && temp[1].equals(likeName)) {
                                     liked.remove(i);
                                     names.remove(getAdapterPosition());

@@ -12,7 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.example.team_project.PublicVariables;
+import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.parse.ParseUser;
@@ -58,7 +58,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
                     public void onClick(DialogInterface dialog, int which) {
 
                         for (int x = 0; x < parseevents.size(); x++) {
-                            if (eventToDelete.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
+                            if (eventToDelete.equals(parseevents.get(x).split(Constants.splitindicator)[2])) {
                                 parseevents.remove(x);
                                 user.put(User.KEY_ADDED_EVENTS, parseevents);
                             }
