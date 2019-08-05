@@ -100,7 +100,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         View view = inflater.inflate(R.layout.fragment_events, parent, false);
         mUnbinder = ButterKnife.bind(this, view);
         return view;
-
     }
 
     // initi method
@@ -158,7 +157,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         }
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }else{
             setMyLocation();
         }
