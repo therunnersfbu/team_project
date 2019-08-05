@@ -22,24 +22,15 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     private static String ID_TAG= "eventID";
     private static String IS_PLACE_TAG= "type";
     private static String DISTANCE_TAG= "distance";
-    private final List<String> mTagList;
+    private final List<String> mResultsList;
     private final List<String> mDistances;
     private final List<String> mIds;
-    private AdapterCallback mCallback;
 
-    public ResultsAdapter(ArrayList<String> tagList, ArrayList<String> distances, ArrayList<String> ids, boolean isPlace) {
+    public ResultsAdapter(ArrayList<String> resultsList, ArrayList<String> distances, ArrayList<String> ids, boolean isPlace) {
         this.isPlace = isPlace;
-        this.mTagList = tagList;
+        this.mResultsList = resultsList;
         this.mDistances = distances;
         this.mIds = ids;
-    }
-
-    public void setOnItemClickedListener(ResultsAdapter.AdapterCallback callback) {
-        this.mCallback = callback;
-    }
-
-    public interface AdapterCallback {
-        void onItemClicked();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -50,9 +41,6 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
             super(view);
             ButterKnife.bind(this, view);
             view.setOnClickListener(this);
-            if(mTagList.isEmpty()) {
-                mCallback.onItemClicked();
-            }
         }
 
         @Override
@@ -77,12 +65,12 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvName.setText(mTagList.get(position));
+        holder.tvName.setText(mResultsList.get(position));
         holder.tvDistance.setText(mDistances.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mTagList.size();
+        return mResultsList.size();
     }
 }

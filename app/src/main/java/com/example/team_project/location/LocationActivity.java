@@ -12,7 +12,6 @@ import android.widget.EditText;
 import com.example.team_project.R;
 import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.search.SearchActivity;
-
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.

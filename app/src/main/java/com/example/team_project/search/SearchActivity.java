@@ -43,7 +43,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances, ResultsAdapter.AdapterCallback{
+public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
     // permission codes and constants
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
@@ -176,7 +176,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
-        mResultsAdapter.setOnItemClickedListener(this);
         //set progressbar to invisible if user input window open
         if(category==USER_SEARCH) {
             mProgressBar.setVisibility(GONE);
@@ -356,6 +355,9 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mResults.add(event.getEventName());
             }
         }
+        if(mEventList.isEmpty()) {
+            mProgressBar.setVisibility(GONE);
+        }
         dApi.getDistance();
     }
 
@@ -399,6 +401,9 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mIds.add(place.getPlaceId());
             }
         }
+        if(mResults.isEmpty()) {
+            mProgressBar.setVisibility(GONE);
+        }
         dApi.getDistance();
     }
 
@@ -439,10 +444,5 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
-    }
-
-    @Override
-    public void onItemClicked() {
-        mProgressBar.setVisibility(View.GONE);
     }
 }
