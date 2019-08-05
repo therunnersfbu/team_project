@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/ivHeaderImage"
-        android:layout_width="403dp"
+        android:layout_width="0dp"
         android:layout_height="175dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"

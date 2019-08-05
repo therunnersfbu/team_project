@@ -11,7 +11,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="#7D9FD5"
     card_view:cardCornerRadius="7dp"
-    card_view:cardElevation="10dp"
+    card_view:cardElevation="12dp"
     card_view:contentPadding="7dp">
 
     <TextView
