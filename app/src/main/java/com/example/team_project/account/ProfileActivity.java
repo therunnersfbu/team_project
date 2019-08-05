@@ -77,11 +77,18 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
+    @BindView(R.id.ivHeaderImage) ImageView ivHeaderImage;
     @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
+    @BindDrawable(R.drawable.header_default) Drawable defaultHeader;
     @BindDrawable(R.drawable.ic_add_black_24dp) Drawable surveyAdd;
 
     @OnClick(R.id.ivProfilePic)
     public void changeProfilePic(ImageView view) {
+        askFilePermission();
+    }
+
+    @OnClick(R.id.ivHeaderImage)
+    public void changeHeaderImage(ImageView view) {
         askFilePermission();
     }
 
@@ -113,6 +120,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         tvUsername.setText(user.getUsername());
 
         ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
+        ParseFile headerFile = user.getParseFile(User.KEY_HEADER_IMAGE);
         if (imageFile != null) {
             Glide.with(this)
                     .load(imageFile.getUrl())
@@ -126,6 +134,21 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
                     .error(defaultPic)
                     .into(ivProfilePic);
         }
+
+        if (headerFile != null) {
+            Glide.with(this)
+                    .load(headerFile.getUrl())
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .into(ivHeaderImage);
+        } else {
+            Glide.with(this)
+                    .load(defaultHeader)
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .into(ivHeaderImage);
+        }
+
 
         getLiked();
     }

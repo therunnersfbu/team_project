@@ -255,7 +255,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 String name = post.getEventPlace().getName();
                 String reviewId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
-                Float color = BitmapDescriptorFactory.HUE_RED;
+                Float color = BitmapDescriptorFactory.HUE_YELLOW;
                 if (coordinates != null){
                     makeMapMarker(coordinates, reviewId, name, review, color);
             }}
@@ -285,7 +285,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     String placeEventCoord = placeEvents.get(i).getCoordinates();
                     String placeEventName = placeEvents.get(i).getName();
                     String likedSpotId = placeEvents.get(i).getAppId();
-                    Float color = BitmapDescriptorFactory.HUE_YELLOW;
+                    Float color = BitmapDescriptorFactory.HUE_RED;
                     String snippet = mLikedEventSnippet;
                     makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
                 }
