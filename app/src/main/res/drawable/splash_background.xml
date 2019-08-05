@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/appThemeBlue" />
+    <item>
+        <scale android:drawable="@drawable/logo_no_background"
+            android:level="5000"
+            android:scaleGravity="center"
+            android:scaleHeight="100%"
+            android:scaleWidth="0%" />
+    </item>
+</layer-list>

@@ -29,8 +29,15 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.btnSignUp)
     public void signupBK(Button button) {
         final Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-        startActivity(intent);
-        finish();
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            startActivity(new Intent(this, BottomNavActivity.class));
+            finish();
+        }
     }
 
     @Override

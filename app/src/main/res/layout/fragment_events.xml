@@ -173,12 +173,15 @@
         android:layout_marginStart="23dp"
         android:layout_marginLeft="23dp"
         android:layout_marginTop="6dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
         android:background="#00FFFFFF"
         android:scaleType="fitCenter"
         android:scaleX=".75"
         android:scaleY=".75"
         android:src="@drawable/microphone_karaoke_outline_24_4x"
         android:tint="#E91E63"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnShopping"
         app:layout_constraintTop_toBottomOf="@+id/tvDinner" />
 
@@ -373,12 +376,13 @@
 
     <Button
         android:id="@+id/btnSearchBar"
-        android:layout_width="388dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="15dp"
-        android:transitionName="category"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/button_shadow"
         android:drawableLeft="@drawable/search_icon"
         android:drawablePadding="20dp"
@@ -387,6 +391,8 @@
         android:text="Search a spot"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:transitionName="category"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
