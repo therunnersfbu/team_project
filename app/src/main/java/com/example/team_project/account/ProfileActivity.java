@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.team_project.BottomNavActivity;
+import com.example.team_project.Constants;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.SurveyActivity;
@@ -215,7 +216,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
 
         for (String i : likedParse) {
             try {
-                String[] spot = i.split(PublicVariables.splitindicator);
+                String[] spot = i.split(Constants.splitindicator);
                 ids.add(spot[0]);
                 liked.add(spot[1]);
                 address.add(spot[2]);

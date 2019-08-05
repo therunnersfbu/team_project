@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.team_project.BottomNavActivity;
+import com.example.team_project.Constants;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -264,7 +265,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> likedEventIds = new ArrayList<>();
         for (int i= 0; i < likedEvents.size();i++){
-            String eventId = likedEvents.get(i).split(PublicVariables.splitindicator)[0];
+            String eventId = likedEvents.get(i).split(Constants.splitindicator)[0];
             likedEventIds.add(eventId);
         }
         placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, likedEventIds);
@@ -294,7 +295,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> addedEventApis = new ArrayList<>();
         for (int i= 0; i < addedEvents.size();i++){
-            String addedSpotId = addedEvents.get(i).split(PublicVariables.splitindicator)[1];
+            String addedSpotId = addedEvents.get(i).split(Constants.splitindicator)[1];
             addedEventApis.add(addedSpotId);
         }
         placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, addedEventApis);

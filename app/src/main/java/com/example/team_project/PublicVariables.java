@@ -5,24 +5,13 @@ import java.util.ArrayList;
 public class PublicVariables {
     public static final String[] SURVEY_ITEMS = {"Restaurants", "Sightseeing", "NightLife", "Shopping", "Concerts",
             "Fairs", "Beauty" ,"Working Out", "Parks", "Upscale", "Outdoors", "Indoors", "Family Friendly"};
-    public static final String splitindicator = "\\(\\)";
-    public static final String separator = "()";
-    public ArrayList<String> events;
     public static Boolean isEvent;
     public static String newLoc;
     public static String newLocName;
+    //TODO save currentlocation on Parse
     public static boolean isCurLoc = true;
     public static String googleApi;
     public static String eventfulApi;
-
-    public static Boolean isEvent(String apiId){
-        if ('E' != apiId.charAt(0)) {
-            PublicVariables.isEvent = true;
-        } else {
-            PublicVariables.isEvent = false;
-        }
-        return PublicVariables.isEvent;
-    }
 
     public static String[] primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
             "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",

@@ -378,6 +378,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
+        android:transitionName="category"
         android:background="@drawable/button_shadow"
         android:drawableLeft="@drawable/search_icon"
         android:drawablePadding="20dp"

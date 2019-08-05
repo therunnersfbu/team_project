@@ -1,15 +1,16 @@
 package com.example.team_project.account;
 
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.example.team_project.BottomNavActivity;
-import com.example.team_project.PublicVariables;
+import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.model.PlaceEvent;
@@ -18,6 +19,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 
 import butterknife.BindDrawable;
@@ -85,7 +87,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
         ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
         for (String i : likedParse) {
             try {
-                String[] spot = i.split(PublicVariables.splitindicator);
+                String[] spot = i.split(Constants.splitindicator);
                 ids.add(spot[0]);
                 liked.add(spot[1]);
                 address.add(spot[2]);
