@@ -2,7 +2,6 @@ package com.example.team_project.calendar;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,20 +12,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.team_project.BottomNavActivity;
-import com.example.team_project.PublicVariables;
+import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
+import com.google.j2objc.annotations.Weak;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -41,13 +41,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int mCount;
 
+    private WeakReference<DirectionsApi.GetSingleDistance> mGetSingleDistance;
+
     public CalendarAdapter(ContextProvider cp, ArrayList<String> theDaysEvents) {
         this.mEvents = theDaysEvents;
         this.mContext = cp.getContext();
-    }
 
-    public Context getmContext() {
-        return this.mContext;
+        mGetSingleDistance = new WeakReference<>((DirectionsApi.GetSingleDistance) this);
     }
 
     public ArrayList<String> getmEvents() {
@@ -93,7 +93,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
         private void bind() {
             for (int x = 0; x < parseevents.size(); x++) {
-                String[] mParseEvent = parseevents.get(x).split(PublicVariables.splitindicator);
+                String[] mParseEvent = parseevents.get(x).split(Constants.splitindicator);
                 if (mEvents.get(getAdapterPosition()).equals(mParseEvent[2])) {
                     Log.d("calada", "setting name:" + mParseEvent[2]); // correct
                     mTVEventName.setText(mParseEvent[2]);
@@ -119,9 +119,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 String eventname = mEvents.get(position);
                 Log.d("calada", "event name in onClick: " + eventname);
                 for (int x = 0; x < parseevents.size(); x++) {
-                    if (eventname.equals(parseevents.get(x).split(PublicVariables.splitindicator)[2])) {
-                        String eventapi = parseevents.get(x).split(PublicVariables.splitindicator)[1];
-                        DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
+                    if (eventname.equals(parseevents.get(x).split(Constants.splitindicator)[2])) {
+                        String eventapi = parseevents.get(x).split(Constants.splitindicator)[1];
+                        DirectionsApi api = new DirectionsApi(mGetSingleDistance.get());
                         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
                         PlaceEvent mParseEvent = query(eventapi);
                         mCount = x;
@@ -135,7 +135,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     public void gotDistance(String distanceApi) {
         Boolean isEvent;
-        String eventApiId = parseevents.get(mCount).split(PublicVariables.splitindicator)[1];
+        String eventApiId = parseevents.get(mCount).split(Constants.splitindicator)[1];
         if ('E' != eventApiId.charAt(0)) {
             isEvent = true;
         } else {

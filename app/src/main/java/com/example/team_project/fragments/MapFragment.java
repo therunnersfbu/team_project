@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.team_project.BottomNavActivity;
+import com.example.team_project.Constants;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -41,6 +42,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private String mCurrentSpotId;
     private Toast toast;
     private LatLng mUnitedStates = new LatLng(39.8283, -98.5795);
+
+    private WeakReference<DirectionsApi.GetSingleDistance> mGetSingleDistance;
 
     @BindView(R.id.mapicon) ImageButton mMapIcon;
     @BindString(R.string.map_frag_tag) String mMapFragTag;
@@ -115,6 +119,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mGetSingleDistance = new WeakReference<>((DirectionsApi.GetSingleDistance) this);
         showInitialToast(view);
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -155,7 +160,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onInfoWindowClick(final Marker marker) {
         mCurrentSpotId = marker.getTag().toString();
-        DirectionsApi api = new DirectionsApi(MapFragment.this);
+        DirectionsApi api = new DirectionsApi(mGetSingleDistance.get());
         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
         PlaceEvent parseEvent = query(mCurrentSpotId);
         api.addDestination(parseEvent.getCoordinates().replace(" ", ","));
@@ -188,8 +193,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         if (ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         } else if (mGoogleMap != null) {
@@ -251,7 +255,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 String name = post.getEventPlace().getName();
                 String reviewId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
-                Float color = BitmapDescriptorFactory.HUE_RED;
+                Float color = BitmapDescriptorFactory.HUE_YELLOW;
                 if (coordinates != null){
                     makeMapMarker(coordinates, reviewId, name, review, color);
             }}
@@ -264,7 +268,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> likedEventIds = new ArrayList<>();
         for (int i= 0; i < likedEvents.size();i++){
-            String eventId = likedEvents.get(i).split(PublicVariables.splitindicator)[0];
+            String eventId = likedEvents.get(i).split(Constants.splitindicator)[0];
             likedEventIds.add(eventId);
         }
         placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, likedEventIds);
@@ -281,7 +285,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     String placeEventCoord = placeEvents.get(i).getCoordinates();
                     String placeEventName = placeEvents.get(i).getName();
                     String likedSpotId = placeEvents.get(i).getAppId();
-                    Float color = BitmapDescriptorFactory.HUE_YELLOW;
+                    Float color = BitmapDescriptorFactory.HUE_RED;
                     String snippet = mLikedEventSnippet;
                     makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
                 }
@@ -294,7 +298,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         placeEventQuery.setLimit(mMaxLimit);
         ArrayList<String> addedEventApis = new ArrayList<>();
         for (int i= 0; i < addedEvents.size();i++){
-            String addedSpotId = addedEvents.get(i).split(PublicVariables.splitindicator)[1];
+            String addedSpotId = addedEvents.get(i).split(Constants.splitindicator)[1];
             addedEventApis.add(addedSpotId);
         }
         placeEventQuery.whereContainedIn(PlaceEvent.KEY_API, addedEventApis);

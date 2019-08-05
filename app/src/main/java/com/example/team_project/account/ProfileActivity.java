@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.team_project.BottomNavActivity;
+import com.example.team_project.Constants;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.SurveyActivity;
@@ -37,6 +38,7 @@ import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.BitmapScaler;
+import com.google.j2objc.annotations.Weak;
 import com.nex3z.flowlayout.FlowLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -45,6 +47,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,16 +70,25 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     private Uri outputFileUri;
     private String photoPath;
 
+    private WeakReference<DirectionsApi.GetDistances> mGetDistances;
+
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.flSurvey) FlowLayout flSurvey;
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
+    @BindView(R.id.ivHeaderImage) ImageView ivHeaderImage;
     @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
+    @BindDrawable(R.drawable.header_default) Drawable defaultHeader;
     @BindDrawable(R.drawable.ic_add_black_24dp) Drawable surveyAdd;
 
     @OnClick(R.id.ivProfilePic)
     public void changeProfilePic(ImageView view) {
+        askFilePermission();
+    }
+
+    @OnClick(R.id.ivHeaderImage)
+    public void changeHeaderImage(ImageView view) {
         askFilePermission();
     }
 
@@ -92,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+        mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
 
         liked = new ArrayList<>();
         distances = new ArrayList<>();
@@ -107,6 +120,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         tvUsername.setText(user.getUsername());
 
         ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
+        ParseFile headerFile = user.getParseFile(User.KEY_HEADER_IMAGE);
         if (imageFile != null) {
             Glide.with(this)
                     .load(imageFile.getUrl())
@@ -120,6 +134,21 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
                     .error(defaultPic)
                     .into(ivProfilePic);
         }
+
+        if (headerFile != null) {
+            Glide.with(this)
+                    .load(headerFile.getUrl())
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .into(ivHeaderImage);
+        } else {
+            Glide.with(this)
+                    .load(defaultHeader)
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .into(ivHeaderImage);
+        }
+
 
         getLiked();
     }
@@ -209,13 +238,13 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     }
 
     private void getLiked() {
-        DirectionsApi api = new DirectionsApi(this);
+        DirectionsApi api = new DirectionsApi(mGetDistances.get());
         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
         ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
 
         for (String i : likedParse) {
             try {
-                String[] spot = i.split(PublicVariables.splitindicator);
+                String[] spot = i.split(Constants.splitindicator);
                 ids.add(spot[0]);
                 liked.add(spot[1]);
                 address.add(spot[2]);

@@ -12,13 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.team_project.PublicVariables;
+import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.User;
 import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -44,6 +46,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
 
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDistance) TextView tvDistance;
+        @BindView(R.id.ivSpotImage) ImageView ivSpotImage;
 
         @OnClick(R.id.ivLike)
         @Optional
@@ -62,7 +65,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
                             String likeId = ids.get(getAdapterPosition());
                             String likeName = names.get(getAdapterPosition());
                             for (int i = 0; i < liked.size(); i++) {
-                                String[] temp = liked.get(i).split(PublicVariables.splitindicator);
+                                String[] temp = liked.get(i).split(Constants.splitindicator);
                                 if (temp[0].equals(likeId) && temp[1].equals(likeName)) {
                                     liked.remove(i);
                                     names.remove(getAdapterPosition());
@@ -106,6 +109,13 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
         private void bind() {
             tvName.setText(names.get(getAdapterPosition()));
             tvDistance.setText(address.get(getAdapterPosition()));
+            if ((ids.get(getAdapterPosition()).substring(0, 1).equals("C"))){
+                ivSpotImage.setImageResource(R.drawable.sky);
+            }
+            else{
+                ivSpotImage.setImageResource(R.drawable.event);
+            }
+
         }
     }
 

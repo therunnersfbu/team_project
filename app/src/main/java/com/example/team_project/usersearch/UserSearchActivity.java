@@ -65,5 +65,6 @@ public class UserSearchActivity extends AppCompatActivity {
         });
         mRvResults.setLayoutManager(new LinearLayoutManager(this));
         mRvResults.setAdapter(mAdapter);
+        mSearchBar.requestFocus();
     }
 }

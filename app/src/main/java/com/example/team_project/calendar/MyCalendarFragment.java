@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.team_project.PublicVariables;
+import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
@@ -130,7 +130,13 @@ public class MyCalendarFragment extends Fragment{
         }, theDaysEvents);
         mCalRV.setLayoutManager(mLayoutManager);
         mCalRV.setAdapter(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter,
+                new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return getActivity();
+            }
+        }));
         itemTouchHelper.attachToRecyclerView(mCalRV);
     }
 
@@ -151,7 +157,7 @@ public class MyCalendarFragment extends Fragment{
         String numberDate = mSimpleDateFormat.format(date);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {
-                String[] eventarray = addedEvents.get(x).split(PublicVariables.splitindicator);
+                String[] eventarray = addedEvents.get(x).split(Constants.splitindicator);
                 if (numberDate.equals(eventarray[0])) {
                     String eventName = eventarray[2];
                     theDaysEvents.add(eventName);
@@ -170,7 +176,7 @@ public class MyCalendarFragment extends Fragment{
             for (int x = 0; x < addedEvents.size(); x++) {
                 Event event = null;
                 try {
-                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(PublicVariables.splitindicator)[0]));
+                    event = new Event(Color.BLACK, myMilliSecConvert(addedEvents.get(x).split(Constants.splitindicator)[0]));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
