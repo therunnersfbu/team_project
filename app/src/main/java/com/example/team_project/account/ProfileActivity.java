@@ -164,8 +164,8 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         super.onResume();
 
         flSurvey.removeAllViews();
-        addCurrentInterests();
         addSurveyButton();
+        addCurrentInterests();
     }
 
     private void addCurrentInterests() {

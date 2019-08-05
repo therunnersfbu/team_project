@@ -9,7 +9,7 @@
     <View
         android:id="@+id/vButtonCard"
         android:layout_width="0dp"
-        android:layout_height="305dp"
+        android:layout_height="310dp"
         android:layout_marginStart="14dp"
         android:layout_marginLeft="14dp"
         android:layout_marginTop="8dp"
