@@ -15,6 +15,7 @@ public class User extends ParseObject {
     public static final String KEY_LIKED_EVENTS = "likedEvents";
     public static final String KEY_ADDED_EVENTS = "addedEvents";
     public static final String KEY_PROFILE_PIC = "profilePic";
+    public static final String KEY_HEADER_IMAGE = "headerImage";
     public static final String KEY_VERIFIED = "verifiedUser";
     public static final String KEY_CATEGORIES = "categoriesInterested";
     public static final String KEY_TAGS = "tagsInterested";
@@ -60,6 +61,12 @@ public class User extends ParseObject {
     }
     public void setImage(ParseFile profilePic) {
         put(KEY_PROFILE_PIC, profilePic);
+    }
+    public ParseFile getHeader() {
+        return getParseFile(KEY_HEADER_IMAGE);
+    }
+    public void setHeader(ParseFile headerImage) {
+        put(KEY_HEADER_IMAGE, headerImage);
     }
     public ArrayList<Boolean> getCategories() {
         return (ArrayList<Boolean>) get(KEY_CATEGORIES);

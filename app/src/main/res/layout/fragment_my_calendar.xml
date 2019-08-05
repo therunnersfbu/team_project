@@ -75,7 +75,7 @@
         android:layout_marginBottom="15dp"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
-        android:text="Spots:"
+        android:text="Spots"
         android:textColor="@android:color/black"
         android:textSize="27sp"
         android:textStyle="bold" />

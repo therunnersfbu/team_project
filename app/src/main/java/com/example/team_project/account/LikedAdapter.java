@@ -46,6 +46,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
 
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDistance) TextView tvDistance;
+        @BindView(R.id.ivSpotImage) ImageView ivSpotImage;
 
         @OnClick(R.id.ivLike)
         @Optional
@@ -108,6 +109,13 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
         private void bind() {
             tvName.setText(names.get(getAdapterPosition()));
             tvDistance.setText(address.get(getAdapterPosition()));
+            if ((ids.get(getAdapterPosition()).substring(0, 1).equals("C"))){
+                ivSpotImage.setImageResource(R.drawable.sky);
+            }
+            else{
+                ivSpotImage.setImageResource(R.drawable.event);
+            }
+
         }
     }
 

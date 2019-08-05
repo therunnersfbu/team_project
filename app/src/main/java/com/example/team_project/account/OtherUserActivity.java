@@ -37,10 +37,12 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
     private ParseUser user;
 
     @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
+    @BindDrawable(R.drawable.header_default) Drawable defaultHeader;
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
+    @BindView(R.id.ivHeaderImage) ImageView ivHeaderImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
         tvName.setText(user.getString(User.KEY_NAME));
         tvUsername.setText(user.getUsername());
 
+
+
         ParseFile imageFile = user.getParseFile(User.KEY_PROFILE_PIC);
         if (imageFile != null) {
             Glide.with(this)
@@ -76,6 +80,23 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
                     .placeholder(defaultPic)
                     .error(defaultPic)
                     .into(ivProfilePic);
+        }
+
+        ParseFile headerFile = user.getParseFile(User.KEY_HEADER_IMAGE);
+        if (headerFile != null) {
+            Glide.with(this)
+                    .load(headerFile.getUrl())
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .into(ivHeaderImage);
+        } else {
+            Glide.with(this)
+                    .load(defaultHeader)
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .placeholder(defaultHeader)
+                    .error(defaultHeader)
+                    .into(ivHeaderImage);
         }
 
         getLiked();
