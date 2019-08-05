@@ -1,6 +1,7 @@
 package com.example.team_project.calendar;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,6 +16,7 @@ import android.view.View;
 import com.example.team_project.Constants;
 import com.example.team_project.R;
 import com.example.team_project.model.User;
+import com.example.team_project.utils.ContextProvider;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -26,12 +28,14 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
     private CalendarAdapter mAdapter;
     private Drawable icon;
     private final ColorDrawable background;
+    private Context mContext;
 
 
-    public SwipeToDeleteCallback(CalendarAdapter adapter) {
+    public SwipeToDeleteCallback(CalendarAdapter adapter, ContextProvider cp) {
         super(0, ItemTouchHelper.RIGHT);
         mAdapter = adapter;
-        icon = ContextCompat.getDrawable(mAdapter.getmContext(),
+        mContext = cp.getContext();
+        icon = ContextCompat.getDrawable(mContext,
                 R.drawable.ic_delete_white_36);
         background = new ColorDrawable(Color.parseColor("#B71C1C"));
     }
@@ -51,7 +55,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         ArrayList<String> rvEvents = mAdapter.getmEvents();
         final String eventToDelete = rvEvents.get(position);
         if (eventToDelete != "NONE!") {
-            new AlertDialog.Builder(mAdapter.getmContext())
+            new AlertDialog.Builder(mContext)
                 .setTitle("Unlike spot")
                 .setMessage("Are you sure you want to delete this spot?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

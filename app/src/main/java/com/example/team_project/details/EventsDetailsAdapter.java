@@ -43,6 +43,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import org.json.JSONArray;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -76,12 +78,18 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Context mContext;
     private AdapterCallback mCallback;
 
+    private WeakReference<EventsApi.GetEvents> mGetEvents;
+    private WeakReference<PlacesApi.GetPlaces> mGetPlaces;
+
     public EventsDetailsAdapter(ArrayList<Post> posts, String id, boolean isPlace, String distance, ContextProvider context) {
         this.mId = id;
         this.isPlace = isPlace;
         this.mDistance = distance;
         this.mContext = context.getContext();
         this.mPosts = posts;
+
+        mGetEvents = new WeakReference<>((EventsApi.GetEvents) this);
+        mGetPlaces = new WeakReference<>((PlacesApi.GetPlaces) this);
     }
 
     @Override
@@ -132,11 +140,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             super(view);
             ButterKnife.bind(this, view);
             if(!isPlace) {
-                EventsApi eApi = new EventsApi(EventsDetailsAdapter.this);
+                EventsApi eApi = new EventsApi(mGetEvents.get());
                 eApi.getSingleEvent(mId);
             }
             else {
-                PlacesApi pApi = new PlacesApi(EventsDetailsAdapter.this);
+                PlacesApi pApi = new PlacesApi(mGetPlaces.get());
                 pApi.getDetails(mId);
             }
         }

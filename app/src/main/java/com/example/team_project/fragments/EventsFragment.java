@@ -39,9 +39,12 @@ import com.example.team_project.search.SearchActivity;
 import com.example.team_project.utils.ContextProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.j2objc.annotations.Weak;
 import com.parse.ParseUser;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -67,6 +70,10 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     private HorizontalScrollAdapter mAdapter;
     private ImageButton mBtn;
     private TextView mText;
+
+    private WeakReference<EventsApi.GetEvents> mGetEvents;
+    private WeakReference<PlacesApi.GetPlaces> mGetPlaces;
+    private WeakReference<DirectionsApi.GetDistances> mGetDistances;
 
     //TODO singleton
     public static int categoryToMark;
@@ -101,6 +108,9 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //initialize with declaration
+        mGetEvents = new WeakReference<>((EventsApi.GetEvents) this);
+        mGetPlaces = new WeakReference<>((PlacesApi.GetPlaces) this);
+        mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
         type = true;
         myManager = new LinearLayoutManager(getContext());
         rvSuggestions.setLayoutManager(myManager);
@@ -211,13 +221,13 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         //TODO make constant tags and radius
         if (keyword.equals("concert") || keyword.equals("fair")) {
             type = false;
-            EventsApi api = new EventsApi(this);
+            EventsApi api = new EventsApi(mGetEvents.get());
             api.setLocation(mLatitude, mLongitude, 60);
             api.setDate("Future");
             api.setKeywords(keyword);
             api.getTopEvents();
         } else {
-            PlacesApi api = new PlacesApi(this);
+            PlacesApi api = new PlacesApi(mGetPlaces.get());
             api.setLocation(mLatitude, mLongitude);
             api.setRadius(10000);
             api.setKeywords(keyword);
@@ -227,7 +237,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
 
     @Override
     public void gotEvents(JSONArray eventsApi) {
-        DirectionsApi dApi = new DirectionsApi(this);
+        DirectionsApi dApi = new DirectionsApi(mGetDistances.get());
         dApi.setOrigin(mLatitude, mLongitude);
         int i = 0;
 
@@ -255,7 +265,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
 
     @Override
     public void gotPlaces(JSONArray placesApi) {
-        DirectionsApi dApi = new DirectionsApi(this);
+        DirectionsApi dApi = new DirectionsApi(mGetDistances.get());
         dApi.setOrigin(mLatitude, mLongitude);
         int i = 0;
 
