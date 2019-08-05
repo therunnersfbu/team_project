@@ -29,7 +29,6 @@ import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
 import com.example.team_project.fragments.EventsFragment;
-import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
@@ -42,9 +41,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
-
 import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
