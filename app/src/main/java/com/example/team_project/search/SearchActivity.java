@@ -33,6 +33,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import butterknife.BindView;
@@ -83,8 +85,8 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private ArrayList<String> mDistances = new ArrayList<>();
     private ArrayList<String> mIds = new ArrayList<>();
     //api clients
-    private EventsApi eApi = new EventsApi(this);
-    private PlacesApi pApi = new PlacesApi(this);
+    private EventsApi eApi;
+    private PlacesApi pApi;
     //location services
     private double longitude;
     private double latitude;
@@ -102,6 +104,11 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             }
         }
     }
+
+    private WeakReference<PlacesApi.GetPlaces> mGetPlaces;
+    private WeakReference<EventsApi.GetEvents> mGetEvents;
+    private WeakReference<DirectionsApi.GetDistances> mGetDistances;
+
     //layout items
     @BindView(R.id.pbSpinner) ProgressBar mProgressBar;
     @BindView(R.id.rvTags) RecyclerView rvTags;
@@ -149,6 +156,11 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         ButterKnife.bind(this);
+        mGetPlaces = new WeakReference<>((PlacesApi.GetPlaces) this);
+        mGetEvents = new WeakReference<>((EventsApi.GetEvents) this);
+        mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
+        eApi = new EventsApi(mGetEvents.get());
+        pApi = new PlacesApi(mGetPlaces.get());
         // layout managers
         myManager = new LinearLayoutManager(this);
         resultsManager = new LinearLayoutManager(this);
@@ -324,7 +336,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     // get events from api
     @Override
     public void gotEvents(JSONArray eventsApi) {
-        DirectionsApi dApi = new DirectionsApi(this);
+        DirectionsApi dApi = new DirectionsApi(mGetDistances.get());
         dApi.setOrigin(latitude, longitude);
         boolean isStored;
         for (int i = 0; i < eventsApi.length(); i++) {
@@ -367,7 +379,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     // get places from api
     @Override
     public void gotPlaces(JSONArray placesApi) {
-        DirectionsApi dApi = new DirectionsApi(this);
+        DirectionsApi dApi = new DirectionsApi(mGetDistances.get());
         dApi.setOrigin(latitude, longitude);
         boolean isStored;
 

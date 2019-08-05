@@ -13,6 +13,7 @@ import com.example.team_project.R;
 import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.search.SearchActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 // used to change the current location to a location of the user's choosing.
@@ -28,10 +29,13 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
     private RecyclerView.LayoutManager resultsManager;
     private LinearLayoutManager linearLayoutManager;
 
+    private WeakReference<AutocompleteApi.GetAutocomplete> mGetAutocomplete;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
+        mGetAutocomplete = new WeakReference<>((AutocompleteApi.GetAutocomplete) this);
         // lists to hold information from location search results
         mLocations = new ArrayList<>();
         mLocIds = new ArrayList<>();
@@ -49,7 +53,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         mLocationAdapter.setOnItemClickedListener(this);
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
-        LApi = new AutocompleteApi(this);
+        LApi = new AutocompleteApi(mGetAutocomplete.get());
         //on click listener for location result selection
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override

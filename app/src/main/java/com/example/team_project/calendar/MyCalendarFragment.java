@@ -130,7 +130,13 @@ public class MyCalendarFragment extends Fragment{
         }, theDaysEvents);
         mCalRV.setLayoutManager(mLayoutManager);
         mCalRV.setAdapter(mAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback((CalendarAdapter) mAdapter,
+                new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return getActivity();
+            }
+        }));
         itemTouchHelper.attachToRecyclerView(mCalRV);
     }
 

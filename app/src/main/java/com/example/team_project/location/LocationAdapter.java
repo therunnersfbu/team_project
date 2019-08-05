@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.PlacesApi;
+
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,11 +19,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     private final List<String> mNames;
     private final List<String> mIds;
     private AdapterCallback mCallback;
-    private PlacesApi pApi;
+
+    private WeakReference<PlacesApi.GetLocation> mGetLocation;
 
     public LocationAdapter(ArrayList<String> mNames, ArrayList<String> mIds) {
         this.mNames = mNames;
         this.mIds = mIds;
+
+        mGetLocation = new WeakReference<>((PlacesApi.GetLocation) this);
     }
 
     public void setOnItemClickedListener(AdapterCallback callback) {
@@ -46,7 +51,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
         public void onClick(View v) {
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                pApi = new PlacesApi(LocationAdapter.this);
+                PlacesApi pApi = new PlacesApi(mGetLocation.get());
                 pApi.getLocation(mIds.get(position));
                 PublicVariables.newLocName = mNames.get(position);
                 PublicVariables.isCurLoc = false;

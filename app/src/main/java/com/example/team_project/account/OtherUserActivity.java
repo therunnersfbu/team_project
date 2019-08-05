@@ -20,6 +20,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindDrawable;
@@ -36,6 +37,8 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
     private LikedAdapter likedAdapter;
     private ParseUser user;
 
+    private WeakReference<DirectionsApi.GetDistances> mGetDistances;
+
     @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
     @BindDrawable(R.drawable.header_default) Drawable defaultHeader;
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
@@ -49,6 +52,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_user);
         ButterKnife.bind(this);
+        mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
 
         liked = new ArrayList<>();
         distances = new ArrayList<>();
@@ -103,7 +107,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
     }
 
     private void getLiked() {
-        DirectionsApi api = new DirectionsApi(this);
+        DirectionsApi api = new DirectionsApi(mGetDistances.get());
         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
         ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
         for (String i : likedParse) {

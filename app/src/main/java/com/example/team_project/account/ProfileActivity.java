@@ -38,6 +38,7 @@ import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.BitmapScaler;
+import com.google.j2objc.annotations.Weak;
 import com.nex3z.flowlayout.FlowLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -46,6 +47,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,8 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     private ParseUser user;
     private Uri outputFileUri;
     private String photoPath;
+
+    private WeakReference<DirectionsApi.GetDistances> mGetDistances;
 
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.flSurvey) FlowLayout flSurvey;
@@ -100,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         ButterKnife.bind(this);
+        mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
 
         liked = new ArrayList<>();
         distances = new ArrayList<>();
@@ -233,7 +238,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     }
 
     private void getLiked() {
-        DirectionsApi api = new DirectionsApi(this);
+        DirectionsApi api = new DirectionsApi(mGetDistances.get());
         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
         ArrayList<String> likedParse = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
 

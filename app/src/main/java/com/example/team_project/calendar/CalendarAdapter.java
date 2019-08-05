@@ -19,10 +19,12 @@ import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
+import com.google.j2objc.annotations.Weak;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -39,13 +41,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private ArrayList<String> parseevents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
     private int mCount;
 
+    private WeakReference<DirectionsApi.GetSingleDistance> mGetSingleDistance;
+
     public CalendarAdapter(ContextProvider cp, ArrayList<String> theDaysEvents) {
         this.mEvents = theDaysEvents;
         this.mContext = cp.getContext();
-    }
 
-    public Context getmContext() {
-        return this.mContext;
+        mGetSingleDistance = new WeakReference<>((DirectionsApi.GetSingleDistance) this);
     }
 
     public ArrayList<String> getmEvents() {
@@ -119,7 +121,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 for (int x = 0; x < parseevents.size(); x++) {
                     if (eventname.equals(parseevents.get(x).split(Constants.splitindicator)[2])) {
                         String eventapi = parseevents.get(x).split(Constants.splitindicator)[1];
-                        DirectionsApi api = new DirectionsApi(CalendarAdapter.this);
+                        DirectionsApi api = new DirectionsApi(mGetSingleDistance.get());
                         api.setOrigin(BottomNavActivity.currentLat, BottomNavActivity.currentLng);
                         PlaceEvent mParseEvent = query(eventapi);
                         mCount = x;
