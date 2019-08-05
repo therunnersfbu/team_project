@@ -289,6 +289,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
             if(!etSearch.getText().toString().isEmpty()) {
                 pApi.setKeywords(etSearch.getText().toString());
             }
+            etSearch.requestFocus();
         }
         else if(!isPlace) {
             mSubTags.clear();

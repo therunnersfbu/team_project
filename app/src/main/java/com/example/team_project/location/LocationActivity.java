@@ -16,34 +16,45 @@ import com.example.team_project.search.SearchActivity;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 // used to change the current location to a location of the user's choosing.
 public class LocationActivity extends AppCompatActivity implements LocationAdapter.AdapterCallback, AutocompleteApi.GetAutocomplete  {
     private ArrayList<String> mLocNames;
     private ArrayList<String> mLocIds;
     private ArrayList<String> mLocations;
-    private RecyclerView rvLocResults;
-    private EditText etSearch;
     private AutocompleteApi LApi;
     private LocationAdapter mLocationAdapter;
-    private Button btnSearch;
     private RecyclerView.LayoutManager resultsManager;
     private LinearLayoutManager linearLayoutManager;
 
     private WeakReference<AutocompleteApi.GetAutocomplete> mGetAutocomplete;
 
+    @BindView(R.id.etSearch) EditText etSearch;
+    @BindView(R.id.rvLocResults) RecyclerView rvLocResults;
+
+    @OnClick(R.id.btnSearch)
+    public void search(Button button) {
+        mLocNames.clear();
+        mLocations.clear();
+        mLocIds.clear();
+        populateList();
+        SearchActivity.hideKeyboard(LocationActivity.this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
+        ButterKnife.bind(this);
         mGetAutocomplete = new WeakReference<>((AutocompleteApi.GetAutocomplete) this);
+        etSearch.requestFocus();
         // lists to hold information from location search results
         mLocations = new ArrayList<>();
         mLocIds = new ArrayList<>();
         mLocNames = new ArrayList<>();
-        //layout items
-        etSearch = findViewById(R.id.etSearch);
-        rvLocResults = findViewById(R.id.rvLocResults);
-        btnSearch = findViewById(R.id.btnSearch);
         //layout managers
         resultsManager = new LinearLayoutManager(this);
         linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -54,17 +65,6 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
         LApi = new AutocompleteApi(mGetAutocomplete.get());
-        //on click listener for location result selection
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLocNames.clear();
-                mLocations.clear();
-                mLocIds.clear();
-                populateList();
-                SearchActivity.hideKeyboard(LocationActivity.this);
-            }
-        });
     }
 
     @Override
