@@ -1,19 +1,21 @@
 package com.example.team_project.search;
 
-import butterknife.BindView;
-import android.support.annotation.NonNull;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
-import com.example.team_project.details.EventsDetailsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // adapter for spots results after user search
@@ -36,6 +38,8 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDistance) TextView tvDistance;
+        @BindView(R.id.ivSpotImage)
+        ImageView ivSpotImage;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -67,6 +71,11 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvName.setText(mResultsList.get(position));
         holder.tvDistance.setText(mDistances.get(position));
+        if (isPlace){
+            holder.ivSpotImage.setImageResource(R.drawable.sky);
+        }else{
+            holder.ivSpotImage.setImageResource(R.drawable.event);
+        }
     }
 
     @Override
