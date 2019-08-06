@@ -6,4 +6,4 @@
     android:layout_height="match_parent"
     android:adjustViewBounds="true"
     android:scaleType="centerCrop"
-    app:srcCompat="@color/appThemeBlue" />
+    app:srcCompat="@drawable/banner_logo" />
