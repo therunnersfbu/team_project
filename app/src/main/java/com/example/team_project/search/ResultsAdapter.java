@@ -27,19 +27,21 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     private final List<String> mResultsList;
     private final List<String> mDistances;
     private final List<String> mIds;
+    private final List<String> mAddresses;
 
-    public ResultsAdapter(ArrayList<String> resultsList, ArrayList<String> distances, ArrayList<String> ids, boolean isPlace) {
+    public ResultsAdapter(ArrayList<String> resultsList, ArrayList<String> distances, ArrayList<String> ids, boolean isPlace,  ArrayList<String> addresses) {
         this.isPlace = isPlace;
         this.mResultsList = resultsList;
         this.mDistances = distances;
         this.mIds = ids;
+        this.mAddresses = addresses;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.tvDistance) TextView tvDistance;
-        @BindView(R.id.ivSpotImage)
-        ImageView ivSpotImage;
+        @BindView(R.id.tvAddress) TextView tvAddress;
+        @BindView(R.id.ivSpotImage) ImageView ivSpotImage;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -71,6 +73,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvName.setText(mResultsList.get(position));
         holder.tvDistance.setText(mDistances.get(position));
+        holder.tvAddress.setText(mAddresses.get(position));
         if (isPlace){
             holder.ivSpotImage.setImageResource(R.drawable.sky);
         }else{

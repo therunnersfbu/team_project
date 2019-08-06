@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,15 +15,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
 import com.example.team_project.api.EventsApi;
 import com.example.team_project.api.PlacesApi;
-import com.example.team_project.details.DetailsActivity;
-import com.example.team_project.details.EventsDetailsAdapter;
 import com.example.team_project.location.LocationActivity;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
@@ -31,15 +30,16 @@ import com.example.team_project.utils.ContextProvider;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import android.support.annotation.Nullable;
 import butterknife.OnClick;
 
 import static android.view.View.GONE;
@@ -84,6 +84,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private ArrayList<Place> mPlaceList = new ArrayList<>();
     private ArrayList<String> mDistances = new ArrayList<>();
     private ArrayList<String> mIds = new ArrayList<>();
+    private ArrayList<String> mAddresses = new ArrayList<>();
     //api clients
     private EventsApi eApi;
     private PlacesApi pApi;
@@ -93,6 +94,8 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
+
+
     private enum eventCategories {
         CONCERT,
         FAIR;
@@ -159,6 +162,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         mGetPlaces = new WeakReference<>((PlacesApi.GetPlaces) this);
         mGetEvents = new WeakReference<>((EventsApi.GetEvents) this);
         mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
+
         eApi = new EventsApi(mGetEvents.get());
         pApi = new PlacesApi(mGetPlaces.get());
         // layout managers
@@ -185,7 +189,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         newLocName = getIntent().getStringExtra(NAME_TAG);
         //results recycler view
         rvResults.setLayoutManager(resultsManager);
-        mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace);
+        mResultsAdapter = new ResultsAdapter(mResults, mDistances, mIds, isPlace, mAddresses);
         rvResults.setLayoutManager(verticalLayout);
         rvResults.setAdapter(mResultsAdapter);
         //set progressbar to invisible if user input window open
@@ -366,6 +370,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 mEventList.add(event);
                 dApi.addDestination(event.getLocation());
                 mResults.add(event.getEventName());
+                mAddresses.add(event.getAddress());
             }
         }
         if(mEventList.isEmpty()) {
@@ -412,6 +417,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                 dApi.addDestination(place.getLocation());
                 mResults.add(place.getPlaceName());
                 mIds.add(place.getPlaceId());
+                mAddresses.add(place.getAddress());
             }
         }
         if(mResults.isEmpty()) {
