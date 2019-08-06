@@ -77,6 +77,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     private HeaderViewHolder mViewHolder;
     private Context mContext;
     private AdapterCallback mCallback;
+    private PlaceEvent placeEvent;
 
     private WeakReference<EventsApi.GetEvents> mGetEvents;
     private WeakReference<PlacesApi.GetPlaces> mGetPlaces;
@@ -87,6 +88,15 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.mDistance = distance;
         this.mContext = context.getContext();
         this.mPosts = posts;
+
+        ParseQuery query = new ParseQuery("PlaceEvent");
+        query.setLimit(1000);
+        query.whereMatches(PlaceEvent.KEY_API, mId);
+        try {
+            placeEvent = (PlaceEvent) query.getFirst();
+        } catch (ParseException e) {
+            placeEvent = null;
+        }
 
         mGetEvents = new WeakReference<>((EventsApi.GetEvents) this);
         mGetPlaces = new WeakReference<>((PlacesApi.GetPlaces) this);
@@ -113,6 +123,8 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.ivAdd) ImageView ivAdd;
         @BindView(R.id.ivLike) ImageView ivLike;
         @BindView(R.id.vfGallery) ViewFlipper vfGallery;
+        @BindView(R.id.tvLikedNo) TextView tvLikedNo;
+        @BindView(R.id.tvReviewedNo) TextView tvReviewedNo;
 
         @Nullable @BindView(R.id.tvVenue) TextView tvVenue;
         @Nullable @BindView(R.id.tvNumber) TextView tvNumber;
@@ -139,6 +151,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         public HeaderViewHolder(@NonNull View view) {
             super(view);
             ButterKnife.bind(this, view);
+
             if(!isPlace) {
                 EventsApi eApi = new EventsApi(mGetEvents.get());
                 eApi.getSingleEvent(mId);
@@ -146,6 +159,16 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             else {
                 PlacesApi pApi = new PlacesApi(mGetPlaces.get());
                 pApi.getDetails(mId);
+            }
+
+            if (placeEvent != null) {
+                int count = placeEvent.getInt(PlaceEvent.KEY_LIKED);
+                tvLikedNo.setText(count + "");
+                count = placeEvent.getInt(PlaceEvent.KEY_REVIEWED);
+                tvReviewedNo.setText(count + "");
+            } else {
+                tvLikedNo.setText("0");
+                tvReviewedNo.setText("0");
             }
         }
     }
@@ -311,9 +334,22 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
                 String toLike = eventApi.getEventId() + Constants.separator + eventApi.getEventName() +
                         Constants.separator + eventApi.getAddress();
+
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
+                    int count = placeEvent.getLiked() + 1;
+                    mViewHolder.tvLikedNo.setText(count + "");
+                    placeEvent.setLiked(count);
+                } else {
+                    int count = placeEvent.getLiked() - 1;
+                    if (count < 0) {
+                        count = 0;
+                    }
+                    mViewHolder.tvLikedNo.setText(count + "");
+                    placeEvent.setLiked(count);
                 }
+                placeEvent.saveInBackground();
+
                 user.put(User.KEY_LIKED_EVENTS, liked);
                 user.saveInBackground(new SaveCallback() {
                     @Override
@@ -412,9 +448,22 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
                 String toLike = placeApi.getPlaceId() + Constants.separator + placeApi.getPlaceName() +
                         Constants.separator + placeApi.getAddress();
+
                 if (!liked.remove(toLike)) {
                     liked.add(toLike);
+                    int count = placeEvent.getLiked() + 1;
+                    mViewHolder.tvLikedNo.setText(count + "");
+                    placeEvent.setLiked(count);
+                } else {
+                    int count = placeEvent.getLiked() - 1;
+                    if (count < 0) {
+                        count = 0;
+                    }
+                    mViewHolder.tvLikedNo.setText(count + "");
+                    placeEvent.setLiked(count);
                 }
+                placeEvent.saveInBackground();
+
                 user.put(User.KEY_LIKED_EVENTS, liked);
                 user.saveInBackground(new SaveCallback() {
                     @Override
@@ -433,46 +482,35 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private void checkPlaceEventExists(final String name) {
-        final ArrayList<PlaceEvent> placeEventList = new ArrayList<>();
-        final PlaceEvent[] placeEvent = {new PlaceEvent()};
         ParseQuery parseQuery = new ParseQuery("PlaceEvent");
         parseQuery.setLimit(1000);
+        parseQuery.whereMatches(PlaceEvent.KEY_API, mId);
 
-        parseQuery.findInBackground(new FindCallback<PlaceEvent>() {
-            @Override
-            public void done(List<PlaceEvent> objects, ParseException e) {
-                if (e == null) {
-                    placeEventList.addAll(objects);
-                    for (int i = 0; i < placeEventList.size(); i++) {
-                        if (mId.equals(placeEventList.get(i).getAppId())) {
-                            return;
-                        }
-                    }
-
-                    placeEvent[0] = new PlaceEvent();
-                    ArrayList<Boolean> categories = new ArrayList<>();
-                    ArrayList<Integer> tags = new ArrayList<>();
-                    for (int i = 0; i < 12; i++) {
-                        categories.add(false);
-                    }
-                    for (int i = 0; i < 20; i++) {
-                        tags.add(0);
-                    }
-                    if (EventsFragment.categoryToMark > -1) {
-                        categories.set(EventsFragment.categoryToMark, true);
-                    }
-
-                    placeEvent[0].put(PlaceEvent.KEY_API, mId);
-                    placeEvent[0].put(PlaceEvent.KEY_CATEGORIES, categories);
-                    placeEvent[0].put(PlaceEvent.KEY_TAGS, tags);
-                    placeEvent[0].setName(name);
-                    placeEvent[0].setCoordinates(mCoords);
-                    placeEvent[0].saveInBackground();
-                } else {
-                    e.printStackTrace();
-                }
+        try {
+            parseQuery.getFirst();
+        } catch (ParseException e) {
+            placeEvent = new PlaceEvent();
+            ArrayList<Boolean> categories = new ArrayList<>();
+            ArrayList<Integer> tags = new ArrayList<>();
+            for (int i = 0; i < 12; i++) {
+                categories.add(false);
             }
-        });
+            for (int i = 0; i < 20; i++) {
+                tags.add(0);
+            }
+            if (EventsFragment.categoryToMark > -1) {
+                categories.set(EventsFragment.categoryToMark, true);
+            }
+
+            placeEvent.put(PlaceEvent.KEY_API, mId);
+            placeEvent.put(PlaceEvent.KEY_CATEGORIES, categories);
+            placeEvent.put(PlaceEvent.KEY_TAGS, tags);
+            placeEvent.setName(name);
+            placeEvent.setCoordinates(mCoords);
+            placeEvent.setLiked(0);
+            placeEvent.setReviewed(0);
+            placeEvent.saveInBackground();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

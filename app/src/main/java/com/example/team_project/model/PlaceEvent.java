@@ -11,6 +11,8 @@ public class PlaceEvent extends ParseObject {
     public static final String KEY_TAGS = "tags";
     public static final String KEY_NAME = "name";
     public static final String KEY_COORDS = "coordinates";
+    public static final String KEY_LIKED = "liked";
+    public static final String KEY_REVIEWED = "reviewed";
 
     public String getAppId() {
         String id = "";
@@ -48,5 +50,17 @@ public class PlaceEvent extends ParseObject {
     }
     public void setCoordinates(String coordinates) {
         put(KEY_COORDS, coordinates);
+    }
+    public int getLiked() {
+        return getInt(KEY_LIKED);
+    }
+    public void setLiked(int liked) {
+        put(KEY_LIKED, liked);
+    }
+    public int getReviewed() {
+        return getInt(KEY_REVIEWED);
+    }
+    public void setReviewed(int reviewed) {
+        put(KEY_REVIEWED, reviewed);
     }
 }

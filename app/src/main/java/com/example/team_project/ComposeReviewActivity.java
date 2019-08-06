@@ -224,6 +224,8 @@ public class ComposeReviewActivity extends AppCompatActivity{
                     placeEvent.put(PlaceEvent.KEY_TAGS, tags);
                     placeEvent.setName(name);
                     placeEvent.setCoordinates(location);
+                    placeEvent.setLiked(0);
+                    placeEvent.setReviewed(0);
                     placeEvent.saveInBackground(new SaveCallback() {
                         @Override
                         public void done(ParseException e) {
@@ -259,6 +261,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
             }
         }
         placeEvent.setTags(placeEventTags);
+        placeEvent.setReviewed(placeEvent.getReviewed() + 1);
         placeEvent.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
