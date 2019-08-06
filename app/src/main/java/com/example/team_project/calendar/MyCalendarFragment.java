@@ -40,7 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 // The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
-// events and allows the user to click on variuous days and see all their added spots for that day
+// events and allows the user to click on various days and see all their added spots for that day
 public class MyCalendarFragment extends Fragment{
     private Unbinder mUnbinder;
     private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
