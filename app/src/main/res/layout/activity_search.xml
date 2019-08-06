@@ -22,14 +22,15 @@
         android:id="@+id/btnSearch"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="90dp"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:backgroundTint="@color/hyperlinkBlue"
+        android:background="@drawable/btn_search"
         android:text="Search"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/etSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
 
     <TextView
         android:id="@+id/etLocation"

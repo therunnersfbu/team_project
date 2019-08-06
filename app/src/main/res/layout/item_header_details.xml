@@ -14,25 +14,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <!--<ImageView-->
-        <!--android:id="@+id/ivPhoto"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scaleType="centerCrop"-->
-        <!--app:srcCompat="@color/colorPrimary" />-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/textView2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fontFamily="casual"-->
-        <!--android:gravity="center"-->
-        <!--android:lines="2"-->
-        <!--android:text="No reviews yet./nBe the first one!"-->
-        <!--android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-        <!--android:textSize="36sp"-->
-        <!--android:typeface="normal" />-->
     </ViewFlipper>
 
     <TextView
@@ -72,7 +53,10 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:background="@drawable/btn_rounded"
         android:text="write a review"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvAddress" />

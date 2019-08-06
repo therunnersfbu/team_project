@@ -19,7 +19,11 @@ import com.parse.ParseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+// activity that shows the bottom navigation bar on the main screen
 public class BottomNavActivity extends AppCompatActivity {
+
+    private final int DEFAULT_TAB_ID = R.id.action_events;
+
     @BindView(R.id.toolbar_main) Toolbar toolbar;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
@@ -43,9 +47,9 @@ public class BottomNavActivity extends AppCompatActivity {
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
         // define your fragments here
-        final Fragment fragment1 = new EventsFragment();
-        final Fragment fragment2 = new MapFragment();
-        final Fragment fragment3 = new MyCalendarFragment();
+        final Fragment eventsFragment = new EventsFragment();
+        final Fragment mapFragment = new MapFragment();
+        final Fragment calendarFragment = new MyCalendarFragment();
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -55,22 +59,23 @@ public class BottomNavActivity extends AppCompatActivity {
                         Fragment fragment;
                         switch (item.getItemId()) {
                             case R.id.action_events:
-                                fragment = fragment1;
+                                fragment = eventsFragment;
                                 break;
                             case R.id.action_map:
-                                fragment = fragment2;
+                                fragment = mapFragment;
                                 break;
                             case R.id.action_my_calendar:
-                            default:
-                                fragment = fragment3;
+                                fragment = calendarFragment;
                                 break;
+                            default:
+                                throw new RuntimeException();
                         }
                         fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();
                         return true;
                     }
                 });
         // Set default selection
-        bottomNavigationView.setSelectedItemId(R.id.action_events);
+        bottomNavigationView.setSelectedItemId(DEFAULT_TAB_ID);
     }
 
     @Override
