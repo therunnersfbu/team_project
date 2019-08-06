@@ -2,13 +2,17 @@ package com.example.team_project.search;
 
 import butterknife.BindView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +21,18 @@ import android.widget.TextView;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.fragments.EventsFragment;
+import com.example.team_project.model.PlaceEvent;
+import com.example.team_project.model.Post;
 import com.example.team_project.utils.ContextProvider;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
@@ -26,16 +40,22 @@ import butterknife.ButterKnife;
 // This adapter handles horizontal scrolling for the Tag and Suggestion CardViews. Used in Search Activity
 public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScrollAdapter.ViewHolder> {
     private final List<String> mTagsList;
+    private final List<String> mIdList;
     private final boolean isTags;
     private static ArrayList<String> mAddTagsToSearch;
     private static String mTagToAdd;
+    private static List<Post> mPosts;
     private Context mContext;
+    private static String API_ID_KEY = "apiId";
+    private static String CLASS_NAME_TAG = "PlaceEvent";
 
-    public HorizontalScrollAdapter(List<String> horizontalList, boolean isTags, ContextProvider cp) {
+    public HorizontalScrollAdapter(List<String> horizontalList, List<String> idList, boolean isTags, ContextProvider cp) {
         this.mTagsList = horizontalList;
         this.isTags = isTags;
+        this.mIdList = idList;
         this.mContext = cp.getContext();
         mAddTagsToSearch = new ArrayList<>();
+        mPosts = new ArrayList<>();
         mTagToAdd = "";
     }
 
@@ -70,12 +90,24 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                 ((SearchActivity) mContext).setNewSearchText(mAddTagsToSearch);
             } else {
                 final Intent intent = new Intent(mContext, DetailsActivity.class);
-                intent.putExtra(DetailsActivity.EVENT_ID, EventsFragment.idList.get(getAdapterPosition()));
+                intent.putExtra(DetailsActivity.EVENT_ID, mIdList.get(getAdapterPosition()));
                 intent.putExtra(DetailsActivity.DISTANCE, EventsFragment.distances.get(getAdapterPosition()));
                 intent.putExtra(DetailsActivity.TYPE, EventsFragment.type);
                 mContext.startActivity(intent);
             }
         }
+    }
+
+    private PlaceEvent query(String id) {
+        ParseQuery<PlaceEvent> query = new ParseQuery(CLASS_NAME_TAG);
+        query.whereContains(API_ID_KEY, id);
+        PlaceEvent mPlaceEvent = null;
+        try {
+            mPlaceEvent = (PlaceEvent) query.getFirst();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return mPlaceEvent;
     }
 
     @NonNull
@@ -88,10 +120,49 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvName.setText(mTagsList.get(position));
+        if(!isTags) {
+            PlaceEvent mPlaceEvent = query(mIdList.get(position));
+            if(mPlaceEvent!=null) {
+                mPosts.clear();
+                getPosts(mPlaceEvent, holder);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
         return mTagsList.size();
+    }
+
+    public void getPosts(final PlaceEvent mPostEvent, final ViewHolder holder) {
+        ParseQuery<Post> parseQuery = new ParseQuery(Post.class);
+        parseQuery.include(Post.KEY_EVENT_PLACE);
+        parseQuery.setLimit(20);
+        parseQuery.whereEqualTo(Post.KEY_EVENT_PLACE, mPostEvent);
+        parseQuery.findInBackground(new FindCallback<Post>() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                if (e == null) {
+                    mPosts.addAll(objects);
+                    for(int i = 0; i< mPosts.size(); i++) {
+                        ParseFile mFile = mPosts.get(i).getImage();
+                        if(mFile!=null) {
+                            Drawable image = null;
+                            try {
+                                image = Drawable.createFromPath(mFile.getFile().getPath());
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                            holder.itemView.setBackground(image);
+                            mPosts.clear();
+                            return;
+                        }
+                    }
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

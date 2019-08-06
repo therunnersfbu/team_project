@@ -168,7 +168,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //tag recycler view
         mRecyclerView.setLayoutManager(myManager);
-        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, new ContextProvider() {
+        mAdapter = new HorizontalScrollAdapter(mSubTags, mSubTags, isTags, new ContextProvider() {
             @Override
             public Context getContext() {
                 return SearchActivity.this;

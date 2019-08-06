@@ -70,6 +70,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     private HorizontalScrollAdapter mAdapter;
     private ImageButton mBtn;
     private TextView mText;
+    private ArrayList<String> idList;
 
     private WeakReference<EventsApi.GetEvents> mGetEvents;
     private WeakReference<PlacesApi.GetPlaces> mGetPlaces;
@@ -78,7 +79,6 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     //TODO singleton
     public static int categoryToMark;
     public static ArrayList<String> distances;
-    public static ArrayList<String> idList;
     public static boolean type;
 
     @BindView(R.id.rvSuggestions) RecyclerView rvSuggestions;
@@ -116,7 +116,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         idList = new ArrayList<>();
         distances = new ArrayList<>();
         mNames = new ArrayList<>();
-        mAdapter = new HorizontalScrollAdapter(mNames, false, new ContextProvider() {
+        mAdapter = new HorizontalScrollAdapter(mNames, idList,false, new ContextProvider() {
             @Override
             public Context getContext() {
                 return getActivity();
