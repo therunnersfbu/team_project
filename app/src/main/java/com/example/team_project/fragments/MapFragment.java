@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -67,6 +66,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private String mCurrentSpotId;
     private Toast toast;
     private LatLng mUnitedStates = new LatLng(39.8283, -98.5795);
+    private ArrayList<String> mMarkerCoordinates;
 
     private WeakReference<DirectionsApi.GetSingleDistance> mGetSingleDistance;
 
@@ -107,6 +107,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 public void done(ParseObject object, ParseException e) {
                     likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
                     addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                    mMarkerCoordinates = new ArrayList<>();
                 }
             });
         }else{
@@ -153,8 +154,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         mGoogleMap.setMinZoomPreference(mMinZoom);
         enableMyLocationIfPermitted();
         queryReviews();
-        queryLikedEvents();
-        queryAddedEvents();
     }
 
     @Override
@@ -255,12 +254,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 String name = post.getEventPlace().getName();
                 String reviewId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
+                mMarkerCoordinates.add(coordinates);
                 Float color = BitmapDescriptorFactory.HUE_YELLOW;
                 if (coordinates != null){
                     makeMapMarker(coordinates, reviewId, name, review, color);
-            }}
+                }
+            }
             }
         });
+        queryLikedEvents();
     }
 
     protected void queryLikedEvents(){
@@ -283,14 +285,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
                 for (int i = 0; i < placeEvents.size(); i++) {
                     String placeEventCoord = placeEvents.get(i).getCoordinates();
-                    String placeEventName = placeEvents.get(i).getName();
-                    String likedSpotId = placeEvents.get(i).getAppId();
-                    Float color = BitmapDescriptorFactory.HUE_RED;
-                    String snippet = mLikedEventSnippet;
-                    makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
+                    if (!mMarkerCoordinates.contains(placeEventCoord)) {
+                        String placeEventName = placeEvents.get(i).getName();
+                        String likedSpotId = placeEvents.get(i).getAppId();
+                        Float color = BitmapDescriptorFactory.HUE_RED;
+                        String snippet = mLikedEventSnippet;
+                        mMarkerCoordinates.add(placeEventCoord);
+                        makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
+                    }
                 }
             }
         });
+        queryAddedEvents();
     }
 
     protected void queryAddedEvents(){
@@ -313,11 +319,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 }
                 for (int i = 0; i < placeEvents.size(); i++) {
                     String placeEventCoord = placeEvents.get(i).getCoordinates();
-                    String placeEventName = placeEvents.get(i).getName();
-                    String addedSpotId = placeEvents.get(i).getAppId();
-                    Float color = BitmapDescriptorFactory.HUE_BLUE;
-                    String snippet = mSavedEventSnippet;
-                    makeMapMarker(placeEventCoord, addedSpotId, placeEventName, snippet, color);
+                    if (!mMarkerCoordinates.contains(placeEventCoord)) {
+                        String placeEventName = placeEvents.get(i).getName();
+                        String addedSpotId = placeEvents.get(i).getAppId();
+                        Float color = BitmapDescriptorFactory.HUE_BLUE;
+                        String snippet = mSavedEventSnippet;
+                        makeMapMarker(placeEventCoord, addedSpotId, placeEventName, snippet, color);
+                    }
                 }
             }
         });
@@ -327,6 +335,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         String[] coordinates = coordinateString.split("\\s+");
         double latitude = Double.parseDouble(coordinates[0]);
         double longitude = Double.parseDouble(coordinates[1]);
+        // if there is already a marker here then break, else make this
         Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .title(placeEventName)
