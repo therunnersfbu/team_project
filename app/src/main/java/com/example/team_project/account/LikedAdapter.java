@@ -126,7 +126,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
         if (context != null) {
             itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_liked, parent, false);
         } else {
-            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_result, parent, false);
+            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_other_user, parent, false);
         }
         return new LikedAdapter.ViewHolder(itemView);
     }
