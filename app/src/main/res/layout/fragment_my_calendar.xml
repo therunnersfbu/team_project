@@ -8,6 +8,12 @@
     android:background="@drawable/gradient"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFFFFF" />
+
     <LinearLayout
         android:id="@+id/calendar"
         android:layout_width="256dp"
@@ -25,7 +31,8 @@
             android:layout_height="51dp"
             android:layout_weight="10"
             android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/button_shadow"
             android:fontFamily="sans-serif-medium"
             android:gravity="bottom|center"
@@ -36,10 +43,15 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#FFFFFF" />
+
     <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/compactcalendar_view"
         android:layout_width="match_parent"
-        android:layout_height="214dp"
+        android:layout_height="223dp"
         android:layout_marginTop="0dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -49,20 +61,24 @@
         app:compactCalendarMultiEventIndicatorColor="#000"
         app:compactCalendarTargetHeight="250dp"
         app:compactCalendarTextColor="#000"
-        app:compactCalendarTextSize="12sp" />
+        app:compactCalendarTextSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/todays_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:text="Spots"
         android:textColor="@color/white"
         android:textSize="27sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

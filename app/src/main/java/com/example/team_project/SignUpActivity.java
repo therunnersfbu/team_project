@@ -51,7 +51,7 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            startActivity(new Intent(this, BottomNavActivity.class));
+            setResult(RESULT_OK, new Intent());
             finish();
         }
     }

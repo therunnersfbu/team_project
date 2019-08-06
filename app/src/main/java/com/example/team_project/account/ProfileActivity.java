@@ -69,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     private ParseUser user;
     private Uri outputFileUri;
     private String photoPath;
+    private boolean isProfile;
 
     private WeakReference<DirectionsApi.GetDistances> mGetDistances;
 
@@ -84,11 +85,13 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
 
     @OnClick(R.id.ivProfilePic)
     public void changeProfilePic(ImageView view) {
+        isProfile = true;
         askFilePermission();
     }
 
     @OnClick(R.id.ivHeaderImage)
     public void changeHeaderImage(ImageView view) {
+        isProfile = false;
         askFilePermission();
     }
 
@@ -164,8 +167,8 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         super.onResume();
 
         flSurvey.removeAllViews();
-        addCurrentInterests();
         addSurveyButton();
+        addCurrentInterests();
     }
 
     private void addCurrentInterests() {
@@ -307,7 +310,6 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
                     isCamera = MediaStore.ACTION_IMAGE_CAPTURE.equals(data.getAction());
                 }
                 Uri selectedImageUri;
-                Bitmap rawTakenImage;
                 if (isCamera) {
                     selectedImageUri = outputFileUri;
                     photoPath = selectedImageUri.getPath();
@@ -315,9 +317,21 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
                     selectedImageUri = data == null ? null : data.getData();
                     photoPath = getRealPathFromURI_API19(this, selectedImageUri);
                 }
-                rawTakenImage = BitmapFactory.decodeFile(photoPath);
-                Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, 400);
-                ivProfilePic.setImageBitmap(resizedBitmap);
+
+                File file = new File(photoPath);
+                if (isProfile) {
+                    Glide.with(this)
+                            .load(file)
+                            .placeholder(defaultPic)
+                            .error(defaultPic)
+                            .into(ivProfilePic);
+                } else {
+                    Glide.with(this)
+                            .load(file)
+                            .placeholder(defaultHeader)
+                            .error(defaultHeader)
+                            .into(ivHeaderImage);
+                }
 
                 savePicture();
             }
@@ -375,7 +389,11 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
         ParseUser user = ParseUser.getCurrentUser();
         File file = new File(photoPath);
         ParseFile parseFile = new ParseFile(file);
-        user.put(User.KEY_PROFILE_PIC, parseFile);
+        if (isProfile) {
+            user.put(User.KEY_PROFILE_PIC, parseFile);
+        } else {
+            user.put(User.KEY_HEADER_IMAGE, parseFile);
+        }
 
         user.saveInBackground(new SaveCallback() {
             @Override

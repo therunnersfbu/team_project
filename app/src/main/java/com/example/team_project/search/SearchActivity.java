@@ -111,7 +111,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
 
     //layout items
     @BindView(R.id.pbSpinner) ProgressBar mProgressBar;
-    @BindView(R.id.rvTags) RecyclerView rvTags;
+    @BindView(R.id.rvTags) RecyclerView mRecyclerView;
     @BindView(R.id.rvResults) RecyclerView rvResults;
     @BindView(R.id.etLocation) TextView tvLocation;
     @BindView(R.id.etSearch) TextView etSearch;
@@ -167,15 +167,15 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         horizontalLayout = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //tag recycler view
-        rvTags.setLayoutManager(myManager);
+        mRecyclerView.setLayoutManager(myManager);
         mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, new ContextProvider() {
             @Override
             public Context getContext() {
                 return SearchActivity.this;
             }
         });
-        rvTags.setLayoutManager(horizontalLayout);
-        rvTags.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(horizontalLayout);
+        mRecyclerView.setAdapter(mAdapter);
         // tag items
         mTagReference = new ArrayList<>(Arrays.asList(PublicVariables.primTagRef));
         //result items
