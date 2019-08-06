@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/btn_rounded"
@@ -70,8 +70,9 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/ivReviewedNo" />
 
     <ImageView
         android:id="@+id/ivUpload"
@@ -151,5 +152,53 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/ivLike"
         app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
+
+    <ImageView
+        android:id="@+id/ivLikedNo"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNumber"
+        app:srcCompat="@drawable/heart_filled_24_4x"
+        tools:srcCompat="@drawable/heart_filled_24_4x" />
+
+    <TextView
+        android:id="@+id/tvLikedNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="11dp"
+        android:text="liked"
+        app:layout_constraintStart_toEndOf="@+id/ivLikedNo"
+        app:layout_constraintTop_toBottomOf="@+id/tvNumber" />
+
+    <ImageView
+        android:id="@+id/ivReviewedNo"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:tint="@color/appThemeBlue"
+        app:layout_constraintStart_toEndOf="@+id/tvLikedNo"
+        app:layout_constraintTop_toBottomOf="@+id/tvNumber"
+        app:srcCompat="@drawable/comment_filled_24_4x"
+        tools:srcCompat="@drawable/comment_filled_24_4x" />
+
+    <TextView
+        android:id="@+id/tvReviewedNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="11dp"
+        android:text="reviewed"
+        app:layout_constraintStart_toEndOf="@+id/ivReviewedNo"
+        app:layout_constraintTop_toBottomOf="@+id/tvNumber" />
 
 </android.support.constraint.ConstraintLayout>
