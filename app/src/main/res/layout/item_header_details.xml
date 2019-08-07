@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     tools:context=".details.DetailsActivity">
 
-
     <ViewFlipper
         android:id="@+id/vfGallery"
         android:layout_width="0dp"
@@ -141,7 +140,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:background="#00ffffff"
-        android:tint="@color/hyperlinkBlue"
+        android:tint="@color/appThemeBlue"
         app:layout_constraintEnd_toStartOf="@+id/ivUpload"
         app:layout_constraintTop_toTopOf="@+id/ivLike"
         app:srcCompat="@drawable/add_button" />

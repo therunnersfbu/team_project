@@ -45,7 +45,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 
 // Search page that populates with events that correspond to user-selected keywords
-public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances {
+public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPlaces, EventsApi.GetEvents, DirectionsApi.GetDistances, EventsApi.EndlessScrollingClass {
     // permission codes and constants
     private static String CATEGORY_TAG = "category";
     private static String NAME_TAG = "name";
@@ -94,7 +94,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     private boolean isCurLoc = true;
     private String newLoc = "";
     private String newLocName;
-
 
     private enum eventCategories {
         CONCERT,
@@ -172,7 +171,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         verticalLayout = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //tag recycler view
         mRecyclerView.setLayoutManager(myManager);
-        mAdapter = new HorizontalScrollAdapter(mSubTags, isTags, new ContextProvider() {
+        mAdapter = new HorizontalScrollAdapter(mSubTags, mSubTags, isTags, new ContextProvider() {
             @Override
             public Context getContext() {
                 return SearchActivity.this;
@@ -461,6 +460,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    @Override
     public void setCanGetMore(boolean canGetMore) {
         this.canGetMore = canGetMore;
     }

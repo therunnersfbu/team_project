@@ -26,11 +26,14 @@ public class EventsApi {
     private String keywords;
     private String date;
     private JSONArray array;
-    private Object source;
+    private Object classToNotify;
     private int pageCount;
 
-    public EventsApi(Object source) {
-        this.source = source;
+    public EventsApi(Object classToNotify) {
+        if (classToNotify == null) {
+            throw  new IllegalArgumentException();
+        }
+        this.classToNotify = classToNotify;
         client = new AsyncHttpClient();
         page = 1;
         location = "";
@@ -63,7 +66,7 @@ public class EventsApi {
     public void getMoreEvents() {
         page++;
         if (page + 1 >= pageCount) {
-            ((SearchActivity) source).setCanGetMore(false);
+            ((EndlessScrollingClass) classToNotify).setCanGetMore(false);
         }
         getEvents();
     }
@@ -78,7 +81,7 @@ public class EventsApi {
                     array = response.getJSONObject("events").getJSONArray("event");
                     pageCount = Integer.parseInt(response.getString("page_count"));
 
-                    ((GetEvents) source).gotEvents(array);
+                    ((GetEvents) classToNotify).gotEvents(array);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -110,7 +113,7 @@ public class EventsApi {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     Event event  = Event.eventFromJson(response, true);
-                    ((GetEvents) source).gotEvent(event);
+                    ((GetEvents) classToNotify).gotEvent(event);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -137,5 +140,9 @@ public class EventsApi {
     public interface GetEvents {
         void gotEvents(JSONArray eventsApi);
         void gotEvent(Event eventApi);
+    }
+
+    public interface EndlessScrollingClass {
+        void setCanGetMore(boolean canGetMore);
     }
 }
