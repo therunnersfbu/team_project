@@ -65,8 +65,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private int mMinZoom = 3;
     private String mCurrentSpotId;
     private Toast toast;
-    private LatLng mUnitedStates = new LatLng(39.8283, -98.5795);
+    private static LatLng mUnitedStates = new LatLng(39.8283, -98.5795);
     private ArrayList<String> mMarkerCoordinates;
+    private Boolean showToast;
 
     private WeakReference<DirectionsApi.GetSingleDistance> mGetSingleDistance;
 
@@ -119,9 +120,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mGetSingleDistance = new WeakReference<>((DirectionsApi.GetSingleDistance) this);
-        showInitialToast(view);
+
+        showToast = user.getBoolean(User.KEY_TOAST);
+        if (showToast){
+            showInitialToast(view);
+            user.put(User.KEY_TOAST, !showToast);
+        }
+
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
@@ -131,11 +137,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         mMapIcon = view.findViewById(R.id.mapicon);
         mMapIcon.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mUnitedStates , 0));
-               mGoogleMap.setMinZoomPreference(mMinZoom);
-           }
+            @Override
+            public void onClick(View v) {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mUnitedStates , 0));
+                mGoogleMap.setMinZoomPreference(mMinZoom);
+            }
         });
     }
 
@@ -225,13 +231,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     public GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
-        new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , mMinZoom));
-                return false;
-            }
-        };
+            new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , mMinZoom));
+                    return false;
+                }
+            };
 
     protected void queryReviews(){
         final ParseQuery<Post> reviewQuery = new ParseQuery<>(Post.class);
@@ -242,24 +248,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reviewQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-            if (e != null) {
-                Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
-                e.printStackTrace();
-                return;
-            }
-
-            for(int i = 0; i < posts.size(); i++) {
-                Post post = posts.get(i);
-                String review = mReview + post.getReview();
-                String name = post.getEventPlace().getName();
-                String reviewId = post.getEventPlace().getAppId();
-                String coordinates = post.getEventPlace().getCoordinates();
-                mMarkerCoordinates.add(coordinates);
-                Float color = BitmapDescriptorFactory.HUE_YELLOW;
-                if (coordinates != null){
-                    makeMapMarker(coordinates, reviewId, name, review, color);
+                if (e != null) {
+                    Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
+                    e.printStackTrace();
+                    return;
                 }
-            }
+
+                for(int i = 0; i < posts.size(); i++) {
+                    Post post = posts.get(i);
+                    String review = mReview + post.getReview();
+                    String name = post.getEventPlace().getName();
+                    String reviewId = post.getEventPlace().getAppId();
+                    String coordinates = post.getEventPlace().getCoordinates();
+                    mMarkerCoordinates.add(coordinates);
+                    Float color = BitmapDescriptorFactory.HUE_YELLOW;
+                    if (coordinates != null){
+                        makeMapMarker(coordinates, reviewId, name, review, color);
+                    }
+                }
             }
         });
         queryLikedEvents();
@@ -355,14 +361,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void showInitialToast(View view){
-            LayoutInflater inflater = getLayoutInflater();
-            View layout = inflater.inflate(R.layout.toast_map,
-                    (ViewGroup) view.findViewById(R.id.custom_map_toast_container));
-            toast = new Toast(getContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout);
-            toast.show();
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.toast_map,
+                (ViewGroup) view.findViewById(R.id.custom_map_toast_container));
+        toast = new Toast(getContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(layout);
+        toast.show();
     }
 
     @Override
@@ -373,3 +379,4 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 }
+

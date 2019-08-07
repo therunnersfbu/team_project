@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.fragments.EventsFragment;
@@ -100,7 +101,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                 final Intent intent = new Intent(mContext, DetailsActivity.class);
                 intent.putExtra(DetailsActivity.EVENT_ID, mIdList.get(getAdapterPosition()));
                 intent.putExtra(DetailsActivity.DISTANCE, EventsFragment.distances.get(getAdapterPosition()));
-                intent.putExtra(DetailsActivity.TYPE, EventsFragment.type);
+                intent.putExtra(DetailsActivity.TYPE, PublicVariables.type);
                 mContext.startActivity(intent);
             }
         }

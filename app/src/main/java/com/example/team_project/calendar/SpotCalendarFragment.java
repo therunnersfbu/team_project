@@ -23,6 +23,9 @@ import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -32,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindString;
@@ -39,9 +43,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-// The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
+// The SpotCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
 // events and allows the user to click on various days and see all their added spots for that day
-public class MyCalendarFragment extends Fragment{
+public class SpotCalendarFragment extends Fragment{
     private Unbinder mUnbinder;
     private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
@@ -79,7 +83,7 @@ public class MyCalendarFragment extends Fragment{
             user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject object, com.parse.ParseException e) {
-                    addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
                 }
             });
         }else{
@@ -96,11 +100,11 @@ public class MyCalendarFragment extends Fragment{
         String currentDate = mDateFormat.format(calendar.getTime());
         mCurrentDate.setText(currentDate);
         mCompactCalendar.setUseThreeLetterAbbreviation(true);
+        showInitialToast(view);
 
         Date mToday = Calendar.getInstance().getTime();
         retrieveEvents(mToday);
         addSpotDots();
-        showInitialToast(view);
 
         // retrieve events on clicked on day and display in recycler view
         mCompactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -156,13 +160,14 @@ public class MyCalendarFragment extends Fragment{
         mCalRV.removeAllViews();
         String numberDate = mSimpleDateFormat.format(date);
         if (addedEvents != null) {
-            for (int x = 0; x < addedEvents.size(); x++) {
-                String[] eventarray = addedEvents.get(x).split(Constants.splitindicator);
-                if (numberDate.equals(eventarray[0])) {
-                    String eventName = eventarray[2];
-                    theDaysEvents.add(eventName);
-                }
+            List<String> daysEventsInfo = Lists.newArrayList(Collections2.filter(
+                    addedEvents, Predicates.containsPattern(numberDate)));
+            for (int i = 0; i < daysEventsInfo.size(); i++){
+                String[] eventarray = addedEvents.get(i).split(Constants.splitindicator);
+                String eventName = eventarray[2];
+                theDaysEvents.add(eventName);
             }
+
             if (theDaysEvents.size() == 0) {
                 mNoneTV.setVisibility(View.VISIBLE);
             }else {
