@@ -189,58 +189,45 @@ public class ComposeReviewActivity extends AppCompatActivity{
     }
 
     private void checkPlaceEventExists() {
-        final ArrayList<PlaceEvent> placeEventList = new ArrayList<>();
         ParseQuery parseQuery = new ParseQuery("PlaceEvent");
         parseQuery.setLimit(1000);
+        parseQuery.whereMatches(PlaceEvent.KEY_API, id);
 
-        parseQuery.findInBackground(new FindCallback<PlaceEvent>() {
-            @Override
-            public void done(List<PlaceEvent> objects, ParseException e) {
-                if (e == null) {
-                    placeEventList.addAll(objects);
-                    for (int i = 0; i < placeEventList.size(); i++) {
-                        if (id.equals(placeEventList.get(i).getAppId())) {
-                            placeEvent = placeEventList.get(i);
-                            savePost();
-                            return;
-                        }
-                    }
-
-                    placeEvent = new PlaceEvent();
-                    ArrayList<Boolean> categories = new ArrayList<>();
-                    ArrayList<Integer> tags = new ArrayList<>();
-                    for (int i = 0; i < 12; i++) {
-                        categories.add(false);
-                    }
-                    for (int i = 0; i < 20; i++) {
-                        tags.add(0);
-                    }
-                    if (EventsFragment.categoryToMark > -1) {
-                        categories.set(EventsFragment.categoryToMark, true);
-                    }
-
-                    placeEvent.put(PlaceEvent.KEY_API, id);
-                    placeEvent.put(PlaceEvent.KEY_CATEGORIES, categories);
-                    placeEvent.put(PlaceEvent.KEY_TAGS, tags);
-                    placeEvent.setName(name);
-                    placeEvent.setCoordinates(location);
-                    placeEvent.setLiked(0);
-                    placeEvent.setReviewed(0);
-                    placeEvent.saveInBackground(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                savePost();
-                            } else {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                } else {
-                    e.printStackTrace();
-                }
+        try {
+            placeEvent = (PlaceEvent) parseQuery.getFirst();
+            savePost();
+        } catch (ParseException e) {
+            placeEvent = new PlaceEvent();
+            ArrayList<Boolean> categories = new ArrayList<>();
+            ArrayList<Integer> tags = new ArrayList<>();
+            for (int i = 0; i < 12; i++) {
+                categories.add(false);
             }
-        });
+            for (int i = 0; i < 20; i++) {
+                tags.add(0);
+            }
+            if (EventsFragment.categoryToMark > -1) {
+                categories.set(EventsFragment.categoryToMark, true);
+            }
+
+            placeEvent.put(PlaceEvent.KEY_API, id);
+            placeEvent.put(PlaceEvent.KEY_CATEGORIES, categories);
+            placeEvent.put(PlaceEvent.KEY_TAGS, tags);
+            placeEvent.setName(name);
+            placeEvent.setCoordinates(location);
+            placeEvent.setLiked(0);
+            placeEvent.setReviewed(0);
+            placeEvent.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        savePost();
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     private void savePost() {

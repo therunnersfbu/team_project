@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 
 import com.example.team_project.R;
 import com.example.team_project.location.LocationAdapter;
+import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.utils.ContextProvider;
 import com.parse.FindCallback;
@@ -50,37 +51,53 @@ public class DetailsActivity extends AppCompatActivity implements EventsDetailsA
     protected void onResume() {
         super.onResume();
 
-        ParseQuery parseQuery = new ParseQuery("Post");
-        parseQuery.include(Post.KEY_USER);
-        parseQuery.setLimit(1000);
+        ParseQuery placeEventQuery = new ParseQuery("PlaceEvent");
+        placeEventQuery.setLimit(1000);
+        placeEventQuery.whereMatches(PlaceEvent.KEY_API, id);
+        try {
+            PlaceEvent placeEvent = (PlaceEvent) placeEventQuery.getFirst();
 
-        parseQuery.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> objects, ParseException e) {
-                if (e == null) {
-                    ArrayList<Post> postsForThisEvent = new ArrayList<>();
-                    postsForThisEvent.add(new Post());
+            ParseQuery parseQuery = new ParseQuery("Post");
+            parseQuery.include(Post.KEY_USER);
+            parseQuery.setLimit(1000);
+            parseQuery.whereEqualTo(Post.KEY_EVENT_PLACE, placeEvent);
 
-                    for (Post i : objects) {
-                        if (id.equals(i.getEventPlace().getAppId())) {
-                            postsForThisEvent.add(i);
-                        }
+            parseQuery.findInBackground(new FindCallback<Post>() {
+                @Override
+                public void done(List<Post> objects, ParseException e) {
+                    if (e == null) {
+                        ArrayList<Post> postsForThisEvent = new ArrayList<>();
+                        postsForThisEvent.add(new Post());
+                        postsForThisEvent.addAll(objects);
+
+                        EventsDetailsAdapter adapter = new EventsDetailsAdapter(
+                                postsForThisEvent, id, type, distance, new ContextProvider() {
+                            @Override
+                            public Context getContext() {
+                                return DetailsActivity.this;
+                            }
+                        });
+                        rvEventsDetail.setAdapter(adapter);
+                        adapter.setOnItemClickedListener(DetailsActivity.this);
+                    } else {
+                        e.printStackTrace();
                     }
-
-                    EventsDetailsAdapter adapter = new EventsDetailsAdapter(
-                            postsForThisEvent, id, type, distance, new ContextProvider() {
-                        @Override
-                        public Context getContext() {
-                            return DetailsActivity.this;
-                        }
-                    });
-                    rvEventsDetail.setAdapter(adapter);
-                    adapter.setOnItemClickedListener(DetailsActivity.this);
-                } else {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        } catch (ParseException e) {
+            ArrayList<Post> postsForThisEvent = new ArrayList<>();
+            postsForThisEvent.add(new Post());
+
+            EventsDetailsAdapter adapter = new EventsDetailsAdapter(
+                    postsForThisEvent, id, type, distance, new ContextProvider() {
+                @Override
+                public Context getContext() {
+                    return DetailsActivity.this;
+                }
+            });
+            rvEventsDetail.setAdapter(adapter);
+            adapter.setOnItemClickedListener(DetailsActivity.this);
+        }
     }
 
     @Override
