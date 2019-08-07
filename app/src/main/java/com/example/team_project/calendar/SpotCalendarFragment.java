@@ -96,6 +96,7 @@ public class SpotCalendarFragment extends Fragment{
         String currentDate = mDateFormat.format(calendar.getTime());
         mCurrentDate.setText(currentDate);
         mCompactCalendar.setUseThreeLetterAbbreviation(true);
+        showInitialToast(view);
 
         Date mToday = Calendar.getInstance().getTime();
         retrieveEvents(mToday);
