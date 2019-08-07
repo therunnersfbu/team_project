@@ -39,9 +39,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-// The MyCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
+// The SpotCalendarFragment displays the calendar and allows for the user to open the fragment with the display of that day's
 // events and allows the user to click on various days and see all their added spots for that day
-public class MyCalendarFragment extends Fragment{
+public class SpotCalendarFragment extends Fragment{
     private Unbinder mUnbinder;
     private SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM yyyy", Locale.ENGLISH);
@@ -79,7 +79,7 @@ public class MyCalendarFragment extends Fragment{
             user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
                 @Override
                 public void done(ParseObject object, com.parse.ParseException e) {
-                    addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+                addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
                 }
             });
         }else{
@@ -100,7 +100,6 @@ public class MyCalendarFragment extends Fragment{
         Date mToday = Calendar.getInstance().getTime();
         retrieveEvents(mToday);
         addSpotDots();
-        showInitialToast(view);
 
         // retrieve events on clicked on day and display in recycler view
         mCompactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -154,6 +153,7 @@ public class MyCalendarFragment extends Fragment{
 
     private void retrieveEvents(Date date) {
         mCalRV.removeAllViews();
+        // TODO only fetch events with the date
         String numberDate = mSimpleDateFormat.format(date);
         if (addedEvents != null) {
             for (int x = 0; x < addedEvents.size(); x++) {

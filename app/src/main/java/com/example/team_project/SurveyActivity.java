@@ -297,6 +297,7 @@ public class SurveyActivity extends AppCompatActivity {
         user.put(User.KEY_VERIFIED, false);
         user.put(User.KEY_ADDED_EVENTS, new ArrayList<String>());
         user.put(User.KEY_LIKED_EVENTS, new ArrayList<String>());
+        user.put(User.KEY_TOAST, true);
 
         user.signUpInBackground(new SignUpCallback() {
             @Override

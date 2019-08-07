@@ -3,6 +3,7 @@ package com.example.team_project.model;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+
 import java.util.ArrayList;
 
 @ParseClassName("User")
@@ -19,6 +20,7 @@ public class User extends ParseObject {
     public static final String KEY_VERIFIED = "verifiedUser";
     public static final String KEY_CATEGORIES = "categoriesInterested";
     public static final String KEY_TAGS = "tagsInterested";
+    public static final String KEY_TOAST = "showToast";
 
     public String getName() {
         return getString(KEY_NAME);
@@ -79,5 +81,11 @@ public class User extends ParseObject {
     }
     public void setTags(ArrayList<Boolean> categories) {
         put(KEY_TAGS, categories);
+    }
+    public Boolean getShowToast() {
+        return getBoolean(KEY_TOAST);
+    }
+    public void setShowToast(Boolean showToast) {
+        put(KEY_TOAST, showToast);
     }
 }
