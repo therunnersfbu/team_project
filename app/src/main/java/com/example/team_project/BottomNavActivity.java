@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import com.example.team_project.account.ProfileActivity;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.fragments.MapFragment;
-import com.example.team_project.calendar.MyCalendarFragment;
+import com.example.team_project.calendar.SpotCalendarFragment;
 import com.example.team_project.usersearch.UserSearchActivity;
 import com.parse.ParseUser;
 import butterknife.BindView;
@@ -49,7 +49,7 @@ public class BottomNavActivity extends AppCompatActivity {
         // define your fragments here
         final Fragment eventsFragment = new EventsFragment();
         final Fragment mapFragment = new MapFragment();
-        final Fragment calendarFragment = new MyCalendarFragment();
+        final Fragment calendarFragment = new SpotCalendarFragment();
 
         // handle navigation selection
         bottomNavigationView.setOnNavigationItemSelectedListener(

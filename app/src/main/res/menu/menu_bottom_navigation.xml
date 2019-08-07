@@ -6,19 +6,22 @@
         android:id="@+id/action_events"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="Events"
+        android:title="Spots"
+        app:iconTint="@color/bottom_nav_selector"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_map"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Explore"
+        app:iconTint="@color/bottom_nav_selector"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_my_calendar"
         android:enabled="true"
         android:icon="@android:drawable/ic_menu_my_calendar"
-        android:title="My Calendar"
+        android:title="Calendar"
+        app:iconTint="@color/bottom_nav_selector"
         app:showAsAction="ifRoom" />
 
 </menu>

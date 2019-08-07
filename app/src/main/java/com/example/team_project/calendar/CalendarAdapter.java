@@ -19,7 +19,6 @@ import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
-import com.google.j2objc.annotations.Weak;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -63,7 +62,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CalendarAdapter.ViewHolder viewHolder, int i) {
-        Log.d("calada", "event in onBindViewHolder:" + mEvents.get(i)); // correct
         viewHolder.bind();
     }
 
@@ -95,7 +93,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             for (int x = 0; x < parseevents.size(); x++) {
                 String[] mParseEvent = parseevents.get(x).split(Constants.splitindicator);
                 if (mEvents.get(getAdapterPosition()).equals(mParseEvent[2])) {
-                    Log.d("calada", "setting name:" + mParseEvent[2]); // correct
                     mTVEventName.setText(mParseEvent[2]);
                     mTVAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];

@@ -10,6 +10,7 @@
     <color name="tagNotSelected">#adadad</color>
     <color name="tagSelected">#6D9EEB</color>
     <color name="reviewNot">#ACE0FF</color>
+    <color name="grey">#696969</color>
     <color name="calMaroon">#B71C1C</color>
     <color name="appThemeBlue">#6D9EEB</color>
     <color name="appThemeDark">#5C85C4</color>

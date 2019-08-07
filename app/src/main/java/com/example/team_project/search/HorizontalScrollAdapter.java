@@ -163,7 +163,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
                             }
-                            holder.itemView.setBackground(image);
+                            holder.itemView.findViewById(R.id.cvResult).setBackground(image);
                             mPosts.clear();
                             return;
                         }
