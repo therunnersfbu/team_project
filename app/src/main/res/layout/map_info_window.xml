@@ -1,37 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<!-- <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:padding="10dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"> -->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvTitle"
-            android:layout_gravity="center_horizontal"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#000"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:maxWidth="300dp"
+    android:orientation="horizontal"
+    android:padding="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:textSize="14sp"
-            android:textColor="#000"
-            android:id="@+id/tvSnippet"/>
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:text="TITLE"
+        android:maxWidth="200dp"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tvSnippet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvSnippet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:maxWidth="280dp"
+        android:maxLines="5"
+        android:text="SNIPPET"
+        android:textColor="#000"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
+
+    <!-- </LinearLayout>
+
+</LinearLayout> -->
