@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,7 +37,6 @@ import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -179,6 +179,7 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         @BindView(R.id.tvName) TextView tvName;
         @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
         @BindView(R.id.tvBody) TextView tvBody;
+        @BindView(R.id.ivBadge) ImageView ivBadge;
 
         public ItemViewHolder(@NonNull View view) {
             super(view);
@@ -191,6 +192,9 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
             final ParseUser user = post.getUser();
             tvName.setText(user.getString(User.KEY_NAME));
             tvBody.setText(post.getReview());
+            if(post.getIsLocal()) {
+                ivBadge.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.local_badge));
+            }
             ivProfilePic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -374,10 +378,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void gotPlace(final Place placeApi) {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
         mViewHolder.tvEventName.setText(placeApi.getPlaceName());
         mViewHolder.tvDistance.setText(mDistance);
         mViewHolder.tvAddress.setText(placeApi.getAddress());
-        mViewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
+        mViewHolder.tvHours.setText(placeApi.getOpenHours().get(day-2));
         mViewHolder.tvNumber.setText(placeApi.getPhoneNumber());
         mViewHolder.tvPrice.setText(placeApi.getPrice());
         mCoords = placeApi.getLocation();

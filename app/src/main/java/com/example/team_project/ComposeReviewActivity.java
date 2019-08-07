@@ -2,6 +2,7 @@ package com.example.team_project;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
@@ -25,10 +27,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
 import com.example.team_project.fragments.EventsFragment;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
@@ -75,7 +80,7 @@ public class ComposeReviewActivity extends AppCompatActivity{
     }
 
     @OnClick(R.id.btnCancel)
-    public void cancel(Button button) {
+    public void cancel(ImageButton button) {
         finish();
     }
 
@@ -146,12 +151,13 @@ public class ComposeReviewActivity extends AppCompatActivity{
     private void setColor(int index) {
         CardView card = (CardView) tags.get(index - 1);
         if (tagsSelected.get(index)) {
-            card.setCardBackgroundColor(getResources().getColor(R.color.hyperlinkBlue));
+            card.setCardBackgroundColor(getResources().getColor(R.color.appThemeDark));
         } else {
             card.setCardBackgroundColor(getResources().getColor(R.color.reviewNot));
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == YOUR_SELECT_PICTURE_REQUEST_CODE) {
@@ -170,10 +176,15 @@ public class ComposeReviewActivity extends AppCompatActivity{
                     selectedImageUri = data == null ? null : data.getData();
                     photoPath = getRealPathFromURI_API19(this, selectedImageUri);
                 }
-                Bitmap takenImage = BitmapFactory.decodeFile(photoPath);
-                Bitmap resizedBitmap = com.example.team_project.utils.BitmapScaler.scaleToFitWidth(takenImage, 400);
-                ivPreview.setImageBitmap(resizedBitmap);
+
+                ivPreview.setAdjustViewBounds(true);
+                ivPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 photoFile = new File(photoPath);
+
+                File file = new File(photoPath);
+                Glide.with(this)
+                        .load(file)
+                        .into(ivPreview);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }

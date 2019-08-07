@@ -22,24 +22,36 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".usersearch.UserSearchActivity" />
-        <activity android:name=".account.OtherUserActivity" />
-        <activity android:name=".location.LocationActivity" />
-        <activity android:name=".ComposeReviewActivity" />
-        <activity android:name=".details.DetailsActivity" />
-        <activity android:name=".SurveyActivity" />
-        <activity android:name=".search.SearchActivity" />
-        <activity android:name=".account.ProfileActivity" />
-        <activity android:name=".BottomNavActivity" />
-        <activity android:name=".LoginActivity">
-        </activity>
-        <activity android:name=".SignUpActivity" />
+        <activity android:name=".usersearch.UserSearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".account.OtherUserActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".location.LocationActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ComposeReviewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan"/>
+        <activity android:name=".details.DetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SurveyActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".search.SearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".account.ProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".BottomNavActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SignUpActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

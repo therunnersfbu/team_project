@@ -1,31 +1,18 @@
 package com.example.team_project.search;
 
 import butterknife.BindView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.details.DetailsActivity;
@@ -37,11 +24,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
@@ -74,11 +56,11 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         public ViewHolder(@NonNull final View view) {
             super(view);
             ButterKnife.bind(this, view);
-            view.setOnClickListener(this);
+            view.findViewById(R.id.cvResult).setOnClickListener(this);
             tvName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    view.callOnClick();
+                    view.findViewById(R.id.cvResult).callOnClick();
                 }
             });
         }
@@ -163,7 +145,7 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
                             }
-                            holder.itemView.setBackground(image);
+                            holder.itemView.findViewById(R.id.cvResult).setBackground(image);
                             mPosts.clear();
                             return;
                         }

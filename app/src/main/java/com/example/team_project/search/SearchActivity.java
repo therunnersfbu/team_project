@@ -126,13 +126,6 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    @OnClick(R.id.btnCancel)
-    public void cancel(Button button) {
-        finish();
-        PublicVariables.isCurLoc = true;
-        setMyLocation();
-    }
-
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
         mProgressBar.setVisibility(View.VISIBLE);

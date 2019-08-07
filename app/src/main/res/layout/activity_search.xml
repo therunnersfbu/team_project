@@ -7,30 +7,18 @@
     tools:context=".search.SearchActivity">
 
     <Button
-        android:id="@+id/btnCancel"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Cancel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/btnSearch"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="90dp"
         android:layout_height="30dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/btn_search"
         android:text="Search"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
+        app:layout_constraintTop_toTopOf="@+id/etSearch" />
 
     <TextView
         android:id="@+id/etLocation"
@@ -38,9 +26,6 @@
         android:layout_height="45dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
         android:drawableLeft="@drawable/location_icon"
         android:drawablePadding="10dp"
         android:paddingLeft="2dp"
@@ -48,9 +33,8 @@
         android:text="Current Location"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/hyperlinkBlue"
-        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/vSearchLine" />
 
     <ProgressBar
         android:id="@+id/pbSpinner"
@@ -72,22 +56,22 @@
         android:id="@+id/etSearch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="6dp"
-        android:transitionName="category"
-        android:background="@null"
         android:layout_marginRight="5dp"
+        android:background="@null"
         android:drawableLeft="@drawable/search_icon"
         android:drawablePadding="11dp"
         android:ems="10"
         android:hint="Search a spot"
         android:inputType="textPersonName"
         android:paddingLeft="6dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="15dp"
+        android:transitionName="category"
         app:layout_constraintEnd_toStartOf="@+id/btnSearch"
         app:layout_constraintStart_toStartOf="@+id/etLocation"
-        app:layout_constraintTop_toBottomOf="@+id/etLocation" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvTags"
@@ -95,10 +79,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/etLocation" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvResults"
@@ -119,16 +103,12 @@
 
     <View
         android:id="@+id/vSearchLine"
-        android:layout_width="match_parent"
+        android:layout_width="230dp"
         android:layout_height="1dp"
-        android:layout_marginStart="29dp"
-        android:layout_marginLeft="29dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="150dp"
-        android:layout_marginRight="150dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="40dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/etSearch"
+        app:layout_constraintTop_toTopOf="@+id/etSearch" />
 </android.support.constraint.ConstraintLayout>
