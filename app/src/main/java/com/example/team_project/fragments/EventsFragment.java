@@ -57,6 +57,7 @@ import butterknife.Unbinder;
 public class EventsFragment extends Fragment implements LocationListener, GoogleApiClient.OnConnectionFailedListener, EventsApi.GetEvents, PlacesApi.GetPlaces, DirectionsApi.GetDistances {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int DEFAULT_NO_CATEGORY_SELECTED = -1;
     private double mLatitude;
     private double mLongitude;
     private Unbinder mUnbinder;
@@ -79,14 +80,13 @@ public class EventsFragment extends Fragment implements LocationListener, Google
     //TODO singleton
     public static int categoryToMark;
     public static ArrayList<String> distances;
-    public static boolean type;
 
     @BindView(R.id.rvSuggestions) RecyclerView rvSuggestions;
     @BindView(R.id.btnSearchBar) Button btnSearchBar;
 
     @OnClick(R.id.btnSearchBar)
     public void buttonSearch(Button button) {
-        EventsFragment.categoryToMark = -1;
+        EventsFragment.categoryToMark = DEFAULT_NO_CATEGORY_SELECTED;
         Intent intent = new Intent(getContext(), SearchActivity.class);
         intent.putExtra("latitude", mLatitude);
         intent.putExtra("longitude", mLongitude);
@@ -110,7 +110,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         mGetEvents = new WeakReference<>((EventsApi.GetEvents) this);
         mGetPlaces = new WeakReference<>((PlacesApi.GetPlaces) this);
         mGetDistances = new WeakReference<>((DirectionsApi.GetDistances) this);
-        type = true;
+        PublicVariables.type = true;
         myManager = new LinearLayoutManager(getContext());
         rvSuggestions.setLayoutManager(myManager);
         idList = new ArrayList<>();
@@ -219,7 +219,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
 
         //TODO make constant tags and radius
         if (keyword.equals("concert") || keyword.equals("fair")) {
-            type = false;
+            PublicVariables.type = false;
             EventsApi api = new EventsApi(mGetEvents.get());
             api.setLocation(mLatitude, mLongitude, 60);
             api.setDate("Future");
