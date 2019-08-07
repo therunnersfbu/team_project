@@ -11,7 +11,7 @@
     <string name="event_id">eventID</string>
     <string name="type">type</string>
     <string name="distance">distance</string>
-    <string name="review">Review: </string>
+    <string name="review">Your Review: \n </string>
     <string name="place_event_class_name">PlaceEvent</string>
     <string name="calendar_frag_tag">CalendarFragment</string>
     <string name="map_frag_tag">MapFragment</string>
