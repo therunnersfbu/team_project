@@ -5,7 +5,7 @@
         <scale android:drawable="@drawable/logo_no_background"
             android:level="5000"
             android:scaleGravity="center"
-            android:scaleHeight="100%"
+            android:scaleHeight="110%"
             android:scaleWidth="0%" />
     </item>
 </layer-list>

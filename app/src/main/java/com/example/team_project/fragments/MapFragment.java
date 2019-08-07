@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.Constants;
+import com.example.team_project.CustomInfoWindowAdapter;
 import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.DirectionsApi;
@@ -187,7 +188,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         query.whereContains(PlaceEvent.KEY_API, currentSpotId);
         PlaceEvent mPlaceEvent = null;
         try {
-            mPlaceEvent = (PlaceEvent) query.getFirst();
+            mPlaceEvent = query.getFirst();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -248,27 +249,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         reviewQuery.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-                if (e != null) {
-                    Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
-                    e.printStackTrace();
-                    return;
-                }
+            if (e != null) {
+                Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
 
-                for(int i = 0; i < posts.size(); i++) {
-                    Post post = posts.get(i);
-                    String review = mReview + post.getReview();
-                    String name = post.getEventPlace().getName();
-                    String reviewId = post.getEventPlace().getAppId();
-                    String coordinates = post.getEventPlace().getCoordinates();
-                    mMarkerCoordinates.add(coordinates);
-                    Float color = BitmapDescriptorFactory.HUE_YELLOW;
-                    if (coordinates != null){
-                        makeMapMarker(coordinates, reviewId, name, review, color);
-                    }
+            for(int i = 0; i < posts.size(); i++) {
+                Post post = posts.get(i);
+                String review = mReview  + post.getReview();
+                String name = post.getEventPlace().getName();
+                String reviewId = post.getEventPlace().getAppId();
+                String coordinates = post.getEventPlace().getCoordinates();
+                mMarkerCoordinates.add(coordinates);
+                Log.d("mapfragment", "Marker Coordinates in reviewd: " + mMarkerCoordinates);
+
+                Float color = BitmapDescriptorFactory.HUE_YELLOW;
+                if (coordinates != null){
+                    makeMapMarker(coordinates, reviewId, name, review, color);
                 }
             }
+                queryLikedEvents();
+            }
         });
-        queryLikedEvents();
+
     }
 
     protected void queryLikedEvents(){
@@ -284,25 +288,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         placeEventQuery.findInBackground(new FindCallback<PlaceEvent>() {
             @Override
             public void done(List<PlaceEvent> placeEvents, ParseException e) {
-                if (e != null) {
-                    Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
-                    e.printStackTrace();
-                    return;
-                }
-                for (int i = 0; i < placeEvents.size(); i++) {
-                    String placeEventCoord = placeEvents.get(i).getCoordinates();
-                    if (!mMarkerCoordinates.contains(placeEventCoord)) {
-                        String placeEventName = placeEvents.get(i).getName();
-                        String likedSpotId = placeEvents.get(i).getAppId();
-                        Float color = BitmapDescriptorFactory.HUE_RED;
-                        String snippet = mLikedEventSnippet;
-                        mMarkerCoordinates.add(placeEventCoord);
-                        makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
-                    }
+            if (e != null) {
+                Log.e(mMapFragTag, mQueryErrorMessage + e.getMessage());
+                e.printStackTrace();
+                return;
+            }
+            for (int i = 0; i < placeEvents.size(); i++) {
+                String placeEventCoord = placeEvents.get(i).getCoordinates();
+                Log.d("mapfragment", "Marker Coordinates in Liked: " + mMarkerCoordinates);
+                Log.d("mapfragment", "Liked event coordinate: " + placeEventCoord);
+                if (!mMarkerCoordinates.contains(placeEventCoord)) {
+                    Log.d("mapfragment", "inloop in liked events!");
+                    String placeEventName = placeEvents.get(i).getName();
+                    String likedSpotId = placeEvents.get(i).getAppId();
+                    Float color = BitmapDescriptorFactory.HUE_RED;
+                    String snippet = mLikedEventSnippet;
+                    mMarkerCoordinates.add(placeEventCoord);
+                    makeMapMarker(placeEventCoord, likedSpotId, placeEventName, snippet, color);
                 }
             }
+            queryAddedEvents();
+            }
         });
-        queryAddedEvents();
     }
 
     protected void queryAddedEvents(){
@@ -341,7 +348,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         String[] coordinates = coordinateString.split("\\s+");
         double latitude = Double.parseDouble(coordinates[0]);
         double longitude = Double.parseDouble(coordinates[1]);
-        // if there is already a marker here then break, else make this
         Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                 .position(new LatLng(latitude, longitude))
                 .title(placeEventName)
@@ -349,6 +355,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
         marker.setTag(id);
         mGoogleMap.setOnInfoWindowClickListener(MapFragment.this);
+        mGoogleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getContext()));
     }
 
     private Boolean getSpotType(String id){
