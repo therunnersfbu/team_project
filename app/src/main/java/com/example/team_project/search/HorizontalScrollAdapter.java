@@ -130,7 +130,8 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         parseQuery.include(Post.KEY_EVENT_PLACE);
         parseQuery.setLimit(20);
         parseQuery.whereEqualTo(Post.KEY_EVENT_PLACE, mPostEvent);
-        parseQuery.findInBackground(new FindCallback<Post>() {
+        parseQuery.findInBackground(
+                new FindCallback<Post>() {
             @SuppressLint("ResourceAsColor")
             @Override
             public void done(List<Post> objects, ParseException e) {
