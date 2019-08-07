@@ -1,141 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightGrey"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context=".ComposeReviewActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <com.nex3z.flowlayout.FlowLayout
+        android:id="@+id/flTags"
         android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        app:flChildSpacing="auto"
+        app:flChildSpacingForLastRow="align"
+        app:flRowSpacing="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etBody">
+
+    </com.nex3z.flowlayout.FlowLayout>
+
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        tools:context=".ComposeReviewActivity">
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:text="Spot name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCancel" />
 
-        <com.nex3z.flowlayout.FlowLayout
-            android:id="@+id/flTags"
-            android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            app:flChildSpacing="auto"
-            app:flChildSpacingForLastRow="align"
-            app:flRowSpacing="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvHeader">
+    <Switch
+        android:id="@+id/sLocal"
+        android:layout_width="50dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/tvLocal"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        </com.nex3z.flowlayout.FlowLayout>
+    <TextView
+        android:id="@+id/tvVisitor"
+        android:layout_width="47dp"
+        android:layout_height="22dp"
+        android:text="Visitor"
+        app:layout_constraintEnd_toStartOf="@+id/sLocal"
+        app:layout_constraintTop_toTopOf="@+id/tvLocal" />
 
-        <TextView
-            android:id="@+id/tvHeader"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Spot name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintEnd_toStartOf="@+id/tvVisitor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tvLocal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Local"
+        app:layout_constraintEnd_toEndOf="@+id/flTags"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <Switch
-            android:id="@+id/sLocal"
-            android:layout_width="50dp"
-            android:layout_height="32dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/tvLocal"
-            app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/etBody"
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/border_back"
+        android:ems="10"
+        android:gravity="start"
+        android:hint="Write a review"
+        android:inputType="textMultiLine"
+        android:overScrollMode="always"
+        android:padding="10dp"
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="@+id/flTags"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/flTags"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeader" />
 
-        <TextView
-            android:id="@+id/tvVisitor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Visitor"
-            app:layout_constraintEnd_toStartOf="@+id/sLocal"
-            app:layout_constraintTop_toTopOf="@+id/tvLocal" />
+    <Button
+        android:id="@+id/btnPost"
+        android:layout_width="500dp"
+        android:layout_height="60dp"
+        android:background="@drawable/btn_rounded"
+        android:text="Post"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/tvLocal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="29dp"
-            android:text="Local"
-            app:layout_constraintEnd_toEndOf="@+id/flTags"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:layout_width="150dp"
+        android:layout_height="146dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginRight="120dp"
+        android:background="@drawable/border_back"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flTags"
+        app:srcCompat="@drawable/review_icon" />
 
-        <EditText
-            android:id="@+id/etBody"
-            android:layout_width="0dp"
-            android:layout_height="140dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:ems="10"
-            android:gravity="start"
-            android:overScrollMode="always"
-            android:scrollbarStyle="insideInset"
-            android:hint="Write a review"
-            android:inputType="textMultiLine"
-            android:padding="10dp"
-            android:scrollbars="vertical"
-            app:layout_constraintEnd_toEndOf="@+id/flTags"
-            app:layout_constraintStart_toStartOf="@+id/flTags"
-            app:layout_constraintTop_toBottomOf="@+id/flTags" />
+    <ImageButton
+        android:id="@+id/btnCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="13dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/quantum_ic_arrow_back_grey600_24" />
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="80dp"
-            android:background="@drawable/btn_rounded_small"
-            android:text="Cancel"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etBody" />
-
-        <Button
-            android:id="@+id/btnPost"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp"
-            android:text="Post"
-            android:layout_height="30dp"
-            android:background="@drawable/btn_rounded_small"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etBody" />
-
-        <ImageView
-            android:id="@+id/ivPreview"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginStart="120dp"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="120dp"
-            android:layout_marginRight="120dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etBody"
-            app:srcCompat="@drawable/photo_icon" />
-
-    </android.support.constraint.ConstraintLayout>
-
-</ScrollView>
+</android.support.constraint.ConstraintLayout>
