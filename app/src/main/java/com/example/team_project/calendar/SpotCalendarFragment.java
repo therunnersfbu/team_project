@@ -23,6 +23,9 @@ import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.parse.GetCallback;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -32,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindString;
@@ -154,16 +158,16 @@ public class SpotCalendarFragment extends Fragment{
 
     private void retrieveEvents(Date date) {
         mCalRV.removeAllViews();
-        // TODO only fetch events with the date
         String numberDate = mSimpleDateFormat.format(date);
         if (addedEvents != null) {
-            for (int x = 0; x < addedEvents.size(); x++) {
-                String[] eventarray = addedEvents.get(x).split(Constants.splitindicator);
-                if (numberDate.equals(eventarray[0])) {
-                    String eventName = eventarray[2];
-                    theDaysEvents.add(eventName);
-                }
+            List<String> daysEventsInfo = Lists.newArrayList(Collections2.filter(
+                    addedEvents, Predicates.containsPattern(numberDate)));
+            for (int i = 0; i < daysEventsInfo.size(); i++){
+                String[] eventarray = addedEvents.get(i).split(Constants.splitindicator);
+                String eventName = eventarray[2];
+                theDaysEvents.add(eventName);
             }
+
             if (theDaysEvents.size() == 0) {
                 mNoneTV.setVisibility(View.VISIBLE);
             }else {
