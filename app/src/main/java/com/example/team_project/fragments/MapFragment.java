@@ -203,7 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
-    /*private void showDefaultLocation() {
+    private void showDefaultLocation() {
         Toast.makeText(getContext(),mLocationPermissionDenied,
                 Toast.LENGTH_SHORT).show();
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mUnitedStates , 0));
@@ -223,7 +223,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 return;
             }
         }
-    }*/
+    }
 
     public GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
         new GoogleMap.OnMyLocationButtonClickListener() {
