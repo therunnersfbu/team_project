@@ -5,8 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
@@ -28,6 +33,7 @@ public class UserSearchActivity extends AppCompatActivity {
 
     @BindView(R.id.rvResults) RecyclerView mRvResults;
     @BindView(R.id.etSearchBar) EditText mSearchBar;
+    @BindView(R.id.btnSearch) Button btnSearch;
 
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
@@ -66,5 +72,18 @@ public class UserSearchActivity extends AppCompatActivity {
         mRvResults.setLayoutManager(new LinearLayoutManager(this));
         mRvResults.setAdapter(mAdapter);
         mSearchBar.requestFocus();
+
+        mSearchBar.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    btnSearch.callOnClick();
+                    PublicVariables.hideKeyboard(UserSearchActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }
