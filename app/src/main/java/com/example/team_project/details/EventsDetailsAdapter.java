@@ -5,11 +5,15 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
+import android.util.DebugUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.ComposeReviewActivity;
 import com.example.team_project.Constants;
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.account.OtherUserActivity;
 import com.example.team_project.api.EventsApi;
@@ -390,10 +395,26 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         } catch (IndexOutOfBoundsException e) {
             mViewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
         }
-        mViewHolder.tvNumber.setText(placeApi.getPhoneNumber());
+
+        String mString = placeApi.getPhoneNumber();
+        SpannableString ss = new SpannableString(mString);
+        ss.setSpan(new UnderlineSpan(), 0, mString.length(), 0);
+        mViewHolder.tvNumber.setText(ss);
         mViewHolder.tvPrice.setText(placeApi.getPrice());
         mCoords = placeApi.getLocation();
         mPlace = placeApi;
+
+        mViewHolder.tvNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (PublicVariables.canMakeCall && ((TextView) v).getText().toString().length() > 0) {
+                    Log.d("calling", placeApi.getPhoneToCall());
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:" + placeApi.getPhoneToCall()));
+                    mContext.startActivity(callIntent);
+                }
+            }
+        });
 
         ParseUser user = ParseUser.getCurrentUser();
         ArrayList<String> liked = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
