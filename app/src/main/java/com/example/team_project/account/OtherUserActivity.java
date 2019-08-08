@@ -40,7 +40,7 @@ public class OtherUserActivity extends AppCompatActivity implements DirectionsAp
     private WeakReference<DirectionsApi.GetDistances> mGetDistances;
 
     @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
-    @BindDrawable(R.drawable.header_default) Drawable defaultHeader;
+    @BindDrawable(R.drawable.polka_banner) Drawable defaultHeader;
     @BindView(R.id.rvLiked) RecyclerView rvLiked;
     @BindView(R.id.tvName) TextView tvName;
     @BindView(R.id.tvUsername) TextView tvUsername;
