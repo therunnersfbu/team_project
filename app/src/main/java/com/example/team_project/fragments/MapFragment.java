@@ -38,9 +38,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -106,14 +104,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private void initUserData() {
         user = ParseUser.getCurrentUser();
         if (user != null) {
-            user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, ParseException e) {
-                    likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
-                    addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                    mMarkerCoordinates = new ArrayList<>();
-                }
-            });
+            likedEvents = (ArrayList<String>) user.get(User.KEY_LIKED_EVENTS);
+            addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
+            mMarkerCoordinates = new ArrayList<>();
         }else{
             Log.d(mMapFragTag, mUserErrorMessage);
             return;
