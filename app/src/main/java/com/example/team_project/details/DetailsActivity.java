@@ -53,13 +53,6 @@ public class DetailsActivity extends AppCompatActivity implements EventsDetailsA
         distance = getIntent().getStringExtra(DISTANCE);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
-
-        if (ContextCompat.checkSelfPermission(DetailsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(DetailsActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
-        } else
-        {
-            PublicVariables.canMakeCall = true;
-        }
     }
 
     @Override
@@ -112,21 +105,6 @@ public class DetailsActivity extends AppCompatActivity implements EventsDetailsA
             });
             rvEventsDetail.setAdapter(adapter);
             adapter.setOnItemClickedListener(DetailsActivity.this);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_PHONE_CALL: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PublicVariables.canMakeCall = true;
-                }
-                else {
-                    PublicVariables.canMakeCall = false;
-                }
-                return;
-            }
         }
     }
 
