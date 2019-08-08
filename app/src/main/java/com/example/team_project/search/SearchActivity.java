@@ -322,6 +322,8 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
         mPlaceList.clear();
         mResults.clear();
         mIds.clear();
+        mAddresses.clear();
+        mDistances.clear();
     }
 
     // query results according to user input
