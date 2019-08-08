@@ -26,8 +26,6 @@ import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.parse.GetCallback;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.text.ParseException;
@@ -80,12 +78,7 @@ public class SpotCalendarFragment extends Fragment{
     // ensures and checks if there is user data available and if so it initializes the list
     private void initUserData() {
         if (user != null) {
-            user.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, com.parse.ParseException e) {
-                addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
-                }
-            });
+            addedEvents = (ArrayList<String>) user.get(User.KEY_ADDED_EVENTS);
         }else{
             Log.d(mCalendarFragTag, mUserErrorMessage);
             return;
@@ -163,7 +156,7 @@ public class SpotCalendarFragment extends Fragment{
             List<String> daysEventsInfo = Lists.newArrayList(Collections2.filter(
                     addedEvents, Predicates.containsPattern(numberDate)));
             for (int i = 0; i < daysEventsInfo.size(); i++){
-                String[] eventarray = addedEvents.get(i).split(Constants.splitindicator);
+                String[] eventarray = daysEventsInfo.get(i).split(Constants.splitindicator);
                 String eventName = eventarray[2];
                 theDaysEvents.add(eventName);
             }
