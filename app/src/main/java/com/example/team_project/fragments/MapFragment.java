@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,6 +28,7 @@ import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
 import com.example.team_project.utils.ContextProvider;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -69,6 +69,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private static LatLng mUnitedStates = new LatLng(39.8283, -98.5795);
     private ArrayList<String> mMarkerCoordinates;
     private Boolean showToast;
+    private GoogleApiClient googleApiClient;
 
     private WeakReference<DirectionsApi.GetSingleDistance> mGetSingleDistance;
 
@@ -124,12 +125,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             user.put(User.KEY_TOAST, !showToast);
         }
 
-
         SupportMapFragment supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         supportMapFragment.getMapAsync(this);
 
-        Drawable loginActivityBackground = mMapIcon.getBackground();
-        loginActivityBackground.setAlpha(230);
 
         mMapIcon = view.findViewById(R.id.mapicon);
         mMapIcon.setOnClickListener(new View.OnClickListener() {
@@ -197,6 +195,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mUnitedStates , 0));
         } else if (mGoogleMap != null) {
             mGoogleMap.setMyLocationEnabled(true);
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , 11));
@@ -227,13 +226,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     public GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
-            new GoogleMap.OnMyLocationButtonClickListener() {
-                @Override
-                public boolean onMyLocationButtonClick() {
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , mMinZoom));
-                    return false;
-                }
-            };
+        new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(BottomNavActivity.currentLat, BottomNavActivity.currentLng) , mMinZoom));
+                return false;
+            }
+        };
 
     protected void queryReviews(){
         final ParseQuery<Post> reviewQuery = new ParseQuery<>(Post.class);
