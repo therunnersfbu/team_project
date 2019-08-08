@@ -15,6 +15,7 @@ public class Place {
 
     // with details
     private String phoneNumber;
+    private String phoneToCall;
     private ArrayList<String> openHours;
     private int price;
 
@@ -33,8 +34,10 @@ public class Place {
         if (singlePLace) {
             try {
                 place.phoneNumber = object.getString("formatted_phone_number");
+                place.phoneToCall = object.getString("international_phone_number").split(" ")[1].replaceAll("-", "");
             } catch (JSONException e) {
                 place.phoneNumber = "";
+                place.phoneToCall = "";
             }
             try {
                 place.price = object.getInt("price_level");
@@ -130,5 +133,9 @@ public class Place {
 
     public String getDistance() {
         return distance;
+    }
+
+    public String getPhoneToCall() {
+        return phoneToCall;
     }
 }

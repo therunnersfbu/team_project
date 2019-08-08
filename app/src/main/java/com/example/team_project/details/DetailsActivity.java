@@ -1,7 +1,13 @@
 package com.example.team_project.details;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.browse.MediaBrowser;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.location.LocationAdapter;
 import com.example.team_project.model.PlaceEvent;
@@ -27,6 +34,7 @@ public class DetailsActivity extends AppCompatActivity implements EventsDetailsA
     public static final String EVENT_ID = "eventID";
     public static final String TYPE = "type";
     public static final String DISTANCE = "distance";
+    public static final int REQUEST_PHONE_CALL = 170;
 
     private String id;
     private boolean type;
@@ -45,6 +53,13 @@ public class DetailsActivity extends AppCompatActivity implements EventsDetailsA
         distance = getIntent().getStringExtra(DISTANCE);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailsActivity.this);
         rvEventsDetail.setLayoutManager(linearLayoutManager);
+
+        if (ContextCompat.checkSelfPermission(DetailsActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(DetailsActivity.this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
+        } else
+        {
+            PublicVariables.canMakeCall = true;
+        }
     }
 
     @Override
@@ -97,6 +112,21 @@ public class DetailsActivity extends AppCompatActivity implements EventsDetailsA
             });
             rvEventsDetail.setAdapter(adapter);
             adapter.setOnItemClickedListener(DetailsActivity.this);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PHONE_CALL: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    PublicVariables.canMakeCall = true;
+                }
+                else {
+                    PublicVariables.canMakeCall = false;
+                }
+                return;
+            }
         }
     }
 
