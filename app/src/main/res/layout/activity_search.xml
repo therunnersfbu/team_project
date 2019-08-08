@@ -63,7 +63,7 @@
         android:drawableLeft="@drawable/search_icon"
         android:drawablePadding="11dp"
         android:ems="10"
-        android:hint="Search a spot"
+        android:hint="Search a park, bar, etc."
         android:inputType="textPersonName"
         android:paddingLeft="6dp"
         android:paddingTop="5dp"
@@ -107,7 +107,7 @@
         android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="35dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="@+id/etSearch"
         app:layout_constraintTop_toTopOf="@+id/etSearch" />

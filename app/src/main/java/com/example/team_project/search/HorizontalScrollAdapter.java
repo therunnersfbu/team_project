@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.ButterKnife;
+import butterknife.Optional;
 
 // This adapter handles horizontal scrolling for the Tag and Suggestion CardViews. Used in Search Activity
 public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScrollAdapter.ViewHolder> {
@@ -52,6 +54,8 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.tvName) TextView tvName;
+        @Nullable @BindView(R.id.tvLike) TextView tvLike;
+        @Nullable @BindView(R.id.tvReview) TextView tvReview;
 
         public ViewHolder(@NonNull final View view) {
             super(view);
@@ -114,10 +118,21 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
         if(!isTags) {
             PlaceEvent mPlaceEvent = query(mIdList.get(position));
             if(mPlaceEvent!=null) {
+                setText(holder, mPlaceEvent.getLiked()+"", mPlaceEvent.getReviewed()+"");
                 mPosts.clear();
                 getPosts(mPlaceEvent, holder);
             }
+            else {
+                holder.tvLike.setText("0");
+                holder.tvReview.setText("0");
+            }
         }
+    }
+
+    @Optional
+    public void setText(ViewHolder holder, String liked, String reviewed) {
+        holder.tvLike.setText(liked);
+        holder.tvReview.setText(reviewed);
     }
 
     @Override
