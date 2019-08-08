@@ -118,7 +118,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
 
         rvLiked.setLayoutManager(likedManager);
         rvLiked.setAdapter(likedAdapter);
-        user = BottomNavActivity.targetUser;
+        user = ParseUser.getCurrentUser();
         tvName.setText(user.getString(User.KEY_NAME));
         tvUsername.setText(user.getUsername());
 
