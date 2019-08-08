@@ -90,8 +90,7 @@ public class EventsFragment extends Fragment implements LocationListener, Google
         Intent intent = new Intent(getContext(), SearchActivity.class);
         intent.putExtra("latitude", mLatitude);
         intent.putExtra("longitude", mLongitude);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) getContext(), (View)btnSearchBar, "category");
-        getContext().startActivity(intent, options.toBundle());
+        getContext().startActivity(intent);
     }
 
     @Nullable
