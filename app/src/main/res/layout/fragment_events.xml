@@ -37,7 +37,7 @@
         android:scaleType="fitCenter"
         android:scaleX=".7"
         android:scaleY=".7"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         app:srcCompat="@drawable/fried_egg_outline_24_4x" />
@@ -54,7 +54,7 @@
         android:scaleType="centerInside"
         android:scaleX=".65"
         android:scaleY=".65"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toEndOf="@+id/ibtnBreakfast"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         app:srcCompat="@drawable/fork_knife_outline_24_4x" />
@@ -71,7 +71,7 @@
         android:scaleType="fitCenter"
         android:scaleX=".65"
         android:scaleY=".65"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toEndOf="@+id/ibtnBrunch"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar"
         app:srcCompat="@drawable/ice_cream_outline_24_4x" />
@@ -91,7 +91,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/steak_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnLunch"
         app:layout_constraintTop_toBottomOf="@+id/btnSearchBar" />
@@ -157,7 +157,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/politics_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBreakfast" />
 
@@ -174,7 +174,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/cocktail_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toEndOf="@+id/ibtnSights"
         app:layout_constraintTop_toBottomOf="@+id/tvBrunch" />
 
@@ -191,7 +191,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/shopping_bag_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toEndOf="@+id/ibtnNight"
         app:layout_constraintTop_toBottomOf="@+id/tvLunch" />
 
@@ -210,7 +210,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/microphone_karaoke_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnShopping"
         app:layout_constraintTop_toBottomOf="@+id/tvDinner" />
@@ -276,7 +276,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/arts_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSights" />
 
@@ -306,7 +306,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/blow_dryer_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toEndOf="@+id/ibtnPop"
         app:layout_constraintTop_toBottomOf="@+id/tvDrinks" />
 
@@ -335,7 +335,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/dumbbell_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintStart_toEndOf="@+id/ibtnBeauty"
         app:layout_constraintTop_toBottomOf="@+id/tvShopping" />
 
@@ -366,7 +366,7 @@
         android:scaleX=".65"
         android:scaleY=".65"
         android:src="@drawable/tree_outline_24_4x"
-        android:tint="@color/quantum_black_100"
+        android:tint="@color/caticon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ibtnActive"
         app:layout_constraintTop_toBottomOf="@+id/tvConcerts" />
@@ -406,7 +406,7 @@
         android:fontFamily="sans-serif"
         android:text="Suggested spots for you"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#535353"
+        android:textColor="@color/caticon"
         android:textSize="20sp"
         android:textStyle="bold"
         android:transitionName="category"

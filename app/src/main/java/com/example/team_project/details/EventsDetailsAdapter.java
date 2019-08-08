@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import com.bumptech.glide.Glide;
 import com.example.team_project.BottomNavActivity;
 import com.example.team_project.ComposeReviewActivity;
@@ -43,12 +42,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import org.json.JSONArray;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -384,7 +381,12 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mViewHolder.tvDistance.setText(mDistance);
         mViewHolder.tvAddress.setText(placeApi.getAddress());
         try {
-            mViewHolder.tvHours.setText(placeApi.getOpenHours().get(day - 2));
+            if(day==1) {
+                mViewHolder.tvHours.setText(placeApi.getOpenHours().get(6));
+            }
+            else {
+                mViewHolder.tvHours.setText(placeApi.getOpenHours().get(day - 2));
+            }
         } catch (IndexOutOfBoundsException e) {
             mViewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
         }
