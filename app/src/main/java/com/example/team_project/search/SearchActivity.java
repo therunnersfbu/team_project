@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.example.team_project.location.LocationActivity;
 import com.example.team_project.model.Event;
 import com.example.team_project.model.Place;
 import com.example.team_project.model.PlaceEvent;
+import com.example.team_project.usersearch.UserSearchActivity;
 import com.example.team_project.utils.ContextProvider;
 import com.example.team_project.utils.EndlessRecyclerViewScrollListener;
 import com.parse.ParseException;
@@ -117,6 +119,7 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
     @BindView(R.id.rvResults) RecyclerView rvResults;
     @BindView(R.id.etLocation) TextView tvLocation;
     @BindView(R.id.etSearch) TextView etSearch;
+    @BindView(R.id.btnSearch) Button btnSearch;
 
     //OnClick listeners for buttons
     @OnClick(R.id.etLocation)
@@ -199,6 +202,19 @@ public class SearchActivity extends AppCompatActivity implements PlacesApi.GetPl
                         pApi.getMorePlaces();
                     }
                 }
+            }
+        });
+        // search by pressing enter
+        etSearch.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    btnSearch.callOnClick();
+                    PublicVariables.hideKeyboard(SearchActivity.this);
+                    return true;
+                }
+                return false;
             }
         });
         //set location

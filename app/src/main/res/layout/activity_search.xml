@@ -68,7 +68,6 @@
         android:paddingLeft="6dp"
         android:paddingTop="5dp"
         android:paddingBottom="15dp"
-        android:transitionName="category"
         app:layout_constraintEnd_toStartOf="@+id/btnSearch"
         app:layout_constraintStart_toStartOf="@+id/etLocation"
         app:layout_constraintTop_toTopOf="parent" />

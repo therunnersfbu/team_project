@@ -2,16 +2,22 @@ package com.example.team_project.location;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.example.team_project.PublicVariables;
 import com.example.team_project.R;
 import com.example.team_project.api.AutocompleteApi;
 import com.example.team_project.search.SearchActivity;
+import com.example.team_project.usersearch.UserSearchActivity;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
@@ -33,6 +39,7 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
 
     @BindView(R.id.etSearch) EditText etSearch;
     @BindView(R.id.rvLocResults) RecyclerView rvLocResults;
+    @BindView(R.id.btnSearch) Button btnSearch;
 
     @OnClick(R.id.btnSearch)
     public void search(Button button) {
@@ -64,6 +71,19 @@ public class LocationActivity extends AppCompatActivity implements LocationAdapt
         rvLocResults.setLayoutManager(linearLayoutManager);
         rvLocResults.setAdapter(mLocationAdapter);
         LApi = new AutocompleteApi(mGetAutocomplete.get());
+        // listener to search with enter
+        etSearch.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    btnSearch.callOnClick();
+                    PublicVariables.hideKeyboard(LocationActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
