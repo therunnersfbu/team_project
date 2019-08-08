@@ -207,7 +207,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private void showDefaultLocation() {
         Toast.makeText(getContext(),mLocationPermissionDenied,
                 Toast.LENGTH_SHORT).show();
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(39.8283, -98.5795) , 0));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mUnitedStates , 0));
     }
 
     @Override
@@ -257,8 +257,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 String reviewId = post.getEventPlace().getAppId();
                 String coordinates = post.getEventPlace().getCoordinates();
                 mMarkerCoordinates.add(coordinates);
-                Log.d("mapfragment", "Marker Coordinates in reviewd: " + mMarkerCoordinates);
-
                 Float color = BitmapDescriptorFactory.HUE_YELLOW;
                 if (coordinates != null){
                     makeMapMarker(coordinates, reviewId, name, review, color);
@@ -290,10 +288,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
             for (int i = 0; i < placeEvents.size(); i++) {
                 String placeEventCoord = placeEvents.get(i).getCoordinates();
-                Log.d("mapfragment", "Marker Coordinates in Liked: " + mMarkerCoordinates);
-                Log.d("mapfragment", "Liked event coordinate: " + placeEventCoord);
                 if (!mMarkerCoordinates.contains(placeEventCoord)) {
-                    Log.d("mapfragment", "inloop in liked events!");
                     String placeEventName = placeEvents.get(i).getName();
                     String likedSpotId = placeEvents.get(i).getAppId();
                     Float color = BitmapDescriptorFactory.HUE_RED;
