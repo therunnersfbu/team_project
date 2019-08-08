@@ -56,7 +56,7 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
         final String eventToDelete = rvEvents.get(position);
         if (eventToDelete != "NONE!") {
             new AlertDialog.Builder(mContext)
-                .setTitle("Unlike spot")
+                .setTitle("Delete spot")
                 .setMessage("Are you sure you want to delete this spot?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

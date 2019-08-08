@@ -74,11 +74,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ViewHold
         holder.tvName.setText(mResultsList.get(position));
         holder.tvDistance.setText(mDistances.get(position));
         holder.tvAddress.setText(mAddresses.get(position));
-        if (isPlace){
-            holder.ivSpotImage.setImageResource(R.drawable.sky);
-        }else{
-            holder.ivSpotImage.setImageResource(R.drawable.event);
-        }
+        holder.ivSpotImage.setImageResource(R.drawable.logo_no_background);
     }
 
     @Override
