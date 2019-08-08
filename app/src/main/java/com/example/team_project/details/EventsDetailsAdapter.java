@@ -383,7 +383,11 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mViewHolder.tvEventName.setText(placeApi.getPlaceName());
         mViewHolder.tvDistance.setText(mDistance);
         mViewHolder.tvAddress.setText(placeApi.getAddress());
-        mViewHolder.tvHours.setText(placeApi.getOpenHours().get(day-2));
+        try {
+            mViewHolder.tvHours.setText(placeApi.getOpenHours().get(day - 2));
+        } catch (IndexOutOfBoundsException e) {
+            mViewHolder.tvHours.setText(placeApi.getOpenHours().get(0));
+        }
         mViewHolder.tvNumber.setText(placeApi.getPhoneNumber());
         mViewHolder.tvPrice.setText(placeApi.getPrice());
         mCoords = placeApi.getLocation();

@@ -1,6 +1,7 @@
 package com.example.team_project.fragments;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -27,6 +28,7 @@ import com.example.team_project.details.DetailsActivity;
 import com.example.team_project.model.PlaceEvent;
 import com.example.team_project.model.Post;
 import com.example.team_project.model.User;
+import com.example.team_project.utils.ContextProvider;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -355,7 +357,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 .icon(BitmapDescriptorFactory.defaultMarker(color)));
         marker.setTag(id);
         mGoogleMap.setOnInfoWindowClickListener(MapFragment.this);
-        mGoogleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(getContext()));
+        mGoogleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter(new ContextProvider() {
+            @Override
+            public Context getContext() {
+                return getActivity();
+            }
+        }));
     }
 
     private Boolean getSpotType(String id){
