@@ -42,13 +42,13 @@
                 android:id="@+id/ivLike"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginBottom="5dp"
+                android:src="@drawable/heart_filled_24_4x"
                 android:tint="@color/colorAccent"
                 card_view:layout_constraintBottom_toBottomOf="@+id/imageView2"
-                card_view:layout_constraintStart_toStartOf="@+id/imageView2"
-                android:src="@drawable/heart_filled_24_4x" />
+                card_view:layout_constraintStart_toStartOf="@+id/imageView2" />
 
             <TextView
                 android:id="@+id/tvReview"
@@ -58,6 +58,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginBottom="5dp"
                 android:text="10"
+                android:textStyle="bold"
                 card_view:layout_constraintBottom_toBottomOf="@+id/imageView2"
                 card_view:layout_constraintStart_toEndOf="@+id/ivReview" />
 
@@ -82,6 +83,7 @@
                 android:layout_marginBottom="5dp"
                 android:text="10"
                 android:textSize="14sp"
+                android:textStyle="bold"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintStart_toEndOf="@+id/ivLike" />
 
@@ -89,15 +91,15 @@
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:ellipsize="end"
                 android:maxLines="4"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
