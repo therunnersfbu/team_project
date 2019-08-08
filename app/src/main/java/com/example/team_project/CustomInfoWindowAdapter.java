@@ -16,7 +16,11 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     public CustomInfoWindowAdapter(ContextProvider cp){
         mcontext = cp.getContext();
-        mWindow = LayoutInflater.from(mcontext).inflate(R.layout.map_info_window, null);
+        if (mcontext != null) {
+            mWindow = LayoutInflater.from(mcontext).inflate(R.layout.map_info_window, null);
+        } else {
+            mWindow = null;
+        }
     }
 
 
