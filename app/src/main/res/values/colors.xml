@@ -17,4 +17,5 @@
     <color name="appThemeLight">#89B1F0</color>
     <color name="filterSelected">#6238c9</color>
     <color name="filterNotSelected">#3e91f7</color>
+    <color name="caticon">#4D4D4D</color>
 </resources>
