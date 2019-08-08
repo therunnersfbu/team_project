@@ -6,4 +6,4 @@
     android:layout_height="match_parent"
     android:adjustViewBounds="true"
     android:scaleType="centerCrop"
-    app:srcCompat="@drawable/banner_logo" />
+    app:srcCompat="@drawable/polka_banner" />

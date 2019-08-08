@@ -80,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements DirectionsApi.
     @BindView(R.id.ivProfilePic) ImageView ivProfilePic;
     @BindView(R.id.ivHeaderImage) ImageView ivHeaderImage;
     @BindDrawable(R.drawable.default_profile_pic) Drawable defaultPic;
-    @BindDrawable(R.drawable.header_default) Drawable defaultHeader;
+    @BindDrawable(R.drawable.polka_banner) Drawable defaultHeader;
     @BindDrawable(R.drawable.ic_add_black_24dp) Drawable surveyAdd;
 
     @OnClick(R.id.ivProfilePic)
