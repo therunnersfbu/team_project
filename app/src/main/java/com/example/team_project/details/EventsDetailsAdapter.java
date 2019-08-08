@@ -407,9 +407,9 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mViewHolder.tvNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (PublicVariables.canMakeCall && ((TextView) v).getText().toString().length() > 0) {
+                if (((TextView) v).getText().toString().length() > 0) {
                     Log.d("calling", placeApi.getPhoneToCall());
-                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
                     callIntent.setData(Uri.parse("tel:" + placeApi.getPhoneToCall()));
                     mContext.startActivity(callIntent);
                 }

@@ -19,7 +19,6 @@ public class PublicVariables {
     public static double latitude;
     public static double longitude;
     public static boolean type;
-    public static boolean canMakeCall = false;
 
     public static String[] primTagRef = new String[]{"TrendyCity verified", "bottomless", "upscale", "young",
             "dress cute", "rooftop", "dress comfy", "insta-worthy", "outdoors", "indoors",
