@@ -48,8 +48,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import org.json.JSONArray;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import butterknife.BindDrawable;
 import butterknife.BindView;
@@ -287,8 +289,17 @@ public class EventsDetailsAdapter extends RecyclerView.Adapter<RecyclerView.View
         mViewHolder.tvEventName.setText(eventApi.getEventName());
         mViewHolder.tvDistance.setText(mDistance);
         mViewHolder.tvAddress.setText(eventApi.getAddress());
-        mViewHolder.tvDate.setText(eventApi.getStartTime());
         mViewHolder.tvVenue.setText(eventApi.getVenueName());
+
+        String time = eventApi.getStartTime();
+        try {
+            @SuppressLint("SimpleDateFormat") Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(time);
+            @SuppressLint("SimpleDateFormat") String timeStr = new SimpleDateFormat("MMM dd, yyyy hh:mm a").format(date);
+            mViewHolder.tvDate.setText(timeStr);
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
         mCoords = eventApi.getLocation();
         mEvent = eventApi;
 
