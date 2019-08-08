@@ -5,6 +5,7 @@
     android:background="@color/appThemeBlue"
     android:backgroundTint="@color/appThemeBlue"
     android:gravity="start"
+    android:elevation="6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
