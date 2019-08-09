@@ -144,7 +144,7 @@ public class PublicVariables {
                 mSubTags.add("dress comfy");
                 mSubTags.add("insta-worthy");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 1:
                 mSubTags.clear();
@@ -154,7 +154,7 @@ public class PublicVariables {
                 mSubTags.add("dress comfy");
                 mSubTags.add("insta-worthy");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 2:
                 mSubTags.clear();
@@ -163,7 +163,7 @@ public class PublicVariables {
                 mSubTags.add("dress comfy");
                 mSubTags.add("insta-worthy");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 3:
                 mSubTags.clear();
@@ -172,7 +172,7 @@ public class PublicVariables {
                 mSubTags.add("dress comfy");
                 mSubTags.add("insta-worthy");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 4:
                 mSubTags.clear();
@@ -180,7 +180,7 @@ public class PublicVariables {
                 mSubTags.add("insta-worthy");
                 mSubTags.add("family friendly");
                 mSubTags.add("museum");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 5:
                 mSubTags.clear();
@@ -189,13 +189,13 @@ public class PublicVariables {
                 mSubTags.add("clubby");
                 mSubTags.add("food available");
                 mSubTags.add("rooftop");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 6:
                 mSubTags.clear();
                 mSubTags.add("upscale");
                 mSubTags.add("mall");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 7:
                 mSubTags.clear();
@@ -204,33 +204,33 @@ public class PublicVariables {
                 mSubTags.add("upscale");
                 mSubTags.add("food available");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 8:
                 mSubTags.clear();
                 mSubTags.add("food available");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 9:
                 mSubTags.clear();
                 mSubTags.add("barber");
                 mSubTags.add("spa");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 10:
                 mSubTags.clear();
                 mSubTags.add("classes");
                 mSubTags.add("trails");
                 mSubTags.add("gyms");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             case 11:
                 mSubTags.clear();
                 mSubTags.add("food available");
                 mSubTags.add("family friendly");
-                mSubTags.add("TrendyCity verified");
+                mSubTags.add("HotSpots verified");
                 break;
             default:
                 return null;
