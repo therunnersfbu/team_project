@@ -55,7 +55,7 @@
             card_view:layout_constraintTop_toTopOf="parent"
             tools:text="Name" />
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivLike"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -80,6 +80,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            card_view:civ_circle_background_color="#19c7aa"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toStartOf="@+id/tvName"
             card_view:layout_constraintHorizontal_bias="0.5"

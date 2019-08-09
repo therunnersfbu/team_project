@@ -109,12 +109,7 @@ public class LikedAdapter extends RecyclerView.Adapter<LikedAdapter.ViewHolder> 
         private void bind() {
             tvName.setText(names.get(getAdapterPosition()));
             tvDistance.setText(address.get(getAdapterPosition()));
-            if ((ids.get(getAdapterPosition()).substring(0, 1).equals("C"))){
-                ivSpotImage.setImageResource(R.drawable.sky);
-            }
-            else{
-                ivSpotImage.setImageResource(R.drawable.event);
-            }
+            ivSpotImage.setImageResource(R.drawable.logo_no_background);
 
         }
     }
