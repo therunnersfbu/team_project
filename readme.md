@@ -1,4 +1,4 @@
-# *HoSspots*
+# *HotSpots*
 
 **HotSpots** is an app where you can browse places and events near you, leave reviews and add them to your calendar.
 
