@@ -96,13 +96,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                     mTVEventName.setText(mParseEvent[2]);
                     mTVAddress.setText(mParseEvent[3]);
                     String eventApiId = mParseEvent[1];
+                    mIVEventImage.setImageResource(R.drawable.logo_no_background);
                     if ('E' != eventApiId.charAt(0)) {
                         mTVEventPlace.setText("Place");
-                        mIVEventImage.setImageResource(R.drawable.sky);
                         break;
                     } else {
                         mTVEventPlace.setText("Event");
-                        mIVEventImage.setImageResource(R.drawable.event);
                         break;
                     }
                 }
