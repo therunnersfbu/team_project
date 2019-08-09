@@ -58,6 +58,7 @@
             android:id="@+id/ivSpotImage"
             android:layout_width="59dp"
             android:layout_height="51dp"
+            card_view:civ_circle_background_color="#19c7aa"
             card_view:layout_constraintEnd_toStartOf="@+id/tvName"
             card_view:layout_constraintHorizontal_bias="0.5"
             card_view:layout_constraintStart_toStartOf="parent"
