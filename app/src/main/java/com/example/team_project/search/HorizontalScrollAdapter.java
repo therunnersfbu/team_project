@@ -81,7 +81,6 @@ public class HorizontalScrollAdapter extends RecyclerView.Adapter<HorizontalScro
                     v.getBackground().setColorFilter(ContextCompat.getColor(v.getContext(), R.color.filterNotSelected), PorterDuff.Mode.LIGHTEN);
                     mAddTagsToSearch.remove(mTagToAdd);
                 }
-                notifyDataSetChanged();
                 ((SearchActivity) mContext).setNewSearchText(mAddTagsToSearch);
             } else {
                 final Intent intent = new Intent(mContext, DetailsActivity.class);
