@@ -2,14 +2,6 @@
 
 **HotSpots** is an app where you can browse places and events near you, leave reviews and add them to your calendar.
 
-## Video Walkthrough
-
-Here's a walkthrough of the app:
-
-<img src='walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
-
 ## Credits
 
 - [Android Async Http Client](http://loopj.com/android-async-http/) - Networking library
